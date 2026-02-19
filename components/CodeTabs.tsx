@@ -8,15 +8,44 @@ interface CodeTabsProps {
   onUpdate: (type: "html" | "css" | "js", value: string) => void;
 }
 
+const tabConfig = {
+  html: {
+    label: "index.html",
+    icon: (
+      <span className="text-orange-400 font-mono font-bold text-xs">
+        &lt;/&gt;
+      </span>
+    ),
+    color: "text-orange-400",
+    activeBorder: "border-orange-400",
+  },
+  css: {
+    label: "style.css",
+    icon: <span className="text-[#00F5FF] font-mono font-bold text-xs">#</span>,
+    color: "text-[#00F5FF]",
+    activeBorder: "border-[#00F5FF]",
+  },
+  js: {
+    label: "script.js",
+    icon: (
+      <span className="text-yellow-400 font-mono font-bold text-xs">JS</span>
+    ),
+    color: "text-yellow-400",
+    activeBorder: "border-yellow-400",
+  },
+};
+
 export default function CodeTabs({ html, css, js, onUpdate }: CodeTabsProps) {
   const [activeTab, setActiveTab] = useState<"html" | "css" | "js">("html");
+  const [copied, setCopied] = useState(false);
+
+  const currentValue =
+    activeTab === "html" ? html : activeTab === "css" ? css : js;
 
   const copyToClipboard = () => {
-    let content = "";
-    if (activeTab === "html") content = html;
-    if (activeTab === "css") content = css;
-    if (activeTab === "js") content = js;
-    navigator.clipboard.writeText(content);
+    navigator.clipboard.writeText(currentValue);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const handleEditorChange = (value: string | undefined) => {
@@ -26,44 +55,106 @@ export default function CodeTabs({ html, css, js, onUpdate }: CodeTabsProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex space-x-1">
-          {(["html", "css", "js"] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors ${
-                activeTab === tab
-                  ? "bg-white dark:bg-gray-900 text-blue-600 dark:text-blue-400 border-t border-x border-gray-200 dark:border-gray-700"
-                  : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-              }`}
-            >
-              {tab.toUpperCase()}
-            </button>
-          ))}
+    <div className="flex flex-col h-full bg-[#111827] overflow-hidden">
+      {/* Tab Bar */}
+      <div className="flex items-center justify-between bg-[#0D1117] border-b border-white/5">
+        <div className="flex">
+          {(["html", "css", "js"] as const).map((tab) => {
+            const cfg = tabConfig[tab];
+            const isActive = activeTab === tab;
+            return (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`relative group px-5 py-3 text-xs font-medium flex items-center gap-2 transition-all duration-200 border-r border-white/5 min-w-[110px] ${
+                  isActive
+                    ? `bg-[#111827] ${cfg.color}`
+                    : "bg-[#0D1117] text-[#4A5568] hover:text-[#8B9AB5] hover:bg-[#111827]/50"
+                }`}
+              >
+                {/* Active top border */}
+                {isActive && (
+                  <div
+                    className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#00F5FF] to-[#8A2BE2]`}
+                  />
+                )}
+                {cfg.icon}
+                <span className="font-mono">{cfg.label}</span>
+              </button>
+            );
+          })}
         </div>
-        <button
-          onClick={copyToClipboard}
-          className="text-xs px-3 py-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded text-gray-700 dark:text-gray-200 transition-colors"
-        >
-          Copy
-        </button>
+
+        {/* Copy button */}
+        <div className="px-3">
+          <button
+            onClick={copyToClipboard}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+              copied
+                ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                : "text-[#4A5568] hover:text-[#00F5FF] hover:bg-[#00F5FF]/8 border border-transparent hover:border-[#00F5FF]/20"
+            }`}
+          >
+            {copied ? (
+              <>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Copied!
+              </>
+            ) : (
+              <>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                </svg>
+                Copy
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
-      <div className="flex-1 min-h-[400px]">
+      {/* Editor */}
+      <div className="flex-1 relative">
         <Editor
           height="100%"
           language={activeTab === "js" ? "javascript" : activeTab}
           theme="vs-dark"
-          value={activeTab === "html" ? html : activeTab === "css" ? css : js}
+          value={currentValue}
           onChange={handleEditorChange}
           options={{
             readOnly: false,
             minimap: { enabled: false },
-            fontSize: 14,
+            fontSize: 13,
+            fontFamily:
+              "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace",
+            fontLigatures: true,
+            lineHeight: 1.7,
             scrollBeyondLastLine: false,
-            padding: { top: 16 },
+            padding: { top: 20, bottom: 20 },
+            renderLineHighlight: "gutter",
+            cursorBlinking: "smooth",
+            smoothScrolling: true,
+            bracketPairColorization: { enabled: true },
           }}
         />
       </div>
