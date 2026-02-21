@@ -3,6 +3,8 @@ import PreviewPanel from "./PreviewPanel";
 import CodeTabs from "./CodeTabs";
 import PublishModal from "./PublishModal";
 import FeedbackWidget from "./FeedbackWidget";
+import DeployButton from "./DeployButton";
+import ResearchPanel from "./ResearchPanel";
 
 interface WorkspaceProps {
   componentData: {
@@ -15,6 +17,7 @@ interface WorkspaceProps {
   chatId?: string | null;
   isPublic?: boolean;
   onPublished?: (isPublic: boolean) => void;
+  mode?: "prompt" | "screenshot" | "research";
 }
 
 export default function Workspace({
@@ -23,9 +26,19 @@ export default function Workspace({
   chatId,
   isPublic = false,
   onPublished,
+  mode = "prompt",
 }: WorkspaceProps) {
-  const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
+  const [activeTab, setActiveTab] = useState<"preview" | "code" | "research">("preview");
   const [showPublishModal, setShowPublishModal] = useState(false);
+
+  // If in research mode, always show ResearchPanel, regardless of componentData
+  if (mode === "research") {
+    return (
+      <div className="flex-1 flex flex-col h-full bg-[#0B0F19] overflow-hidden">
+        <ResearchPanel />
+      </div>
+    );
+  }
 
   if (!componentData) {
     return (
@@ -84,6 +97,8 @@ export default function Workspace({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3">
+          {/* <DeployButton componentData={componentData} /> */}
+
           {chatId && (
             <button
               onClick={() => setShowPublishModal(true)}
@@ -114,7 +129,7 @@ export default function Workspace({
 
           {/* Tab toggle */}
           <div className="flex bg-[#0B0F19] p-1 rounded-xl border border-white/5 gap-1">
-            {(["preview", "code"] as const).map((tab) => (
+            {(["preview", "code", "research"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -138,7 +153,7 @@ export default function Workspace({
                     <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
-                ) : (
+                ) : tab === "code" ? (
                   <svg
                     width="12"
                     height="12"
@@ -152,6 +167,20 @@ export default function Workspace({
                     <path d="m18 16 4-4-4-4" />
                     <path d="m6 8-4 4 4 4" />
                     <path d="m14.5 4-5 16" />
+                  </svg>
+                ) : (
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
                   </svg>
                 )}
                 {tab}
@@ -168,13 +197,15 @@ export default function Workspace({
             css={componentData.css}
             js={componentData.js}
           />
-        ) : (
+        ) : activeTab === "code" ? (
           <CodeTabs
             html={componentData.html}
             css={componentData.css}
             js={componentData.js}
             onUpdate={onCodeUpdate}
           />
+        ) : (
+          <ResearchPanel />
         )}
       </div>
 

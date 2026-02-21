@@ -7,8 +7,8 @@ import { fetchUser, logout as logoutAction } from "@/store/slices/authSlice";
 interface DashboardNavbarProps {
   onLogout?: () => void;
   showModeToggle?: boolean;
-  mode?: "prompt" | "screenshot";
-  onModeChange?: (mode: "prompt" | "screenshot") => void;
+  mode?: "prompt" | "screenshot" | "research";
+  onModeChange?: (mode: "prompt" | "screenshot" | "research") => void;
 }
 
 export default function DashboardNavbar({
@@ -143,6 +143,29 @@ export default function DashboardNavbar({
               <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
             </svg>
             Screenshot
+          </button>
+          <button
+            onClick={() => onModeChange("research")}
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+              mode === "research"
+                ? "bg-amber-500/15 text-amber-500 border border-amber-500/25 shadow-[0_0_10px_rgba(245,158,11,0.1)]"
+                : "text-[#4A5568] hover:text-[#8B9AB5]"
+            }`}
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+            Research
           </button>
         </div>
       )}

@@ -7,6 +7,7 @@ import Workspace from "@/components/Workspace";
 import ChatHistorySidebar from "@/components/ChatHistorySidebar";
 import ErrorToast from "@/components/ErrorToast";
 import PostToCommunityPanel from "@/components/PostToCommunityPanel";
+import VoiceListeningOverlay from "@/components/VoiceListeningOverlay";
 import { useRouter } from "next/navigation";
 import DashboardNavbar from "@/components/DashboardNavbar";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -21,6 +22,9 @@ import {
   setMode,
   setGenerationMode,
   setProjectType,
+  setStyleMode,
+  setIsListening,
+  setTranscript,
   setError,
   setSidebarCollapsed,
   resetChat,
@@ -40,6 +44,9 @@ export default function Dashboard() {
     mode,
     generationMode,
     projectType,
+    styleMode,
+    isListening,
+    transcript,
     sidebarCollapsed,
   } = useAppSelector((state) => state.chat);
 
@@ -74,6 +81,7 @@ export default function Dashboard() {
     prompt: string,
     chatMode?: "standard" | "reverse",
     projType?: "component" | "app" | "game" | "auto",
+    sMode?: "vanilla" | "tailwind",
   ) => {
     dispatch(setLoading(true));
     dispatch(setError(null));
@@ -83,6 +91,7 @@ export default function Dashboard() {
 
     const currentMode = chatMode || mode;
     const currentProjectType = projType || projectType || "auto";
+    const currentStyleMode = sMode || styleMode || "vanilla";
 
     // If there is existing componentData, we include it as context for refinement
     const context = componentData
@@ -102,6 +111,7 @@ export default function Dashboard() {
           context,
           mode: currentMode,
           projectType: currentProjectType,
+          styleMode: currentStyleMode,
         }),
       });
 
@@ -219,6 +229,11 @@ export default function Dashboard() {
         onModeChange={(m) => dispatch(setMode(m))}
       />
 
+      <VoiceListeningOverlay
+        isListening={isListening}
+        transcript={transcript}
+      />
+
       <div className="flex-1 flex overflow-hidden">
         <ChatHistorySidebar
           key={sidebarKey}
@@ -231,15 +246,22 @@ export default function Dashboard() {
           }
         />
 
-        {mode === "prompt" ? (
+        {mode === "prompt" || mode === "research" ? (
           <ChatInterface
             messages={messages}
             isLoading={loading}
-            onSendMessage={(msg, m, pType) => handleSendMessage(msg, m, pType)}
-            mode={generationMode}
+            onSendMessage={(msg, m, pType, sMode) =>
+              handleSendMessage(msg, m, pType, sMode)
+            }
+            mode={mode === "research" ? "research" : generationMode}
             onModeChange={(m) => dispatch(setGenerationMode(m))}
             projectType={projectType || "auto"}
             onProjectTypeChange={(t) => dispatch(setProjectType(t))}
+            styleMode={styleMode || "vanilla"}
+            onStyleModeChange={(s) => dispatch(setStyleMode(s))}
+            isListening={isListening}
+            onListeningChange={(l) => dispatch(setIsListening(l))}
+            onTranscriptChange={(t) => dispatch(setTranscript(t))}
           />
         ) : (
           <ImageUploadPanel
@@ -255,6 +277,7 @@ export default function Dashboard() {
             chatId={savedChatId}
             isPublic={isPublic}
             onPublished={(pub) => dispatch(setIsPublic(pub))}
+            mode={mode}
           />
         </div>
       </div>

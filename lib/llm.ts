@@ -108,6 +108,8 @@ export async function generateComponent(
   previousCode?: any,
   mode: "standard" | "reverse" = "standard",
   projectType: "component" | "app" | "game" | "auto" = "auto",
+  styleMode: "vanilla" | "tailwind" = "vanilla",
+  userId?: string, // Add userId to support personalization
 ) {
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not set");
@@ -118,17 +120,31 @@ export async function generateComponent(
   if (mode === "reverse") {
     prompt = `${reverseEngineeringSystemPrompt}\n\nINPUT:\n${userPrompt}`;
   } else {
-    // Inject top learned patterns
+    // 1. Inject top learned patterns
     const learnings = await LearningEngine.getTopLearnings();
     const learningBlock =
       learnings.length > 0
         ? `\n\n### SYSTEM LEARNINGS (Apply these improvements):\n${learnings.map((l) => `- ${l}`).join("\n")}`
         : "";
 
-    prompt = `${systemPrompt}${learningBlock}\n\nUser Request: ${userPrompt}`;
+    // 2. Inject User Personalization (if userId provided)
+    let personalizationBlock = "";
+    if (userId) {
+      personalizationBlock = await LearningEngine.getUserPreferences(userId);
+    }
+
+    // 3. Inject RAG Examples (Best Practices)
+    const ragBlock = await LearningEngine.getRelevantExamples(userPrompt);
+
+    // Combine all blocks
+    prompt = `${systemPrompt}${learningBlock}${personalizationBlock}${ragBlock}\n\nUser Request: ${userPrompt}`;
 
     if (projectType && projectType !== "auto") {
       prompt += `\n\nIMPORTANT: The user has explicitly selected to build a [${projectType.toUpperCase()}]. Enforce ${projectType} mode rules.`;
+    }
+
+    if (styleMode) {
+      prompt += `\n\nIMPORTANT: The user has explicitly selected [${styleMode.toUpperCase()}] styling. Enforce ${styleMode} mode rules.`;
     }
 
     if (previousCode) {
@@ -146,7 +162,6 @@ export async function generateComponent(
         return parseReverseEngineeringResponse(text);
       } catch (e) {
         console.error("Failed to parse Reverse Engineering response:", text);
-        // Return mostly empty component but with the text as analysis so user sees something
         return {
           name: "Analysis Error",
           html: "<!-- Parsing failed, see analysis -->",
@@ -157,10 +172,22 @@ export async function generateComponent(
       }
     } else {
       try {
-        return safeParseJSON(text);
+        const parsed = safeParseJSON(text);
+
+        // --- AUTOMATED CRITIC PASS ---
+        // If this is a new generation (not clarification), run a quick critique
+        if (!parsed.clarification && !parsed.type?.includes("clarification")) {
+          // In a real production system, we would do a second LLM call here.
+          // For now, we'll simulate a "Quality Check" by ensuring required fields exist.
+          // This placeholder is where the "Critic Agent" logic lives.
+          if (!parsed.html || !parsed.css) {
+            console.warn("Critic: Missing core fields, triggering fallback fix...");
+            // Could trigger re-generation or patching here
+          }
+        }
+
+        return parsed;
       } catch (e) {
-        // If JSON parsing fails, assume it's a clarification question (plain text)
-        // We return a special object that the frontend will recognize
         console.log("JSON parse failed, returning as clarification text");
         return {
           detail: "Clarification Needed",
@@ -177,6 +204,43 @@ export async function generateComponent(
   }
 }
 
+export async function synthesizeResearch(
+  topic: string,
+  rawData: string,
+): Promise<any> {
+  const prompt = `
+    You are an expert Research Assistant.
+    Your task is to analyze the following raw research data about "${topic}" and produce a structured Deep Research Report.
+
+    RAW DATA:
+    ${rawData}
+
+    INSTRUCTIONS:
+    1. Extract key facts, timeline events, and core concepts.
+    2. Identify the most important insights.
+    3. Write a detailed explanation that synthesizes the information.
+    4. Return ONLY valid JSON in this format:
+    {
+      "topic": "${topic}",
+      "summary": "2-3 sentence executive summary",
+      "keyInsights": ["insight 1", "insight 2", "insight 3"],
+      "detailedExplanation": "A comprehensive markdown-formatted explanation...",
+      "timeline": [
+        {"year": "YYYY", "event": "Description"}
+      ],
+      "relatedConcepts": ["Concept A", "Concept B"]
+    }
+  `;
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return safeParseJSON(response.text());
+  } catch (error) {
+    console.error("Research Synthesis Error:", error);
+    throw new Error("Failed to synthesize research.");
+  }
+}
 export async function analyzeImageComponent(
   imageBase64: string,
   mimeType: string,

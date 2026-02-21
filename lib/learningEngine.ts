@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import Generation from "@/models/Generation";
 import Feedback from "@/models/Feedback";
 import LearningInsight from "@/models/LearningInsight";
+import UserPreference from "@/models/UserPreference";
+import BestExample from "@/models/BestExample";
 
 export class LearningEngine {
   static async analyzeFailedGenerations() {
@@ -63,5 +65,40 @@ export class LearningEngine {
       .limit(5);
 
     return insights.map((i) => i.improvementInstruction);
+  }
+
+  static async getUserPreferences(userId: string): Promise<string> {
+    const prefs = await UserPreference.findOne({ userId });
+    if (!prefs) return "";
+
+    let instruction = "\n### USER PERSONALIZATION:\n";
+    if (prefs.prefersDarkMode) instruction += "- Use dark mode styles.\n";
+    if (prefs.cssFramework !== "auto")
+      instruction += `- Use ${prefs.cssFramework} for styling.\n`;
+    if (prefs.codingStyle !== "auto")
+      instruction += `- Use ${prefs.codingStyle} coding style.\n`;
+    if (prefs.tone !== "auto")
+      instruction += `- Tone: ${prefs.tone}.\n`;
+
+    return instruction;
+  }
+
+  static async getRelevantExamples(prompt: string): Promise<string> {
+    // Basic text search using regex (in prod use Vector DB)
+    const keywords = prompt.split(" ").filter((w) => w.length > 3);
+    const regex = new RegExp(keywords.join("|"), "i");
+
+    const examples = await BestExample.find({ prompt: { $regex: regex } })
+      .sort({ qualityScore: -1 })
+      .limit(2);
+
+    if (examples.length === 0) return "";
+
+    let output = "\n### REFERENCE EXAMPLES (High Quality):\n";
+    examples.forEach((ex, i) => {
+      output += `\nExample ${i + 1}:\nHTML:\n${ex.html}\nCSS:\n${ex.css}\nJS:\n${ex.js}\n`;
+    });
+
+    return output;
   }
 }

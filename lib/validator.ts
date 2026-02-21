@@ -17,8 +17,13 @@ export function validateComponent(component: any): {
     return { isValid: false, error: "Missing HTML content" };
   }
 
-  if (!component.css || typeof component.css !== "string") {
-    return { isValid: false, error: "Missing CSS content" };
+  // CSS is optional for Tailwind mode
+  if (component.css === undefined || component.css === null) {
+    component.css = ""; // Normalize to empty string if missing
+  }
+
+  if (typeof component.css !== "string") {
+    return { isValid: false, error: "Invalid CSS content" };
   }
 
   if (component.js && typeof component.js !== "string") {

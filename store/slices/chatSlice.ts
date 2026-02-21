@@ -10,11 +10,19 @@ interface Message {
   }[];
 }
 
+interface FileNode {
+  name: string;
+  type: "file" | "directory";
+  content?: string;
+  children?: FileNode[];
+}
+
 interface ComponentData {
   name: string;
   html: string;
   css: string;
   js: string;
+  files?: FileNode[]; // New field for multi-file support
 }
 
 interface ChatState {
@@ -24,9 +32,12 @@ interface ChatState {
   savedChatId: string | null;
   isPublic: boolean;
   loading: boolean;
-  mode: "prompt" | "screenshot";
+  mode: "prompt" | "screenshot" | "research";
   generationMode: "standard" | "reverse";
   projectType: "component" | "app" | "game" | "auto";
+  styleMode: "vanilla" | "tailwind";
+  isListening: boolean;
+  transcript: string;
   error: string | null;
   sidebarCollapsed: boolean;
 }
@@ -41,6 +52,9 @@ const initialState: ChatState = {
   mode: "prompt",
   generationMode: "standard",
   projectType: "auto",
+  styleMode: "vanilla",
+  isListening: false,
+  transcript: "",
   error: null,
   sidebarCollapsed: false,
 };
@@ -71,7 +85,7 @@ const chatSlice = createSlice({
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
     },
-    setMode(state, action: PayloadAction<"prompt" | "screenshot">) {
+    setMode(state, action: PayloadAction<"prompt" | "screenshot" | "research">) {
       state.mode = action.payload;
     },
     setGenerationMode(state, action: PayloadAction<"standard" | "reverse">) {
@@ -79,6 +93,18 @@ const chatSlice = createSlice({
     },
     setProjectType(state, action: PayloadAction<"component" | "app" | "game" | "auto">) {
       state.projectType = action.payload;
+    },
+    setStyleMode(state, action: PayloadAction<"vanilla" | "tailwind">) {
+      state.styleMode = action.payload;
+    },
+    setIsListening(state, action: PayloadAction<boolean>) {
+      state.isListening = action.payload;
+      if (!action.payload) {
+        state.transcript = ""; // Reset transcript when stopping
+      }
+    },
+    setTranscript(state, action: PayloadAction<string>) {
+      state.transcript = action.payload;
     },
     setError(state, action: PayloadAction<string | null>) {
       state.error = action.payload;
@@ -110,6 +136,9 @@ export const {
   setMode,
   setGenerationMode,
   setProjectType,
+  setStyleMode,
+  setIsListening,
+  setTranscript,
   setError,
   setSidebarCollapsed,
   resetChat,

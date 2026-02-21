@@ -8,35 +8,49 @@ interface CodeTabsProps {
   onUpdate: (type: "html" | "css" | "js", value: string) => void;
 }
 
-const tabConfig = {
-  html: {
-    label: "index.html",
-    icon: (
-      <span className="text-orange-400 font-mono font-bold text-xs">
-        &lt;/&gt;
-      </span>
-    ),
-    color: "text-orange-400",
-    activeBorder: "border-orange-400",
-  },
-  css: {
-    label: "style.css",
-    icon: <span className="text-[#00F5FF] font-mono font-bold text-xs">#</span>,
-    color: "text-[#00F5FF]",
-    activeBorder: "border-[#00F5FF]",
-  },
-  js: {
-    label: "script.js",
-    icon: (
-      <span className="text-yellow-400 font-mono font-bold text-xs">JS</span>
-    ),
-    color: "text-yellow-400",
-    activeBorder: "border-yellow-400",
-  },
-};
+// Simple File Explorer Component (Mock for now, to be expanded)
+function FileExplorer({ activeTab, onSelect }: { activeTab: string, onSelect: (tab: "html" | "css" | "js") => void }) {
+  return (
+    <div className="w-48 bg-[#0B0F19] border-r border-white/5 flex flex-col">
+      <div className="px-4 py-3 text-xs font-bold text-[#6B7A99] uppercase tracking-wider">
+        Explorer
+      </div>
+      <div className="flex flex-col gap-0.5 px-2">
+        <button
+          onClick={() => onSelect("html")}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
+            activeTab === "html" ? "bg-[#00F5FF]/10 text-[#00F5FF]" : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+          }`}
+        >
+          <span className="text-orange-400">&lt;/&gt;</span>
+          index.html
+        </button>
+        <button
+          onClick={() => onSelect("css")}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
+            activeTab === "css" ? "bg-[#00F5FF]/10 text-[#00F5FF]" : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+          }`}
+        >
+          <span className="text-[#00F5FF]">#</span>
+          style.css
+        </button>
+        <button
+          onClick={() => onSelect("js")}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
+            activeTab === "js" ? "bg-[#00F5FF]/10 text-[#00F5FF]" : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+          }`}
+        >
+          <span className="text-yellow-400">JS</span>
+          script.js
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function CodeTabs({ html, css, js, onUpdate }: CodeTabsProps) {
   const [activeTab, setActiveTab] = useState<"html" | "css" | "js">("html");
+  const [showExplorer, setShowExplorer] = useState(true);
   const [copied, setCopied] = useState(false);
 
   const currentValue =
@@ -91,131 +105,133 @@ export default function CodeTabs({ html, css, js, onUpdate }: CodeTabsProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#111827] overflow-hidden">
-      {/* Tab Bar */}
-      <div className="flex items-center justify-between bg-[#0D1117] border-b border-white/5">
-        <div className="flex">
-          {(["html", "css", "js"] as const).map((tab) => {
-            const cfg = tabConfig[tab];
-            const isActive = activeTab === tab;
-            return (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`relative group px-5 py-3 text-xs font-medium flex items-center gap-2 transition-all duration-200 border-r border-white/5 min-w-[110px] ${
-                  isActive
-                    ? `bg-[#111827] ${cfg.color}`
-                    : "bg-[#0D1117] text-[#4A5568] hover:text-[#8B9AB5] hover:bg-[#111827]/50"
-                }`}
-              >
-                {/* Active top border */}
-                {isActive && (
-                  <div
-                    className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#00F5FF] to-[#8A2BE2]`}
-                  />
-                )}
-                {cfg.icon}
-                <span className="font-mono">{cfg.label}</span>
-              </button>
-            );
-          })}
-        </div>
+    <div className="flex h-full bg-[#111827] overflow-hidden">
+      {/* Sidebar Explorer */}
+      {showExplorer && <FileExplorer activeTab={activeTab} onSelect={setActiveTab} />}
 
-        {/* Copy button */}
-        <div className="px-3">
-          <button
-            onClick={copyToClipboard}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
-              copied
-                ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-                : "text-[#4A5568] hover:text-[#00F5FF] hover:bg-[#00F5FF]/8 border border-transparent hover:border-[#00F5FF]/20"
-            }`}
-          >
-            {copied ? (
-              <>
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                Copied!
-              </>
-            ) : (
-              <>
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                </svg>
-                Copy
-              </>
-            )}
-          </button>
-        </div>
-
-        {/* Format Button */}
-        <div className="px-3 border-l border-white/5">
-          <button
-            onClick={handleFormat}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#4A5568] hover:text-[#00F5FF] hover:bg-[#00F5FF]/8 border border-transparent hover:border-[#00F5FF]/20 transition-all duration-200"
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        {/* Top Bar */}
+        <div className="flex items-center justify-between bg-[#0D1117] border-b border-white/5 h-10 px-4">
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setShowExplorer(!showExplorer)}
+              className="text-[#6B7A99] hover:text-white"
             >
-              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-            </svg>
-            Format
-          </button>
-        </div>
-      </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <line x1="9" y1="3" x2="9" y2="21"/>
+              </svg>
+            </button>
+            <span className="text-xs text-[#6B7A99] font-mono">
+              {activeTab === 'html' ? 'index.html' : activeTab === 'css' ? 'style.css' : 'script.js'}
+            </span>
+          </div>
 
-      {/* Editor */}
-      <div className="flex-1 relative">
-        <Editor
-          height="100%"
-          language={activeTab === "js" ? "javascript" : activeTab}
-          theme="thunder-v2"
-          value={currentValue}
-          onMount={handleEditorDidMount}
-          onChange={handleEditorChange}
-          options={{
-            readOnly: false,
-            minimap: { enabled: false },
-            fontSize: 13,
-            fontFamily:
-              "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace",
-            fontLigatures: true,
-            lineHeight: 1.7,
-            scrollBeyondLastLine: false,
-            padding: { top: 20, bottom: 20 },
-            renderLineHighlight: "gutter",
-            cursorBlinking: "smooth",
-            smoothScrolling: true,
-            bracketPairColorization: { enabled: true },
-          }}
-        />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleFormat}
+              className="p-1.5 text-[#6B7A99] hover:text-white transition-colors"
+              title="Format Code"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 10H3" />
+                <path d="M21 6H3" />
+                <path d="M21 14H3" />
+                <path d="M21 18H3" />
+              </svg>
+            </button>
+            <button
+              onClick={copyToClipboard}
+              className={`flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition-all ${
+                copied
+                  ? "bg-emerald-500/20 text-emerald-400"
+                  : "bg-white/5 text-[#6B7A99] hover:text-white hover:bg-white/10"
+              }`}
+            >
+              {copied ? (
+                <>
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  Copied
+                </>
+              ) : (
+                <>
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect
+                      x="9"
+                      y="9"
+                      width="13"
+                      height="13"
+                      rx="2"
+                      ry="2"
+                    />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                  Copy
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Editor Area */}
+        <div className="flex-1 relative">
+          <Editor
+            height="100%"
+            language={
+              activeTab === "js"
+                ? "javascript"
+                : activeTab === "html"
+                  ? "html"
+                  : "css"
+            }
+            theme="thunder-v2"
+            value={currentValue}
+            onChange={handleEditorChange}
+            onMount={handleEditorDidMount}
+            options={{
+              minimap: { enabled: false },
+              fontSize: 13,
+              fontFamily: "JetBrains Mono, Menlo, Monaco, 'Courier New', monospace",
+              lineHeight: 20,
+              padding: { top: 16 },
+              scrollBeyondLastLine: false,
+              smoothScrolling: true,
+              cursorBlinking: "smooth",
+              cursorSmoothCaretAnimation: "on",
+              formatOnPaste: true,
+              formatOnType: true,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
