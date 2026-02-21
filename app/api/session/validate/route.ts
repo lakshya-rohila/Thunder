@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     await connectToDatabase();
 
     const user = await User.findById(auth.userId)
-      .select("name email createdAt")
+      .select("name email createdAt dailyCredits")
       .lean();
 
     if (!user) {
@@ -27,6 +27,7 @@ export async function GET(request: Request) {
         name: user.name,
         email: user.email,
         createdAt: user.createdAt,
+        dailyCredits: user.dailyCredits,
       },
       sessionId: auth.sessionId,
     });

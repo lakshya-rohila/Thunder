@@ -5,7 +5,7 @@ import DashboardNavbar from "@/components/DashboardNavbar";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { fetchUser, logout as logoutAction } from "@/store/slices/authSlice";
+import { fetchUser, logoutUser } from "@/modules/Auth/AuthActions";
 
 export default function SettingsPage() {
   const dispatch = useAppDispatch();
@@ -37,8 +37,7 @@ export default function SettingsPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
-      dispatch(logoutAction());
+      await dispatch(logoutUser());
       router.push("/login");
     } catch (error) {
       console.error("Logout failed", error);

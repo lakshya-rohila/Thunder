@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useVoiceInput } from "@/hooks/useVoiceInput";
+import { ChatState } from "@/modules/Chat/ChatSlice";
 
 interface Message {
   role: "user" | "ai";

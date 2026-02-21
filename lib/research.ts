@@ -4,10 +4,11 @@ export interface ResearchResult {
   topic: string;
   summary: string;
   keyInsights: string[];
-  detailedExplanation: string;
-  timeline: { year: string; event: string }[];
-  relatedConcepts: string[];
-  sources: { title: string; url: string; snippet: string }[];
+  detailedAnalysis: string;
+  statistics?: { label: string; value: string }[];
+  timeline?: { year: string; event: string }[];
+  relatedConcepts?: string[];
+  sources: { title: string; url: string; snippet?: string }[];
   provider?: string;
 }
 

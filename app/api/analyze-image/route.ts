@@ -2,9 +2,26 @@ import { NextResponse } from "next/server";
 import { analyzeImageComponent } from "@/lib/llm";
 import { validateComponent } from "@/lib/validator";
 import { sanitizeComponent } from "@/lib/sanitizer";
+import { getAuthContext } from "@/lib/auth";
+import { deductCredits } from "@/lib/credits";
 
 export async function POST(request: Request) {
   try {
+    // Authenticate first
+    const auth = await getAuthContext(request);
+    if (auth instanceof NextResponse) {
+      return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    }
+
+    // Check credits (5 for image analysis)
+    const hasCredits = await deductCredits(auth.userId.toString(), 5);
+    if (!hasCredits) {
+      return NextResponse.json(
+        { error: "Insufficient daily credits. Please upgrade or wait for tomorrow." },
+        { status: 402 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get("image") as File | null;
 

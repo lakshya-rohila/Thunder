@@ -1,6 +1,12 @@
-"use client";
-
-import React, { useState, useRef, useCallback } from "react";
+import React, { useRef, useCallback } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  setFile,
+  setPreview,
+  clearScreenshot,
+  setError,
+} from "./ScreenshotSlice";
+import { analyzeScreenshot } from "./ScreenshotActions";
 
 interface ImageUploadPanelProps {
   onResult: (data: {
@@ -16,22 +22,22 @@ export default function ImageUploadPanel({
   onResult,
   onError,
 }: ImageUploadPanelProps) {
-  const [isDragging, setIsDragging] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analyzed, setAnalyzed] = useState(false);
+  const dispatch = useAppDispatch();
+  const { file, preview, isAnalyzing, analyzed, error } = useAppSelector(
+    (state) => state.screenshot
+  );
+  const [isDragging, setIsDragging] = React.useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (f: File) => {
     if (!f.type.startsWith("image/")) {
+      dispatch(setError("Please upload an image file (JPEG, PNG, WebP, or GIF)."));
       onError("Please upload an image file (JPEG, PNG, WebP, or GIF).");
       return;
     }
-    setFile(f);
-    setAnalyzed(false);
+    dispatch(setFile(f));
     const reader = new FileReader();
-    reader.onload = (e) => setPreview(e.target?.result as string);
+    reader.onload = (e) => dispatch(setPreview(e.target?.result as string));
     reader.readAsDataURL(f);
   };
 
@@ -39,8 +45,18 @@ export default function ImageUploadPanel({
     e.preventDefault();
     setIsDragging(false);
     const dropped = e.dataTransfer.files[0];
-    if (dropped) handleFile(dropped);
-  }, []);
+    if (dropped) {
+      if (!dropped.type.startsWith("image/")) {
+        dispatch(setError("Please upload an image file (JPEG, PNG, WebP, or GIF)."));
+        onError("Please upload an image file (JPEG, PNG, WebP, or GIF).");
+        return;
+      }
+      dispatch(setFile(dropped));
+      const reader = new FileReader();
+      reader.onload = (ev) => dispatch(setPreview(ev.target?.result as string));
+      reader.readAsDataURL(dropped);
+    }
+  }, [dispatch, onError]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -56,37 +72,21 @@ export default function ImageUploadPanel({
 
   const handleAnalyze = async () => {
     if (!file) return;
-    setIsAnalyzing(true);
-    onError(""); // clear previous errors
+    dispatch(setError(null));
+    onError("");
 
-    try {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const response = await fetch("/api/analyze-image", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to analyze image");
-      }
-
-      setAnalyzed(true);
-      onResult(data);
-    } catch (err: any) {
-      onError(err.message || "An unexpected error occurred");
-    } finally {
-      setIsAnalyzing(false);
+    const resultAction = await dispatch(analyzeScreenshot(file));
+    if (analyzeScreenshot.fulfilled.match(resultAction)) {
+      onResult(resultAction.payload);
+    } else {
+      const errMsg = resultAction.payload as string;
+      dispatch(setError(errMsg));
+      onError(errMsg);
     }
   };
 
   const handleClear = () => {
-    setFile(null);
-    setPreview(null);
-    setAnalyzed(false);
+    dispatch(clearScreenshot());
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 

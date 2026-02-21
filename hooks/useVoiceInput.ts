@@ -35,7 +35,13 @@ export function useVoiceInput({
 
       recognition.onstart = () => {
         setIsListening(true);
-        resetSilenceTimer();
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = setTimeout(() => {
+          if (recognitionRef.current) {
+            recognitionRef.current.stop();
+            if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+          }
+        }, 1000);
       };
 
       recognition.onend = () => {
@@ -54,7 +60,13 @@ export function useVoiceInput({
       };
 
       recognition.onresult = (event: any) => {
-        resetSilenceTimer(); // Activity detected, reset silence timer
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = setTimeout(() => {
+          if (recognitionRef.current) {
+            recognitionRef.current.stop();
+            if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+          }
+        }, 1000);
 
         let finalTranscript = "";
         let interimTranscript = "";
@@ -84,8 +96,15 @@ export function useVoiceInput({
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     // Auto-stop after 1.2 seconds of silence (snappier response)
     silenceTimerRef.current = setTimeout(() => {
-      stopListening();
-    }, 1000);
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {
+          // ignore
+        }
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      }
+    }, 1200);
   }, []);
 
   const startListening = () => {

@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { fetchUser, logout as logoutAction } from "@/store/slices/authSlice";
+import { fetchUser, logoutUser } from "@/modules/Auth/AuthActions";
 
 interface DashboardNavbarProps {
   onLogout?: () => void;
   showModeToggle?: boolean;
-  mode?: "prompt" | "screenshot" | "research";
-  onModeChange?: (mode: "prompt" | "screenshot" | "research") => void;
+  mode?: "prompt" | "screenshot" | "research" | "image" | "code";
+  onModeChange?: (mode: "prompt" | "screenshot" | "research" | "image" | "code") => void;
 }
 
 export default function DashboardNavbar({
@@ -21,18 +21,35 @@ export default function DashboardNavbar({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isLoggedIn, isLoading, user } = useAppSelector((state) => state.auth);
+  const [showLowCreditWarning, setShowLowCreditWarning] = useState(false);
 
   useEffect(() => {
     dispatch(fetchUser());
   }, [dispatch]);
+
+  // Check for low credits
+  useEffect(() => {
+    if (user?.dailyCredits !== undefined && user.dailyCredits < 20 && user.dailyCredits > 0) {
+      // Only show if we haven't shown it this session (or simple state for now)
+      // For now, let's show it if it's low, but maybe we can use a dismiss state
+      const hasDismissed = localStorage.getItem(`low-credit-dismissed-${new Date().toDateString()}`);
+      if (!hasDismissed) {
+        setShowLowCreditWarning(true);
+      }
+    }
+  }, [user?.dailyCredits]);
+
+  const dismissWarning = () => {
+    setShowLowCreditWarning(false);
+    localStorage.setItem(`low-credit-dismissed-${new Date().toDateString()}`, "true");
+  };
 
   const handleLogout = async () => {
     try {
       if (onLogout) {
         onLogout();
       } else {
-        await fetch("/api/auth/logout", { method: "POST" });
-        dispatch(logoutAction());
+        await dispatch(logoutUser());
         router.push("/login");
       }
     } catch (error) {
@@ -93,7 +110,61 @@ export default function DashboardNavbar({
             );
           })}
         </div>
+
+        {/* Credits Display */}
+        {isLoggedIn && user?.dailyCredits !== undefined && (
+             <div className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border ml-4 mr-4 transition-all duration-300 ${
+               user.dailyCredits < 20 
+                 ? "bg-red-500/10 border-red-500/30 animate-pulse" 
+                 : "bg-white/5 border-white/10"
+             }`}>
+                <span className={`w-2 h-2 rounded-full animate-pulse ${
+                  user.dailyCredits < 20 ? "bg-red-500" : "bg-emerald-400"
+                }`} />
+                <span className={`text-xs font-medium ${
+                  user.dailyCredits < 20 ? "text-red-400" : "text-emerald-400"
+                }`}>
+                  {user.dailyCredits} Credits
+                </span>
+             </div>
+        )}
       </div>
+
+      {/* Low Credit Warning Toast/Popup */}
+      {showLowCreditWarning && (
+        <div className="fixed bottom-6 right-6 z-[100] animate-fade-in-up">
+          <div className="bg-[#0D1117] border border-red-500/30 rounded-xl shadow-2xl p-4 w-80 relative overflow-hidden">
+             <div className="absolute top-0 left-0 w-1 h-full bg-red-500" />
+             <div className="flex items-start gap-3">
+               <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0 text-red-400">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                   <circle cx="12" cy="12" r="10"></circle>
+                   <line x1="12" y1="8" x2="12" y2="12"></line>
+                   <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                 </svg>
+               </div>
+               <div className="flex-1">
+                 <h4 className="text-sm font-bold text-white mb-1">Low Credits Warning</h4>
+                 <p className="text-xs text-gray-400 mb-3">
+                   You have <span className="text-red-400 font-bold">{user?.dailyCredits}</span> credits remaining for today. Please use them precisely!
+                 </p>
+                 <button 
+                   onClick={dismissWarning}
+                   className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg transition-colors font-medium"
+                 >
+                   I understand
+                 </button>
+               </div>
+               <button onClick={dismissWarning} className="text-gray-500 hover:text-white">
+                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                   <line x1="18" y1="6" x2="6" y2="18"></line>
+                   <line x1="6" y1="6" x2="18" y2="18"></line>
+                 </svg>
+               </button>
+             </div>
+          </div>
+        </div>
+      )}
 
       {/* Center: Mode Toggle (Optional) */}
       {showModeToggle && onModeChange && (
@@ -166,6 +237,55 @@ export default function DashboardNavbar({
               <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
             </svg>
             Research
+          </button>
+          <button
+            onClick={() => onModeChange("image")}
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+              mode === "image"
+                ? "bg-pink-500/15 text-pink-500 border border-pink-500/25 shadow-[0_0_10px_rgba(236,72,153,0.1)]"
+                : "text-[#4A5568] hover:text-[#8B9AB5]"
+            }`}
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />
+            </svg>
+            Image
+          </button>
+          <button
+            onClick={() => onModeChange("code")}
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+              mode === "code"
+                ? "bg-cyan-500/15 text-cyan-500 border border-cyan-500/25 shadow-[0_0_10px_rgba(6,182,212,0.1)]"
+                : "text-[#4A5568] hover:text-[#8B9AB5]"
+            }`}
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+            Code
           </button>
         </div>
       )}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import LandingNavbar from "@/components/LandingNavbar";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { fetchUser } from "@/store/slices/authSlice";
+import { fetchUser } from "@/modules/Auth/AuthActions";
 
 export default function LandingPage() {
   const dispatch = useAppDispatch();
@@ -154,32 +154,322 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Features Section ───────────────────────────── */}
-      <section
-        id="features"
-        className="py-32 px-6 bg-[#0D1117] border-t border-white/5"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#8A2BE2]/30 bg-[#8A2BE2]/8 text-[#8A2BE2] text-xs font-semibold mb-6 uppercase tracking-widest">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8A2BE2]" />
-              Capabilities
+      {/* ── Capabilities Section (Redesigned) ───────────────────────────── */}
+      <section id="features" className="py-24 px-6 bg-[#0D1117] border-t border-white/5">
+        <div className="max-w-7xl mx-auto space-y-32">
+          
+          {/* Instant UI Generation */}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="order-2 lg:order-1 relative">
+               <div className="absolute -inset-1 bg-gradient-to-r from-[#00F5FF]/20 to-[#8A2BE2]/20 rounded-2xl blur-lg opacity-50" />
+               <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl">
+                 <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-[#161B22]">
+                   <div className="flex gap-1.5">
+                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+                     <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+                   </div>
+                   <div className="ml-4 flex-1 h-5 bg-[#0B0F19] rounded text-[10px] text-gray-500 flex items-center px-2 font-mono">
+                     prompt.txt
+                   </div>
+                 </div>
+                 <div className="p-6 font-mono text-sm text-gray-300 space-y-2">
+                   <p className="text-[#00F5FF]">User:</p>
+                   <p className="bg-white/5 p-3 rounded-lg border-l-2 border-[#00F5FF]">
+                     "Create a modern pricing card with a gradient border, 3 distinct tiers, and a toggle for monthly/yearly billing."
+                   </p>
+                   <p className="text-[#8A2BE2] mt-4">Thunder AI:</p>
+                   <div className="space-y-1 text-gray-400">
+                     <p>Generating HTML structure... <span className="text-green-400">Done</span></p>
+                     <p>Applying Tailwind classes... <span className="text-green-400">Done</span></p>
+                     <p>Adding interactive JS... <span className="text-green-400">Done</span></p>
+                   </div>
+                 </div>
+               </div>
             </div>
-            <h2 className="text-3xl md:text-5xl font-black mb-5 tracking-tight">
-              Everything you need to{" "}
-              <span className="gradient-text-blue">ship faster</span>
-            </h2>
-            <p className="text-[#8B9AB5] max-w-2xl mx-auto text-lg">
-              From prompt to production-ready code in seconds. Built for
-              developers who value speed and quality.
-            </p>
+            <div className="order-1 lg:order-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00F5FF]/30 bg-[#00F5FF]/10 text-[#00F5FF] text-xs font-bold uppercase tracking-wider mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00F5FF] animate-pulse" />
+                Core Engine
+              </div>
+              <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
+                Instant UI <span className="text-[#00F5FF]">Generation</span>
+              </h3>
+              <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
+                Transform plain text into production-ready code instantly. Our advanced LLM pipeline understands design intent, accessibility standards, and modern best practices.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  "Context-aware component generation",
+                  "Tailwind CSS or Vanilla CSS support",
+                  "Responsive by default",
+                  "Interactive JavaScript logic included"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
+                    <svg className="w-5 h-5 text-[#00F5FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-5">
-            {features.map((f, i) => (
-              <FeatureCard key={i} {...f} delay={i * 80} />
-            ))}
+          {/* Screenshot to Code */}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-400 text-xs font-bold uppercase tracking-wider mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
+                Visual Intelligence
+              </div>
+              <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
+                Screenshot to <span className="text-pink-400">Code</span>
+              </h3>
+              <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
+                See a design you love? Simply upload a screenshot. Thunder analyzes the layout, typography, and colors to recreate it in pixel-perfect code.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  "High-fidelity layout replication",
+                  "Automatic color palette extraction",
+                  "Typography matching",
+                  "Works with sketches and wireframes"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
+                    <svg className="w-5 h-5 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="relative">
+               <div className="absolute -inset-1 bg-gradient-to-l from-pink-500/20 to-purple-500/20 rounded-2xl blur-lg opacity-50" />
+               <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl p-8 flex flex-col items-center justify-center min-h-[300px] border-dashed border-2 border-pink-500/30">
+                  <div className="w-20 h-20 rounded-2xl bg-pink-500/10 flex items-center justify-center mb-6 animate-float">
+                    <svg className="w-10 h-10 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  </div>
+                  <div className="space-y-2 text-center">
+                    <h4 className="text-lg font-bold text-white">Upload Design</h4>
+                    <p className="text-sm text-gray-500">Drag & drop or paste an image</p>
+                  </div>
+                  
+                  {/* Processing Visual */}
+                  <div className="mt-8 w-full max-w-xs bg-[#161B22] rounded-lg p-3 border border-white/5 flex items-center gap-3">
+                     <div className="w-8 h-8 rounded bg-pink-500/20 animate-pulse" />
+                     <div className="flex-1 space-y-1.5">
+                       <div className="h-2 w-3/4 bg-white/10 rounded" />
+                       <div className="h-2 w-1/2 bg-white/5 rounded" />
+                     </div>
+                     <div className="text-xs text-pink-400 font-bold">Processing...</div>
+                  </div>
+               </div>
+            </div>
           </div>
+
+          {/* Deep Research */}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="order-2 lg:order-1 relative">
+               <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 rounded-2xl blur-lg opacity-50" />
+               <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl p-6">
+                 <div className="flex gap-4 mb-6">
+                    <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
+                      <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    </div>
+                    <div className="flex-1">
+                      <div className="h-10 w-full bg-[#161B22] rounded-lg border border-white/5 flex items-center px-4 text-sm text-gray-400">
+                        Research: "UX trends for fintech dashboards 2026"
+                      </div>
+                    </div>
+                 </div>
+                 <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex gap-3 p-3 rounded-lg bg-[#161B22]/50 border border-white/5 hover:border-purple-500/30 transition-colors">
+                        <div className="w-1 h-full bg-purple-500/50 rounded-full" />
+                        <div className="space-y-1.5 flex-1">
+                           <div className="h-2.5 w-1/3 bg-white/10 rounded" />
+                           <div className="h-2 w-full bg-white/5 rounded" />
+                           <div className="h-2 w-5/6 bg-white/5 rounded" />
+                        </div>
+                      </div>
+                    ))}
+                 </div>
+               </div>
+            </div>
+            <div className="order-1 lg:order-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-400 text-xs font-bold uppercase tracking-wider mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+                Knowledge Engine
+              </div>
+              <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
+                Deep <span className="text-purple-400">Research</span>
+              </h3>
+              <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
+                Don't just build—understand. Our integrated research agent scrapes the web, summarizes key documentation, and gathers insights to inform your development decisions.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  "Real-time web scraping & summarization",
+                  "Documentation analysis",
+                  "Competitor UI research",
+                  "Technology stack recommendations"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
+                    <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Code Assistant */}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                Expert Partner
+              </div>
+              <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
+                Code <span className="text-cyan-400">Assistant</span>
+              </h3>
+              <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
+                Stuck on complex logic? The Code Assistant is your specialized pair programmer. It generates functions, optimizes algorithms, and debugs issues on the fly.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  "Complex function generation",
+                  "Algorithm optimization",
+                  "Regex & data parsing helpers",
+                  "Code explanation & refactoring"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
+                    <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="relative">
+               <div className="absolute -inset-1 bg-gradient-to-l from-cyan-500/20 to-blue-500/20 rounded-2xl blur-lg opacity-50" />
+               <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl">
+                  {/* Editor Header */}
+                  <div className="flex items-center justify-between px-4 py-2 bg-[#161B22] border-b border-white/5">
+                    <span className="text-xs text-cyan-400 font-mono">helper.ts</span>
+                    <div className="flex gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-white/20" />
+                      <div className="w-2 h-2 rounded-full bg-white/20" />
+                    </div>
+                  </div>
+                  {/* Code Area */}
+                  <div className="p-5 font-mono text-xs md:text-sm leading-relaxed text-gray-300">
+                    <div className="text-gray-500 mb-2">// Generate a debounce function</div>
+                    <div><span className="text-purple-400">export</span> <span className="text-purple-400">function</span> <span className="text-blue-400">debounce</span><span className="text-yellow-400">&lt;T&gt;</span>(</div>
+                    <div className="pl-4">func: <span className="text-yellow-400">T</span>,</div>
+                    <div className="pl-4">wait: <span className="text-yellow-400">number</span></div>
+                    <div>): <span className="text-yellow-400">T</span> {'{'}</div>
+                    <div className="pl-4"><span className="text-purple-400">let</span> timeout: <span className="text-yellow-400">NodeJS.Timeout</span>;</div>
+                    <div className="pl-4"><span className="text-purple-400">return</span> ((...args: <span className="text-yellow-400">any</span>[]) =&gt; {'{'}</div>
+                    <div className="pl-8"><span className="text-blue-400">clearTimeout</span>(timeout);</div>
+                    <div className="pl-8">timeout = <span className="text-blue-400">setTimeout</span>(() =&gt; func(...args), wait);</div>
+                    <div className="pl-4">{'}'}) <span className="text-purple-400">as</span> <span className="text-purple-400">any</span>;</div>
+                    <div>{'}'}</div>
+                  </div>
+               </div>
+            </div>
+          </div>
+
+          {/* AI Image Studio */}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="order-2 lg:order-1 relative group">
+               <div className="absolute -inset-1 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-2xl blur-lg opacity-50" />
+               <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl aspect-video flex items-center justify-center">
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620641788421-7f1c33850486?q=80&w=2836&auto=format&fit=crop')] bg-cover bg-center opacity-50 group-hover:opacity-70 transition-opacity duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <div className="bg-black/60 backdrop-blur-md p-3 rounded-lg border border-white/10 flex items-center gap-3">
+                      <div className="w-8 h-8 rounded bg-orange-500/20 flex items-center justify-center text-orange-400">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                      </div>
+                      <div className="text-xs text-gray-300 truncate">
+                        "Abstract 3D geometric shapes, neon lighting, dark background, 4k"
+                      </div>
+                    </div>
+                  </div>
+               </div>
+            </div>
+            <div className="order-1 lg:order-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-bold uppercase tracking-wider mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                Asset Generation
+              </div>
+              <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
+                AI Image <span className="text-orange-400">Studio</span>
+              </h3>
+              <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
+                Never use generic placeholders again. Generate custom, high-quality assets for your UI directly within the platform. From hero backgrounds to icon sets.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  "High-resolution image generation",
+                  "Style consistency control",
+                  "Seamless integration with generated UI",
+                  "Commercial usage rights"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
+                    <svg className="w-5 h-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Community Showcase */}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-green-500/30 bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-wider mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                Ecosystem
+              </div>
+              <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
+                Community <span className="text-green-400">Showcase</span>
+              </h3>
+              <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
+                Discover what others are building. Share your best creations, get inspired by the community, and fork existing components to jumpstart your project.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  "Explore trending components",
+                  "One-click cloning/forking",
+                  "Share your profile & portfolio",
+                  "Collaborative improvement"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
+                    <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="relative">
+               <div className="absolute -inset-1 bg-gradient-to-l from-green-500/20 to-teal-500/20 rounded-2xl blur-lg opacity-50" />
+               <div className="grid grid-cols-2 gap-4 relative">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className={`rounded-xl bg-[#161B22] border border-white/5 overflow-hidden p-3 hover:-translate-y-1 transition-transform duration-300 ${i === 2 ? 'mt-8' : i === 1 ? 'mt-8' : ''}`}>
+                       <div className="aspect-[4/3] bg-[#0B0F19] rounded-lg mb-3 border border-white/5" />
+                       <div className="h-2 w-2/3 bg-white/10 rounded mb-2" />
+                       <div className="flex justify-between items-center">
+                         <div className="flex items-center gap-1">
+                           <div className="w-4 h-4 rounded-full bg-white/10" />
+                           <div className="h-1.5 w-8 bg-white/5 rounded" />
+                         </div>
+                         <div className="h-1.5 w-4 bg-green-500/30 rounded" />
+                       </div>
+                    </div>
+                  ))}
+               </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -411,145 +701,7 @@ export default function LandingPage() {
 
 /* ── Data ──────────────────────────────────────────────── */
 
-const features = [
-  {
-    icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={1.5}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M13 10V3L4 14h7v7l9-11h-7z"
-        />
-      </svg>
-    ),
-    iconColor: "text-[#00F5FF]",
-    iconBg: "bg-[#00F5FF]/10 border-[#00F5FF]/20",
-    title: "Instant Generation",
-    description:
-      "Describe your component in plain English. Our AI understands context and generates clean, semantic code in under 3 seconds.",
-  },
-  {
-    icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={1.5}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-        />
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-        />
-      </svg>
-    ),
-    iconColor: "text-[#8A2BE2]",
-    iconBg: "bg-[#8A2BE2]/10 border-[#8A2BE2]/20",
-    title: "Live Preview",
-    description:
-      "See your changes rendered in real-time in an isolated sandbox. Pixel-perfect accuracy for every component you build.",
-  },
-  {
-    icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={1.5}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-        />
-      </svg>
-    ),
-    iconColor: "text-emerald-400",
-    iconBg: "bg-emerald-400/10 border-emerald-400/20",
-    title: "Clean Export",
-    description:
-      "Zero dependencies. Copy-paste pure HTML/CSS/JS that works anywhere. No vendor lock-in, no framework requirements.",
-  },
-  {
-    icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={1.5}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-        />
-      </svg>
-    ),
-    iconColor: "text-yellow-400",
-    iconBg: "bg-yellow-400/10 border-yellow-400/20",
-    title: "AI Refinement",
-    description:
-      "Iterate with natural language. Say 'make it darker' or 'add a hover animation' and Thunder refines your component instantly.",
-  },
-  {
-    icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={1.5}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
-        />
-      </svg>
-    ),
-    iconColor: "text-[#00F5FF]",
-    iconBg: "bg-[#00F5FF]/10 border-[#00F5FF]/20",
-    title: "Multi-Language",
-    description:
-      "Full control over HTML structure, CSS styling, and JavaScript behavior. Edit each layer independently in the built-in editor.",
-  },
-  {
-    icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={1.5}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-        />
-      </svg>
-    ),
-    iconColor: "text-[#8A2BE2]",
-    iconBg: "bg-[#8A2BE2]/10 border-[#8A2BE2]/20",
-    title: "Secure & Private",
-    description:
-      "Your prompts and code are never stored or used for training. What you build stays yours, always.",
-  },
-];
+// const features = [...]; // Removed feature cards data as it's no longer used
 
 const steps = [
   {
@@ -627,36 +779,36 @@ const floatingChips = [
   { label: "AI", style: { bottom: "15%", right: "5%" } },
 ];
 
-/* ── Feature Card Component ────────────────────────────── */
-function FeatureCard({
-  icon,
-  iconColor,
-  iconBg,
-  title,
-  description,
-  delay = 0,
-}: {
-  icon: React.ReactNode;
-  iconColor: string;
-  iconBg: string;
-  title: string;
-  description: string;
-  delay?: number;
-}) {
-  return (
-    <div
-      className="glass-card glass-card-hover p-7 rounded-2xl flex flex-col gap-5"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div
-        className={`w-12 h-12 rounded-xl border flex items-center justify-center ${iconBg} ${iconColor}`}
-      >
-        {icon}
-      </div>
-      <div>
-        <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
-        <p className="text-[#8B9AB5] text-sm leading-relaxed">{description}</p>
-      </div>
-    </div>
-  );
-}
+/* ── Feature Card Component (Deprecated) ────────────────────────────── */
+// function FeatureCard({
+//   icon,
+//   iconColor,
+//   iconBg,
+//   title,
+//   description,
+//   delay = 0,
+// }: {
+//   icon: React.ReactNode;
+//   iconColor: string;
+//   iconBg: string;
+//   title: string;
+//   description: string;
+//   delay?: number;
+// }) {
+//   return (
+//     <div
+//       className="glass-card glass-card-hover p-7 rounded-2xl flex flex-col gap-5"
+//       style={{ animationDelay: `${delay}ms` }}
+//     >
+//       <div
+//         className={`w-12 h-12 rounded-xl border flex items-center justify-center ${iconBg} ${iconColor}`}
+//       >
+//         {icon}
+//       </div>
+//       <div>
+//         <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
+//         <p className="text-[#8B9AB5] text-sm leading-relaxed">{description}</p>
+//       </div>
+//     </div>
+//   );
+// }

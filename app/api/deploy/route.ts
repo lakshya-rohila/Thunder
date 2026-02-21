@@ -9,6 +9,15 @@ export async function POST(request: Request) {
     const auth = await getAuthContext(request);
     if (auth instanceof NextResponse) return auth;
 
+    // Check credits (5 for deployment)
+    const hasCredits = await deductCredits(auth.userId.toString(), 5);
+    if (!hasCredits) {
+      return NextResponse.json(
+        { error: "Insufficient daily credits. Please upgrade or wait for tomorrow." },
+        { status: 402 }
+      );
+    }
+
     const { html, css, js, name } = await request.json();
 
     if (!html) {

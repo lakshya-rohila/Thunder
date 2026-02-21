@@ -4,7 +4,9 @@ import CodeTabs from "./CodeTabs";
 import PublishModal from "./PublishModal";
 import FeedbackWidget from "./FeedbackWidget";
 import DeployButton from "./DeployButton";
-import ResearchPanel from "./ResearchPanel";
+import ResearchPanel from "@/modules/Research/ResearchPanel";
+import ImageGenerationPanel from "@/modules/ImageGeneration/ImageGenerationPanel";
+import CodeAssistantPanel from "@/modules/CodeAssistant/CodeAssistantPanel";
 
 interface WorkspaceProps {
   componentData: {
@@ -17,7 +19,7 @@ interface WorkspaceProps {
   chatId?: string | null;
   isPublic?: boolean;
   onPublished?: (isPublic: boolean) => void;
-  mode?: "prompt" | "screenshot" | "research";
+  mode?: "prompt" | "screenshot" | "research" | "image" | "code";
 }
 
 export default function Workspace({
@@ -31,11 +33,29 @@ export default function Workspace({
   const [activeTab, setActiveTab] = useState<"preview" | "code" | "research">("preview");
   const [showPublishModal, setShowPublishModal] = useState(false);
 
-  // If in research mode, always show ResearchPanel, regardless of componentData
+  // If in research mode, always show ResearchPanel
   if (mode === "research") {
     return (
       <div className="flex-1 flex flex-col h-full bg-[#0B0F19] overflow-hidden">
         <ResearchPanel />
+      </div>
+    );
+  }
+
+  // If in image mode, always show ImageGenerationPanel
+  if (mode === "image") {
+    return (
+      <div className="flex-1 flex flex-col h-full bg-[#0B0F19] overflow-hidden">
+        <ImageGenerationPanel />
+      </div>
+    );
+  }
+
+  // If in code mode, always show CodeAssistantPanel
+  if (mode === "code") {
+    return (
+      <div className="flex-1 flex flex-col h-full bg-[#0B0F19] overflow-hidden">
+        <CodeAssistantPanel />
       </div>
     );
   }

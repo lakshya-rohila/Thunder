@@ -73,7 +73,10 @@ INSTRUCTIONS:
   "topic": "${topic}",
   "summary": "2-3 sentence executive summary",
   "keyInsights": ["insight 1", "insight 2", "insight 3"],
-  "detailedExplanation": "A comprehensive markdown-formatted explanation...",
+  "detailedAnalysis": "A comprehensive markdown-formatted explanation...",
+  "statistics": [
+    {"label": "Stat Label", "value": "Stat Value"}
+  ],
   "timeline": [
     {"year": "YYYY", "event": "Description"}
   ],

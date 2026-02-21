@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createChat, generateComponent } from "./ChatActions";
 
 interface Message {
   role: "user" | "ai";
@@ -25,14 +26,14 @@ interface ComponentData {
   files?: FileNode[]; // New field for multi-file support
 }
 
-interface ChatState {
+export interface ChatState {
   messages: Message[];
   componentData: ComponentData | null;
   activeChatId: string | null;
   savedChatId: string | null;
   isPublic: boolean;
   loading: boolean;
-  mode: "prompt" | "screenshot" | "research";
+  mode: "prompt" | "screenshot" | "research" | "image" | "code";
   generationMode: "standard" | "reverse";
   projectType: "component" | "app" | "game" | "auto";
   styleMode: "vanilla" | "tailwind";
@@ -85,13 +86,21 @@ const chatSlice = createSlice({
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
     },
-    setMode(state, action: PayloadAction<"prompt" | "screenshot" | "research">) {
+    setMode(
+      state,
+      action: PayloadAction<
+        "prompt" | "screenshot" | "research" | "image" | "code"
+      >
+    ) {
       state.mode = action.payload;
     },
     setGenerationMode(state, action: PayloadAction<"standard" | "reverse">) {
       state.generationMode = action.payload;
     },
-    setProjectType(state, action: PayloadAction<"component" | "app" | "game" | "auto">) {
+    setProjectType(
+      state,
+      action: PayloadAction<"component" | "app" | "game" | "auto">
+    ) {
       state.projectType = action.payload;
     },
     setStyleMode(state, action: PayloadAction<"vanilla" | "tailwind">) {
@@ -99,9 +108,6 @@ const chatSlice = createSlice({
     },
     setIsListening(state, action: PayloadAction<boolean>) {
       state.isListening = action.payload;
-      if (!action.payload) {
-        state.transcript = ""; // Reset transcript when stopping
-      }
     },
     setTranscript(state, action: PayloadAction<string>) {
       state.transcript = action.payload;
@@ -118,10 +124,29 @@ const chatSlice = createSlice({
       state.activeChatId = null;
       state.savedChatId = null;
       state.isPublic = false;
-      state.loading = false;
       state.error = null;
-      state.generationMode = "standard";
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createChat.fulfilled, (state, action) => {
+        state.savedChatId = action.payload;
+      })
+      .addCase(generateComponent.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(generateComponent.fulfilled, (state, action) => {
+        state.loading = false;
+        // Data handling is typically done in the component via result, 
+        // but we can update state here if needed. 
+        // For now, we'll leave it to the component to dispatch setComponentData 
+        // or handle it here if we want to move logic out of the component completely.
+      })
+      .addCase(generateComponent.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 

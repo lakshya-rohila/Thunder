@@ -3,6 +3,7 @@ import { generateComponent } from "@/lib/llm";
 import { validateComponent } from "@/lib/validator";
 import { sanitizeComponent } from "@/lib/sanitizer";
 import { getAuthContext } from "@/lib/auth";
+import { deductCredits } from "@/lib/credits";
 
 export async function POST(request: Request) {
   try {
@@ -19,8 +20,24 @@ export async function POST(request: Request) {
     // Try to get auth context for personalization (optional)
     let userId: string | undefined;
     const auth = await getAuthContext(request);
+    
+    // Check credits if user is authenticated
     if (!(auth instanceof NextResponse)) {
       userId = auth.userId.toString();
+      const hasCredits = await deductCredits(userId, 5); // 5 credits per generation
+      
+      if (!hasCredits) {
+        return NextResponse.json(
+          { error: "Insufficient daily credits. Please upgrade or wait for tomorrow." },
+          { status: 402 } // Payment Required
+        );
+      }
+    } else {
+       // Require authentication for generation
+       return NextResponse.json(
+         { error: "Authentication required to generate components" },
+         { status: 401 }
+       );
     }
 
     // 1. Generate (with optional context for refinement)

@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import ChatInterface from "@/components/ChatInterface";
-import ImageUploadPanel from "@/components/ImageUploadPanel";
+import ChatInterface from "@/modules/Chat/ChatInterface";
+import ImageUploadPanel from "@/modules/Screenshot/ImageUploadPanel";
 import Workspace from "@/components/Workspace";
 import ChatHistorySidebar from "@/components/ChatHistorySidebar";
 import ErrorToast from "@/components/ErrorToast";
-import PostToCommunityPanel from "@/components/PostToCommunityPanel";
 import VoiceListeningOverlay from "@/components/VoiceListeningOverlay";
 import { useRouter } from "next/navigation";
 import DashboardNavbar from "@/components/DashboardNavbar";
@@ -28,7 +27,9 @@ import {
   setError,
   setSidebarCollapsed,
   resetChat,
-} from "@/store/slices/chatSlice";
+} from "@/modules/Chat/ChatSlice";
+import { createChat, generateComponent } from "@/modules/Chat/ChatActions";
+import { logoutUser, fetchUser } from "@/modules/Auth/AuthActions";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -58,20 +59,16 @@ export default function Dashboard() {
     data: { name: string; html: string; css: string; js: string },
   ): Promise<string | null> => {
     try {
-      const res = await fetch("/api/chat/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt,
-          title: data.name || prompt.slice(0, 80),
-          generatedHTML: data.html,
-          generatedCSS: data.css,
-          generatedJS: data.js,
-        }),
-      });
-      const json = await res.json();
-      setSidebarKey((k) => k + 1);
-      return json?.chat?.id ?? json?.chat?._id ?? json?._id ?? null;
+      const resultAction = await dispatch(createChat({
+        prompt,
+        data
+      }));
+      
+      if (createChat.fulfilled.match(resultAction)) {
+         setSidebarKey((k) => k + 1);
+         return resultAction.payload as string;
+      }
+      return null;
     } catch {
       return null;
     }
@@ -103,21 +100,13 @@ export default function Dashboard() {
       : undefined;
 
     try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt,
-          context,
-          mode: currentMode,
-          projectType: currentProjectType,
-          styleMode: currentStyleMode,
-        }),
-      });
-
-      const data = await response.json();
-      if (!response.ok)
-        throw new Error(data.error || "Failed to generate component");
+      const data = await dispatch(generateComponent({
+        prompt,
+        context,
+        mode: currentMode,
+        projectType: currentProjectType,
+        styleMode: currentStyleMode,
+      })).unwrap();
 
       if (data.type === "clarification") {
         // It's a structured question set
@@ -153,6 +142,9 @@ export default function Dashboard() {
           const chatId = await saveChat(prompt, data);
           dispatch(setSavedChatId(chatId));
         }
+
+        // Refresh user credits
+        dispatch(fetchUser());
       }
     } catch (err: any) {
       const errMsg = err.message || "An unexpected error occurred";
@@ -178,6 +170,9 @@ export default function Dashboard() {
     dispatch(setIsPublic(false));
     const chatId = await saveChat(`[Screenshot] ${data.name}`, data);
     dispatch(setSavedChatId(chatId));
+    
+    // Refresh user credits
+    dispatch(fetchUser());
   };
 
   const handleCodeUpdate = (type: "html" | "css" | "js", value: string) => {
@@ -213,7 +208,7 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      await dispatch(logoutUser()).unwrap();
       router.push("/login");
     } catch (error) {
       console.error("Logout failed", error);
@@ -263,12 +258,12 @@ export default function Dashboard() {
             onListeningChange={(l) => dispatch(setIsListening(l))}
             onTranscriptChange={(t) => dispatch(setTranscript(t))}
           />
-        ) : (
+        ) : mode === "screenshot" ? (
           <ImageUploadPanel
             onResult={handleImageResult}
             onError={(msg) => dispatch(setError(msg))}
           />
-        )}
+        ) : null}
 
         <div className="flex-1 flex flex-col overflow-hidden">
           <Workspace

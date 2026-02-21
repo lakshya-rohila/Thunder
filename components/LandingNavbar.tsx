@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { fetchUser } from "@/store/slices/authSlice";
+import { fetchUser } from "@/modules/Auth/AuthActions";
 
 export default function LandingNavbar() {
   const dispatch = useAppDispatch();

@@ -31,6 +31,19 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  dailyCredits: {
+    type: Number,
+    default: 100, // Default daily credits for beta
+  },
+  lastCreditReset: {
+    type: Date,
+    default: Date.now,
+  },
+  subscription: {
+    type: String,
+    enum: ["beta-free", "pro"],
+    default: "beta-free",
+  },
 });
 
 // Prevent Mongoose recompilation error in dev but allow schema updates

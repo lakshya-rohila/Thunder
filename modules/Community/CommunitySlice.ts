@@ -1,4 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { fetchCommunityFeed, postToCommunity } from "./CommunityActions";
 
 interface ChatCard {
   _id: string;
@@ -24,6 +25,8 @@ interface CommunityState {
   totalPages: number;
   loading: boolean;
   error: string | null;
+  posting: boolean;
+  postError: string | null;
 }
 
 const initialState: CommunityState = {
@@ -33,18 +36,9 @@ const initialState: CommunityState = {
   totalPages: 1,
   loading: false,
   error: null,
+  posting: false,
+  postError: null,
 };
-
-export const fetchCommunityFeed = createAsyncThunk(
-  "community/fetchFeed",
-  async ({ page, sort }: { page: number; sort: "latest" | "likes" }) => {
-    const res = await fetch(
-      `/api/community/feed?page=${page}&limit=12&sort=${sort}`,
-    );
-    if (!res.ok) throw new Error("Failed to fetch feed");
-    return await res.json();
-  },
-);
 
 const communitySlice = createSlice({
   name: "community",
@@ -57,23 +51,42 @@ const communitySlice = createSlice({
     setPage(state, action: PayloadAction<number>) {
       state.page = action.payload;
     },
+    clearPostError(state) {
+      state.postError = null;
+    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCommunityFeed.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchCommunityFeed.fulfilled, (state, action) => {
         state.loading = false;
-        state.chats = action.payload.chats;
-        state.totalPages = action.payload.pagination.totalPages;
+        // Check if payload has the expected structure
+        if (action.payload && action.payload.chats) {
+            state.chats = action.payload.chats;
+            state.totalPages = action.payload.pagination.totalPages;
+        }
       })
       .addCase(fetchCommunityFeed.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Something went wrong";
+        state.error = (action.payload as string) || action.error.message || "Something went wrong";
+      })
+      // Post to Community
+      .addCase(postToCommunity.pending, (state) => {
+        state.posting = true;
+        state.postError = null;
+      })
+      .addCase(postToCommunity.fulfilled, (state) => {
+        state.posting = false;
+      })
+      .addCase(postToCommunity.rejected, (state, action) => {
+        state.posting = false;
+        state.postError = (action.payload as string) || action.error.message || "Failed to post";
       });
   },
 });
 
-export const { setSort, setPage } = communitySlice.actions;
+export const { setSort, setPage, clearPostError } = communitySlice.actions;
 export default communitySlice.reducer;

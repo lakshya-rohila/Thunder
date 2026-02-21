@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Loader from "@/components/Loader";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { fetchUser, logout as logoutAction } from "@/store/slices/authSlice";
+import { fetchUser, logoutUser } from "@/modules/Auth/AuthActions";
 
 interface Chat {
   _id: string;
@@ -64,8 +64,7 @@ export default function SessionsPage() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
-      dispatch(logoutAction());
+      await dispatch(logoutUser());
       router.push("/login");
     } catch (error) {
       console.error("Logout failed", error);
