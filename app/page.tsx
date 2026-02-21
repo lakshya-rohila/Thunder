@@ -571,40 +571,74 @@ export default function LandingPage() {
             </div>
 
             {/* Right: Abstract visual */}
-            <div className="relative flex items-center justify-center h-80 md:h-auto">
-              {/* Outer ring */}
-              <div className="absolute w-72 h-72 rounded-full border border-[#00F5FF]/10 animate-spin-slow" />
-              <div
-                className="absolute w-56 h-56 rounded-full border border-[#8A2BE2]/15"
-                style={{ animation: "spin-slow 14s linear infinite reverse" }}
-              />
-              {/* Center glow */}
-              <div className="absolute w-40 h-40 rounded-full bg-gradient-to-br from-[#00F5FF]/20 to-[#8A2BE2]/20 blur-2xl animate-lightning-glow" />
-              {/* Center icon */}
-              <div className="relative w-24 h-24 rounded-2xl bg-gradient-to-br from-[#00F5FF] to-[#8A2BE2] flex items-center justify-center shadow-[0_0_60px_rgba(0,245,255,0.3)] animate-float">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#0B0F19"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            <div className="relative flex items-center justify-center h-[500px] w-full max-w-[500px] mx-auto md:mx-0">
+              
+              {/* 1. Outer Glow/Shockwave */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#00F5FF]/20 to-[#8A2BE2]/20 rounded-full blur-3xl animate-pulse opacity-20" />
+
+              {/* 2. Outer Orbit Track (Dashed) */}
+              <div className="absolute w-[450px] h-[450px] rounded-full border border-dashed border-white/5 animate-[spin_60s_linear_infinite]" />
+
+              {/* 3. Middle Orbit Track (Solid thin) - Reverse */}
+              <div className="absolute w-[350px] h-[350px] rounded-full border border-white/10 animate-[spin_40s_linear_infinite_reverse]" />
+
+              {/* 4. Inner Orbit Track (Glowing) */}
+              <div className="absolute w-[250px] h-[250px] rounded-full border border-[#00F5FF]/20 shadow-[0_0_15px_rgba(0,245,255,0.1)] animate-[spin_20s_linear_infinite]" />
+
+              {/* 5. Central Logo (Pulse + Float) */}
+              <div className="relative z-10 w-32 h-32 rounded-3xl bg-[#0B0F19] border border-[#00F5FF]/30 flex items-center justify-center shadow-[0_0_30px_rgba(0,245,255,0.15)] animate-float">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#00F5FF]/10 to-[#8A2BE2]/10 rounded-3xl animate-pulse" />
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" strokeWidth="2">
+                   <defs>
+                     <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                       <stop offset="0%" stopColor="#00F5FF" />
+                       <stop offset="100%" stopColor="#8A2BE2" />
+                     </linearGradient>
+                   </defs>
+                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                 </svg>
               </div>
-              {/* Floating chips */}
-              {floatingChips.map((chip, i) => (
-                <div
-                  key={i}
-                  className="absolute glass-card border border-white/8 px-3 py-1.5 rounded-full text-xs font-mono text-[#00F5FF] animate-float"
-                  style={{ ...chip.style, animationDelay: `${i * 0.8}s` }}
-                >
-                  {chip.label}
-                </div>
-              ))}
+
+              {/* 6. Orbiting Elements */}
+              
+              {/* Outer Orbit Items Container (Matches Track 3: 40s reverse) */}
+              <div className="absolute w-[350px] h-[350px] animate-[spin_40s_linear_infinite_reverse]">
+                 {/* Item 1: Top */}
+                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <div className="glass-card px-4 py-2 rounded-full text-xs font-bold text-[#8A2BE2] animate-[spin_40s_linear_infinite] shadow-[0_0_15px_rgba(138,43,226,0.3)]">
+                      AI-Powered
+                    </div>
+                 </div>
+                 {/* Item 2: Bottom */}
+                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
+                    <div className="glass-card px-4 py-2 rounded-full text-xs font-bold text-[#8A2BE2] animate-[spin_40s_linear_infinite] shadow-[0_0_15px_rgba(138,43,226,0.3)]">
+                      Dependency-Free
+                    </div>
+                 </div>
+              </div>
+
+              {/* Inner Orbit Items Container (Matches Track 4: 20s normal) */}
+              <div className="absolute w-[250px] h-[250px] animate-[spin_20s_linear_infinite]">
+                 {/* Item 1: Right */}
+                 <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2">
+                    <div className="glass-card px-3 py-1.5 rounded-full text-xs font-mono text-[#00F5FF] animate-[spin_20s_linear_infinite_reverse] shadow-[0_0_10px_rgba(0,245,255,0.3)]">
+                      &lt;html&gt;
+                    </div>
+                 </div>
+                 {/* Item 2: Left */}
+                 <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2">
+                    <div className="glass-card px-3 py-1.5 rounded-full text-xs font-mono text-[#00F5FF] animate-[spin_20s_linear_infinite_reverse] shadow-[0_0_10px_rgba(0,245,255,0.3)]">
+                      .css
+                    </div>
+                 </div>
+                 {/* Item 3: Top (Offset) */}
+                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <div className="glass-card px-3 py-1.5 rounded-full text-xs font-mono text-yellow-400 animate-[spin_20s_linear_infinite_reverse] shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+                      JS
+                    </div>
+                 </div>
+              </div>
+
             </div>
           </div>
         </div>
