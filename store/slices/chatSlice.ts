@@ -3,6 +3,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface Message {
   role: "user" | "ai";
   content: string;
+  questions?: {
+    id: string;
+    text: string;
+    options: string[];
+  }[];
 }
 
 interface ComponentData {
@@ -20,6 +25,8 @@ interface ChatState {
   isPublic: boolean;
   loading: boolean;
   mode: "prompt" | "screenshot";
+  generationMode: "standard" | "reverse";
+  projectType: "component" | "app" | "game" | "auto";
   error: string | null;
   sidebarCollapsed: boolean;
 }
@@ -32,6 +39,8 @@ const initialState: ChatState = {
   isPublic: false,
   loading: false,
   mode: "prompt",
+  generationMode: "standard",
+  projectType: "auto",
   error: null,
   sidebarCollapsed: false,
 };
@@ -65,6 +74,12 @@ const chatSlice = createSlice({
     setMode(state, action: PayloadAction<"prompt" | "screenshot">) {
       state.mode = action.payload;
     },
+    setGenerationMode(state, action: PayloadAction<"standard" | "reverse">) {
+      state.generationMode = action.payload;
+    },
+    setProjectType(state, action: PayloadAction<"component" | "app" | "game" | "auto">) {
+      state.projectType = action.payload;
+    },
     setError(state, action: PayloadAction<string | null>) {
       state.error = action.payload;
     },
@@ -79,6 +94,7 @@ const chatSlice = createSlice({
       state.isPublic = false;
       state.loading = false;
       state.error = null;
+      state.generationMode = "standard";
     },
   },
 });
@@ -92,6 +108,8 @@ export const {
   setIsPublic,
   setLoading,
   setMode,
+  setGenerationMode,
+  setProjectType,
   setError,
   setSidebarCollapsed,
   resetChat,

@@ -23,7 +23,18 @@ const initialState: AuthState = {
 
 export const fetchUser = createAsyncThunk("auth/fetchUser", async () => {
   const res = await fetch("/api/auth/me");
-  if (!res.ok) throw new Error("Not authenticated");
+  if (!res.ok) {
+    if (res.status === 401 || res.status === 404) {
+      await fetch("/api/auth/logout", { method: "POST" });
+      if (
+        typeof window !== "undefined" &&
+        window.location.pathname.startsWith("/dashboard")
+      ) {
+        window.location.href = "/login";
+      }
+    }
+    throw new Error("Not authenticated");
+  }
   const data = await res.json();
   return data.user;
 });

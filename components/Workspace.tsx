@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PreviewPanel from "./PreviewPanel";
 import CodeTabs from "./CodeTabs";
 import PublishModal from "./PublishModal";
+import FeedbackWidget from "./FeedbackWidget";
 
 interface WorkspaceProps {
   componentData: {
@@ -78,6 +79,7 @@ export default function Workspace({
           <span className="text-[10px] bg-[#00F5FF]/10 text-[#00F5FF] px-2 py-0.5 rounded-full border border-[#00F5FF]/20 font-semibold uppercase tracking-wider">
             Active
           </span>
+          {chatId && <FeedbackWidget generationId={chatId} />}
         </div>
 
         {/* Action Buttons */}

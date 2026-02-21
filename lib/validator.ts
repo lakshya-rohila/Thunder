@@ -26,10 +26,10 @@ export function validateComponent(component: any): {
   }
 
   const forbiddenTags = [
-    "<html>",
-    "<head>",
-    "<body>",
-    "<script src=",
+    // "<html>",  <-- We allow <html> now for full app mode
+    // "<head>",  <-- We allow <head> now for full app mode
+    // "<body>",  <-- We allow <body> now for full app mode
+    // "<script src=", <-- We allow <script src> now for external libraries (charts, p5.js, etc.)
     "import ",
     "require(",
   ];

@@ -19,6 +19,8 @@ import {
   setIsPublic,
   setLoading,
   setMode,
+  setGenerationMode,
+  setProjectType,
   setError,
   setSidebarCollapsed,
   resetChat,
@@ -36,6 +38,8 @@ export default function Dashboard() {
     loading,
     error,
     mode,
+    generationMode,
+    projectType,
     sidebarCollapsed,
   } = useAppSelector((state) => state.chat);
 
@@ -66,11 +70,21 @@ export default function Dashboard() {
     }
   };
 
-  const handleSendMessage = async (prompt: string) => {
+  const handleSendMessage = async (
+    prompt: string,
+    chatMode?: "standard" | "reverse",
+    projType?: "component" | "app" | "game" | "auto",
+  ) => {
     dispatch(setLoading(true));
     dispatch(setError(null));
+
+    // Update the message history locally
     dispatch(addMessage({ role: "user", content: prompt }));
 
+    const currentMode = chatMode || mode;
+    const currentProjectType = projType || projectType || "auto";
+
+    // If there is existing componentData, we include it as context for refinement
     const context = componentData
       ? {
           html: componentData.html,
@@ -83,27 +97,52 @@ export default function Dashboard() {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, context }),
+        body: JSON.stringify({
+          prompt,
+          context,
+          mode: currentMode,
+          projectType: currentProjectType,
+        }),
       });
 
       const data = await response.json();
       if (!response.ok)
         throw new Error(data.error || "Failed to generate component");
 
-      dispatch(setComponentData(data));
-      dispatch(setIsPublic(false));
-      dispatch(
-        addMessage({
-          role: "ai",
-          content: context
-            ? "Component updated successfully!"
-            : "Component generated successfully!",
-        }),
-      );
+      if (data.type === "clarification") {
+        // It's a structured question set
+        dispatch(
+          addMessage({
+            role: "ai",
+            content: "I need a few details to get this right:",
+            questions: data.questions,
+          }),
+        );
+      } else if (data.clarification) {
+        // Fallback for plain text clarification (legacy)
+        dispatch(
+          addMessage({
+            role: "ai",
+            content: data.clarification,
+          }),
+        );
+      } else {
+        // It's a generated component (type: 'component' or default)
+        dispatch(setComponentData(data));
+        dispatch(setIsPublic(false));
+        dispatch(
+          addMessage({
+            role: "ai",
+            content: context
+              ? "Component updated successfully!"
+              : "Component generated successfully!",
+          }),
+        );
 
-      if (!context) {
-        const chatId = await saveChat(prompt, data);
-        dispatch(setSavedChatId(chatId));
+        if (!context) {
+          const chatId = await saveChat(prompt, data);
+          dispatch(setSavedChatId(chatId));
+        }
       }
     } catch (err: any) {
       const errMsg = err.message || "An unexpected error occurred";
@@ -196,7 +235,11 @@ export default function Dashboard() {
           <ChatInterface
             messages={messages}
             isLoading={loading}
-            onSendMessage={handleSendMessage}
+            onSendMessage={(msg, m, pType) => handleSendMessage(msg, m, pType)}
+            mode={generationMode}
+            onModeChange={(m) => dispatch(setGenerationMode(m))}
+            projectType={projectType || "auto"}
+            onProjectTypeChange={(t) => dispatch(setProjectType(t))}
           />
         ) : (
           <ImageUploadPanel

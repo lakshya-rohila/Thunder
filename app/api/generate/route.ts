@@ -5,7 +5,7 @@ import { sanitizeComponent } from "@/lib/sanitizer";
 
 export async function POST(request: Request) {
   try {
-    const { prompt, context } = await request.json();
+    const { prompt, context, mode, projectType } = await request.json();
 
     if (!prompt) {
       return NextResponse.json(
@@ -15,9 +15,18 @@ export async function POST(request: Request) {
     }
 
     // 1. Generate (with optional context for refinement)
-    const rawComponent = await generateComponent(prompt, context);
+    const rawComponent = await generateComponent(
+      prompt,
+      context,
+      mode,
+      projectType,
+    );
 
-    // 2. Validate
+    // 2. Validate (Skip if it is a clarification question)
+    if (rawComponent.clarification || rawComponent.type === "clarification") {
+      return NextResponse.json(rawComponent);
+    }
+
     const validation = validateComponent(rawComponent);
     if (!validation.isValid) {
       return NextResponse.json(
