@@ -6,7 +6,7 @@ export const createChat = createAsyncThunk(
   async (
     payload: {
       prompt: string;
-      data: { name: string; html: string; css: string; js: string };
+      data: { name: string; html: string; css: string; js: string; jsx?: string };
     },
     { rejectWithValue }
   ) => {
@@ -17,6 +17,7 @@ export const createChat = createAsyncThunk(
         generatedHTML: payload.data.html,
         generatedCSS: payload.data.css,
         generatedJS: payload.data.js,
+        generatedJSX: payload.data.jsx,
       });
       return json?.chat?.id ?? json?.chat?._id ?? json?._id ?? null;
     } catch (error: any) {
@@ -34,6 +35,7 @@ export const generateComponent = createAsyncThunk(
       mode: string;
       projectType: string;
       styleMode: string;
+      framework?: string;
     },
     { rejectWithValue }
   ) => {

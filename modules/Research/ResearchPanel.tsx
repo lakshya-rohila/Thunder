@@ -5,10 +5,13 @@ import { useVoiceInput } from "@/hooks/useVoiceInput";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setTopic } from "./ResearchSlice";
 import { performResearch } from "./ResearchActions";
+import { fetchUser } from "@/modules/Auth/AuthActions";
 
 export default function ResearchPanel() {
   const dispatch = useAppDispatch();
-  const { topic, result, isLoading } = useAppSelector((state) => state.research);
+  const { topic, result, isLoading } = useAppSelector(
+    (state) => state.research,
+  );
 
   const { isListening, toggleListening } = useVoiceInput({
     onTranscript: (transcript) => {
@@ -41,7 +44,10 @@ export default function ResearchPanel() {
           <h1 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
             What do you want to learn?
           </h1>
-          <form onSubmit={handleResearch} className="relative max-w-2xl mx-auto">
+          <form
+            onSubmit={handleResearch}
+            className="relative max-w-2xl mx-auto"
+          >
             <div className="relative w-full">
               <input
                 type="text"
@@ -61,7 +67,16 @@ export default function ResearchPanel() {
                   }`}
                   title="Voice Input"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     {isListening ? (
                       <>
                         <line x1="1" y1="1" x2="23" y2="23"></line>

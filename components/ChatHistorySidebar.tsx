@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 
 interface ChatItem {
   _id: string;
@@ -30,15 +31,15 @@ interface ChatHistorySidebarProps {
   onToggleCollapse: () => void;
 }
 
-function timeAgo(dateStr: string): string {
+function timeAgo(dateStr: string, t: any): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
   const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  return `${days}d ago`;
+  if (mins < 1) return t("justNow");
+  if (mins < 60) return `${mins}${t("mAgo")}`;
+  if (hours < 24) return `${hours}${t("hAgo")}`;
+  return `${days}${t("dAgo")}`;
 }
 
 export default function ChatHistorySidebar({
@@ -48,6 +49,7 @@ export default function ChatHistorySidebar({
   isCollapsed,
   onToggleCollapse,
 }: ChatHistorySidebarProps) {
+  const t = useTranslations("ChatHistorySidebar");
   const [chats, setChats] = useState<ChatItem[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
@@ -182,7 +184,7 @@ export default function ChatHistorySidebar({
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
           <span className="text-xs font-semibold text-white tracking-wide">
-            History
+            {t("title")}
           </span>
           {chats.length > 0 && (
             <span className="text-[10px] bg-white/5 text-[#4A5568] px-1.5 py-0.5 rounded-full font-medium">
@@ -253,7 +255,7 @@ export default function ChatHistorySidebar({
               }}
               className="mt-2 text-xs text-[#00F5FF] hover:underline"
             >
-              Retry
+              {t("retry")}
             </button>
           </div>
         ) : chats.length === 0 ? (
@@ -273,9 +275,9 @@ export default function ChatHistorySidebar({
               </svg>
             </div>
             <p className="text-xs text-[#4A5568] leading-relaxed">
-              No chats yet.
+              {t("noChats")}
               <br />
-              Start a new prompt!
+              {t("startPrompt")}
             </p>
           </div>
         ) : (
@@ -350,7 +352,7 @@ export default function ChatHistorySidebar({
                       {chat.prompt.length > 45 ? "…" : ""}
                     </p>
                     <span className="text-[10px] text-[#4A5568]/60 shrink-0">
-                      {timeAgo(chat.updatedAt)}
+                      {timeAgo(chat.updatedAt, t)}
                     </span>
                   </div>
                 </div>
@@ -377,7 +379,7 @@ export default function ChatHistorySidebar({
                     />
                   </>
                 ) : (
-                  "Load more"
+                  t("loadMore")
                 )}
               </button>
             )}
@@ -388,7 +390,7 @@ export default function ChatHistorySidebar({
       {/* Footer */}
       <div className="px-3 py-2.5 border-t border-white/5">
         <p className="text-[10px] text-[#4A5568]/50 text-center">
-          Chats auto-delete after 15 days
+          {t("footer")}
         </p>
       </div>
     </div>

@@ -7,7 +7,7 @@ import { deductCredits } from "@/lib/credits";
 
 export async function POST(request: Request) {
   try {
-    const { prompt, context, mode, projectType, styleMode } =
+    const { prompt, context, mode, projectType, styleMode, framework } =
       await request.json();
 
     if (!prompt) {
@@ -48,6 +48,7 @@ export async function POST(request: Request) {
       projectType,
       styleMode,
       userId,
+      framework,
     );
 
     // 2. Validate (Skip if it is a clarification question)

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useVoiceInput } from "@/hooks/useVoiceInput";
+import { useTranslations } from "next-intl";
 import { ChatState } from "@/modules/Chat/ChatSlice";
 
 interface Message {
@@ -20,6 +21,7 @@ interface ChatInterfaceProps {
     mode: "standard" | "reverse",
     projectType?: "component" | "app" | "game" | "auto",
     styleMode?: "vanilla" | "tailwind",
+    framework?: "html" | "react",
   ) => void;
   mode: "standard" | "reverse" | "research";
   onModeChange: (mode: "standard" | "reverse") => void;
@@ -27,6 +29,8 @@ interface ChatInterfaceProps {
   onProjectTypeChange: (type: "component" | "app" | "game" | "auto") => void;
   styleMode: "vanilla" | "tailwind";
   onStyleModeChange: (mode: "vanilla" | "tailwind") => void;
+  framework: "html" | "react";
+  onFrameworkChange: (framework: "html" | "react") => void;
   isListening?: boolean;
   onListeningChange?: (isListening: boolean) => void;
   onTranscriptChange?: (transcript: string) => void;
@@ -42,9 +46,12 @@ export default function ChatInterface({
   onProjectTypeChange,
   styleMode,
   onStyleModeChange,
+  framework,
+  onFrameworkChange,
   onListeningChange,
   onTranscriptChange,
 }: ChatInterfaceProps) {
+  const t = useTranslations("ChatInterface");
   const [input, setInput] = useState("");
   const [clarificationAnswers, setClarificationAnswers] = useState<
     Record<string, string>
@@ -89,7 +96,13 @@ export default function ChatInterface({
     if (input.trim() && !isLoading) {
       // In research mode, we might just use standard mode for sending, or adapt the API
       // The parent component handles the logic based on mode
-      onSendMessage(input.trim(), mode === "research" ? "standard" : mode, projectType, styleMode);
+      onSendMessage(
+        input.trim(),
+        mode === "research" ? "standard" : mode,
+        projectType,
+        styleMode,
+        framework,
+      );
       setInput("");
     }
   };
@@ -112,7 +125,13 @@ export default function ChatInterface({
       .join("\n");
 
     const consolidatedPrompt = `Clarification Answers Provided. GENERATE COMPONENT CODE IMMEDIATELY based on these details:\n${formattedAnswers}`;
-    onSendMessage(consolidatedPrompt, mode === "research" ? "standard" : mode, projectType, styleMode);
+    onSendMessage(
+      consolidatedPrompt,
+      mode === "research" ? "standard" : mode,
+      projectType,
+      styleMode,
+      framework,
+    );
     setClarificationAnswers({}); // Reset after sending
   };
 
@@ -126,7 +145,11 @@ export default function ChatInterface({
               className={`w-2 h-2 rounded-full animate-pulse ${mode === "reverse" ? "bg-purple-500" : mode === "research" ? "bg-amber-500" : "bg-[#00F5FF]"}`}
             />
             <h2 className="text-sm font-semibold text-white tracking-wide">
-              {mode === "reverse" ? "Reverse Engineer" : mode === "research" ? "Research Commands" : "Prompt"}
+              {mode === "reverse"
+                ? t("titleReverse")
+                : mode === "research"
+                  ? t("titleResearch")
+                  : t("titlePrompt")}
             </h2>
           </div>
         </div>
@@ -137,10 +160,10 @@ export default function ChatInterface({
             {/* Type */}
             <div className="flex gap-1 bg-black/20 p-1 rounded-lg border border-white/5">
               {[
-                { id: "auto", label: "Auto" },
-                { id: "component", label: "Component" },
-                { id: "app", label: "App" },
-                { id: "game", label: "Game" },
+                { id: "auto", label: t("typeAuto") },
+                { id: "component", label: t("typeComponent") },
+                { id: "app", label: t("typeApp") },
+                { id: "game", label: t("typeGame") },
               ].map((type) => (
                 <button
                   key={type.id}
@@ -159,8 +182,8 @@ export default function ChatInterface({
             {/* Style Mode */}
             <div className="flex gap-1 bg-black/20 p-1 rounded-lg border border-white/5">
               {[
-                { id: "vanilla", label: "Vanilla CSS" },
-                { id: "tailwind", label: "Tailwind CSS" },
+                { id: "vanilla", label: t("styleVanilla") },
+                { id: "tailwind", label: t("styleTailwind") },
               ].map((sMode) => (
                 <button
                   key={sMode.id}
@@ -175,6 +198,26 @@ export default function ChatInterface({
                 </button>
               ))}
             </div>
+
+            {/* Framework */}
+            <div className="flex gap-1 bg-black/20 p-1 rounded-lg border border-white/5">
+              {[
+                { id: "html", label: t("fwHtml") },
+                // { id: "react", label: "React" },
+              ].map((fw) => (
+                <button
+                  key={fw.id}
+                  onClick={() => onFrameworkChange(fw.id as any)}
+                  className={`flex-1 px-2 py-1.5 text-[10px] uppercase font-bold tracking-wider rounded transition-all ${
+                    framework === fw.id
+                      ? "bg-[#00F5FF]/10 text-[#00F5FF] shadow-[0_0_10px_rgba(0,245,255,0.2)]"
+                      : "text-[#6B7A99] hover:text-white"
+                  }`}
+                >
+                  {fw.label}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -186,8 +229,8 @@ export default function ChatInterface({
             <div
               className={`w-16 h-16 rounded-2xl border flex items-center justify-center mb-4 animate-float ${
                 mode === "reverse"
-                  ? "bg-gradient-to-br from-purple-500/15 to-pink-500/15 border-purple-500/15"
-                  : "bg-gradient-to-br from-[#00F5FF]/15 to-[#8A2BE2]/15 border-[#00F5FF]/15"
+                  ? "bg-linear-to-br from-purple-500/15 to-pink-500/15 border-purple-500/15"
+                  : "bg-linear-to-br from-[#00F5FF]/15 to-[#8A2BE2]/15 border-[#00F5FF]/15"
               }`}
             >
               <svg
@@ -212,32 +255,25 @@ export default function ChatInterface({
               </svg>
             </div>
             <h3 className="text-white font-semibold mb-2 text-sm">
-              {mode === "reverse"
-                ? "Reverse Engineering Mode"
-                : "Ready to build"}
+              {mode === "reverse" ? t("stateReverse") : t("stateReady")}
             </h3>
             <p className="text-[#4A5568] text-xs leading-relaxed max-w-[200px]">
-              {mode === "reverse"
-                ? "Paste HTML or structure to analyze, refactor, and modernize."
-                : "Describe the component you want to create or refine."}
+              {mode === "reverse" ? t("descReverse") : t("descReady")}
             </p>
             {/* Suggestion chips */}
             <div className="mt-6 flex flex-col gap-2 w-full">
               {(mode === "reverse"
-                ? [
-                    "Analyze this navbar HTML...",
-                    "Refactor this old pricing table...",
-                    "Modernize this form structure...",
-                  ]
-                : [
-                    "A dark hero section with gradient",
-                    "A pricing card with hover effect",
-                    "A glassmorphism login form",
-                  ]
+                ? [t("sugRev1"), t("sugRev2"), t("sugRev3")]
+                : [t("sugReady1"), t("sugReady2"), t("sugReady3")]
               ).map((suggestion) => (
                 <button
                   key={suggestion}
-                  onClick={() => onSendMessage(suggestion, mode === "research" ? "standard" : mode)}
+                  onClick={() =>
+                    onSendMessage(
+                      suggestion,
+                      mode === "research" ? "standard" : mode,
+                    )
+                  }
                   className={`text-left text-xs px-3 py-2 rounded-lg border border-white/5 bg-white/3 transition-all duration-200 ${
                     mode === "reverse"
                       ? "text-[#8B9AB5] hover:border-purple-500/20 hover:text-purple-400 hover:bg-purple-500/5"
@@ -257,14 +293,14 @@ export default function ChatInterface({
             className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
           >
             <span className="text-[10px] text-[#4A5568] mb-1.5 px-1 font-medium">
-              {msg.role === "user" ? "You" : "Thunder AI"}
+              {msg.role === "user" ? t("roleUser") : t("roleAI")}
             </span>
             <div
               className={`max-w-[95%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                 msg.role === "user"
                   ? mode === "reverse"
-                    ? "bg-gradient-to-br from-purple-600 to-indigo-600 text-white font-medium rounded-br-sm shadow-[0_0_20px_rgba(168,85,247,0.2)]"
-                    : "bg-gradient-to-br from-[#00F5FF] to-[#0080FF] text-[#0B0F19] font-medium rounded-br-sm shadow-[0_0_20px_rgba(0,245,255,0.2)]"
+                    ? "bg-linear-to-br from-purple-600 to-indigo-600 text-white font-medium rounded-br-sm shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+                    : "bg-linear-to-br from-[#00F5FF] to-[#0080FF] text-[#0B0F19] font-medium rounded-br-sm shadow-[0_0_20px_rgba(0,245,255,0.2)]"
                   : "glass-card text-[#C8D8F0] rounded-bl-sm border border-white/6 w-full"
               }`}
             >
@@ -321,7 +357,7 @@ export default function ChatInterface({
                         }
                         className="w-full py-2 rounded-lg bg-[#00F5FF] text-[#0B0F19] font-bold text-xs uppercase tracking-wider hover:bg-[#00F5FF]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-[0_0_15px_rgba(0,245,255,0.3)]"
                       >
-                        Generate with Answers
+                        {t("btnGenerateAnswers")}
                       </button>
                     </div>
                   </div>
@@ -355,8 +391,8 @@ export default function ChatInterface({
                 className={`text-xs font-medium ${mode === "reverse" ? "text-purple-400" : "text-[#00F5FF]"}`}
               >
                 {mode === "reverse"
-                  ? "Analyzing Structure..."
-                  : "Generating..."}
+                  ? t("statusAnalyzing")
+                  : t("statusGenerating")}
               </span>
             </div>
           </div>
@@ -378,10 +414,10 @@ export default function ChatInterface({
             }}
             placeholder={
               isListening
-                ? "Listening..."
+                ? t("phListening")
                 : mode === "reverse"
-                  ? "Paste code or describe changes..."
-                  : "Describe your component..."
+                  ? t("phReverse")
+                  : t("phReady")
             }
             className={`w-full bg-[#0D1117] border rounded-xl px-4 py-3 pr-24 text-sm text-white focus:outline-none focus:ring-1 transition-all resize-none h-[52px] scrollbar-hide placeholder:text-[#4A5568] ${
               mode === "reverse"
@@ -474,8 +510,11 @@ export default function ChatInterface({
         </form>
         <div className="text-center mt-2">
           <p className="text-[10px] text-[#4A5568]">
-            Press <span className="text-[#6B7A99]">Enter</span> to send,{" "}
-            <span className="text-[#6B7A99]">Shift + Enter</span> for new line
+            {t("hintPress")}
+            <span className="text-[#6B7A99]">{t("hintEnter")}</span>
+            {t("hintToSend")}
+            <span className="text-[#6B7A99]">{t("hintShiftEnter")}</span>
+            {t("hintNewline")}
           </p>
         </div>
       </div>

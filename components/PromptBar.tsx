@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface PromptBarProps {
   onGenerate: (prompt: string) => void;
@@ -6,6 +7,7 @@ interface PromptBarProps {
 }
 
 export default function PromptBar({ onGenerate, isLoading }: PromptBarProps) {
+  const t = useTranslations("PromptBar");
   const [prompt, setPrompt] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,7 +24,7 @@ export default function PromptBar({ onGenerate, isLoading }: PromptBarProps) {
           type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Describe your component (e.g., 'A login form with glassmorphism effect')"
+          placeholder={t("placeholder")}
           className="flex-1 p-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           disabled={isLoading}
         />
@@ -31,7 +33,7 @@ export default function PromptBar({ onGenerate, isLoading }: PromptBarProps) {
           disabled={isLoading || !prompt.trim()}
           className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {isLoading ? "Generating..." : "Generate"}
+          {isLoading ? t("generating") : t("generate")}
         </button>
       </div>
     </form>

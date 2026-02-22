@@ -2,6 +2,7 @@ import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { CODE_MODEL } from "@/lib/code-assistant";
+import { fetchUser } from "@/modules/Auth/AuthActions";
 import { useVoiceInput } from "@/hooks/useVoiceInput";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setPrompt, setLanguage, setError } from "./CodeAssistantSlice";
@@ -10,7 +11,7 @@ import { generateCode } from "./CodeAssistantActions";
 export default function CodeAssistantPanel() {
   const dispatch = useAppDispatch();
   const { prompt, generatedCode, isLoading, error, language } = useAppSelector(
-    (state) => state.codeAssistant
+    (state) => state.codeAssistant,
   );
 
   const { isListening, toggleListening } = useVoiceInput({
@@ -68,7 +69,16 @@ export default function CodeAssistantPanel() {
                 </>
               ) : (
                 <>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                     <line x1="12" y1="19" x2="12" y2="23" />
@@ -79,8 +89,11 @@ export default function CodeAssistantPanel() {
               )}
             </button>
           </h3>
-          
-          <form onSubmit={handleGenerate} className="flex-1 flex flex-col gap-4">
+
+          <form
+            onSubmit={handleGenerate}
+            className="flex-1 flex flex-col gap-4"
+          >
             <div className="flex gap-2">
               <select
                 value={language}
@@ -104,7 +117,7 @@ export default function CodeAssistantPanel() {
               placeholder="E.g., Write a function to validate email addresses using regex..."
               className="flex-1 w-full bg-[#161B22] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-cyan-500/50 resize-none font-mono"
             />
-            
+
             {error && (
               <div className="text-red-400 text-xs bg-red-500/10 p-3 rounded-lg border border-red-500/20">
                 {error}
@@ -119,8 +132,19 @@ export default function CodeAssistantPanel() {
               {isLoading ? (
                 <>
                   <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
                   </svg>
                   Coding...
                 </>
@@ -133,48 +157,60 @@ export default function CodeAssistantPanel() {
 
         {/* Output Panel */}
         <div className="flex-1 bg-[#1E1E1E] overflow-hidden flex flex-col relative">
-           <div className="absolute top-4 right-4 z-10">
-             <button
-               onClick={copyToClipboard}
-               className="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors backdrop-blur-sm border border-white/5"
-             >
-               Copy Code
-             </button>
-           </div>
-           
-           <div className="flex-1 overflow-auto">
-             {generatedCode ? (
-               <SyntaxHighlighter
-                 language={language}
-                 style={vscDarkPlus}
-                 customStyle={{
-                   margin: 0,
-                   padding: "1.5rem",
-                   fontSize: "14px",
-                   lineHeight: "1.5",
-                   backgroundColor: "transparent",
-                   minHeight: "100%",
-                 }}
-                 showLineNumbers={true}
-                 wrapLines={true}
-               >
-                 {generatedCode}
-               </SyntaxHighlighter>
-             ) : (
-               <div className="h-full flex flex-col items-center justify-center text-gray-500 p-8 text-center">
-                 <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-4">
-                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                     <polyline points="16 18 22 12 16 6" />
-                     <polyline points="8 6 2 12 8 18" />
-                   </svg>
-                 </div>
-                 <h3 className="text-lg font-medium text-gray-300 mb-2">Code Assistant</h3>
-                 <p className="max-w-md">
-                   Enter a description of the code you need, and StarCoder2 will generate a solution for you.
-                 </p>
-               </div>
-             )}
-           </div>
+          <div className="absolute top-4 right-4 z-10">
+            <button
+              onClick={copyToClipboard}
+              className="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors backdrop-blur-sm border border-white/5"
+            >
+              Copy Code
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-auto">
+            {generatedCode ? (
+              <SyntaxHighlighter
+                language={language}
+                style={vscDarkPlus}
+                customStyle={{
+                  margin: 0,
+                  padding: "1.5rem",
+                  fontSize: "14px",
+                  lineHeight: "1.5",
+                  backgroundColor: "transparent",
+                  minHeight: "100%",
+                }}
+                showLineNumbers={true}
+                wrapLines={true}
+              >
+                {generatedCode}
+              </SyntaxHighlighter>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-gray-500 p-8 text-center">
+                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-4">
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="16 18 22 12 16 6" />
+                    <polyline points="8 6 2 12 8 18" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-300 mb-2">
+                  Code Assistant
+                </h3>
+                <p className="max-w-md">
+                  Enter a description of the code you need, and StarCoder2 will
+                  generate a solution for you.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

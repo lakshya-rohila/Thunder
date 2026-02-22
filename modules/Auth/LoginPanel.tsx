@@ -3,12 +3,14 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import ErrorToast from "@/components/ErrorToast";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { loginUser } from "./AuthActions";
 import { setError } from "./AuthSlice";
 
 export default function LoginPanel() {
+  const t = useTranslations("Auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -59,12 +61,11 @@ export default function LoginPanel() {
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
-            The power to build <br />
-            <span className="gradient-text-blue">faster than ever.</span>
+            {t("loginHeroTitle1")} <br />
+            <span className="gradient-text-blue">{t("loginHeroTitle2")}</span>
           </h1>
           <p className="text-[var(--text-secondary)] text-lg mb-8 leading-relaxed">
-            Join thousands of developers building the next generation of
-            applications with our cutting-edge infrastructure.
+            {t("loginHeroDesc")}
           </p>
 
           <div className="flex items-center gap-4">
@@ -83,14 +84,14 @@ export default function LoginPanel() {
               ))}
             </div>
             <p className="text-sm var(--text-muted) font-medium">
-              Over 10,000+ builders
+              {t("loginStat")}
             </p>
           </div>
         </div>
 
         {/* Footer */}
         <div className="relative z-10 text-[var(--text-muted)] text-sm">
-          © 2024 Thunder Inc. All rights reserved.
+          {t("footer")}
         </div>
       </div>
 
@@ -99,10 +100,10 @@ export default function LoginPanel() {
         <div className="w-full max-w-md space-y-8">
           <div className="text-center lg:text-left">
             <h2 className="text-3xl font-bold text-white tracking-tight">
-              Welcome back
+              {t("loginTitle")}
             </h2>
             <p className="mt-2 text-[var(--text-secondary)]">
-              Enter your credentials to access your workspace.
+              {t("loginSubtitle")}
             </p>
           </div>
 
@@ -113,7 +114,7 @@ export default function LoginPanel() {
                   htmlFor="email"
                   className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5"
                 >
-                  Email address
+                  {t("loginEmail")}
                 </label>
                 <input
                   id="email"
@@ -124,7 +125,7 @@ export default function LoginPanel() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="appearance-none relative block w-full px-4 py-3 border border-[var(--border-subtle)] placeholder-gray-500 text-white rounded-xl bg-[var(--bg-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--electric-blue)] focus:border-transparent transition-all sm:text-sm"
-                  placeholder="you@example.com"
+                  placeholder={t("loginEmailPh")}
                 />
               </div>
               <div>
@@ -132,7 +133,7 @@ export default function LoginPanel() {
                   htmlFor="password"
                   className="block text-sm font-medium text-[var(--text-secondary)] mb-1.5"
                 >
-                  Password
+                  {t("loginPassword")}
                 </label>
                 <input
                   id="password"
@@ -143,7 +144,7 @@ export default function LoginPanel() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none relative block w-full px-4 py-3 border border-[var(--border-subtle)] placeholder-gray-500 text-white rounded-xl bg-[var(--bg-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--electric-blue)] focus:border-transparent transition-all sm:text-sm"
-                  placeholder="••••••••"
+                  placeholder={t("loginPasswordPh")}
                 />
               </div>
             </div>
@@ -160,7 +161,7 @@ export default function LoginPanel() {
                   htmlFor="remember-me"
                   className="ml-2 block text-sm text-[var(--text-secondary)]"
                 >
-                  Remember me
+                  {t("loginRemember")}
                 </label>
               </div>
 
@@ -169,7 +170,7 @@ export default function LoginPanel() {
                   href="#"
                   className="font-medium text-[var(--electric-blue)] hover:text-[var(--neon-purple)] transition-colors"
                 >
-                  Forgot password?
+                  {t("loginForgot")}
                 </a>
               </div>
             </div>
@@ -202,7 +203,7 @@ export default function LoginPanel() {
                     ></path>
                   </svg>
                 ) : (
-                  "Sign in"
+                  t("loginButton")
                 )}
               </button>
             </div>
@@ -210,21 +211,18 @@ export default function LoginPanel() {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-[var(--text-secondary)]">
-              Don't have an account?{" "}
+              {t("loginNoAccount")}
               <Link
                 href="/register"
                 className="font-medium text-[var(--electric-blue)] hover:text-[var(--neon-purple)] transition-colors"
               >
-                Sign up for free
+                {t("loginSignUp")}
               </Link>
             </p>
           </div>
         </div>
       </div>
-      <ErrorToast
-        message={error}
-        onClose={() => dispatch(setError(null))}
-      />
+      <ErrorToast message={error} onClose={() => dispatch(setError(null))} />
     </div>
   );
 }

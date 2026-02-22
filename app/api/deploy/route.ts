@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAuthContext } from "@/lib/auth";
+import { deductCredits } from "@/lib/credits";
 
 const VERCEL_API_URL = "https://api.vercel.com/v13/deployments";
 const VERCEL_TOKEN = process.env.VERCEL_TOKEN; // Must be set in .env
@@ -13,8 +14,11 @@ export async function POST(request: Request) {
     const hasCredits = await deductCredits(auth.userId.toString(), 5);
     if (!hasCredits) {
       return NextResponse.json(
-        { error: "Insufficient daily credits. Please upgrade or wait for tomorrow." },
-        { status: 402 }
+        {
+          error:
+            "Insufficient daily credits. Please upgrade or wait for tomorrow.",
+        },
+        { status: 402 },
       );
     }
 

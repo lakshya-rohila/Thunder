@@ -3,17 +3,19 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { registerUser } from "./AuthActions";
 import { setError } from "./AuthSlice";
 import ErrorToast from "@/components/ErrorToast";
 
 export default function RegisterPanel() {
+  const t = useTranslations("Auth");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const dispatch = useAppDispatch();
   const { isLoading: loading, error } = useAppSelector((state) => state.auth);
   const router = useRouter();
@@ -25,15 +27,15 @@ export default function RegisterPanel() {
     // Basic username validation
     const usernameRegex = /^[a-z0-9_-]+$/;
     if (!usernameRegex.test(username)) {
-      dispatch(setError(
-        "Username can only contain letters, numbers, underscores, and hyphens",
-      ));
+      dispatch(setError(t("usernameError")));
       return;
     }
 
     try {
-      const resultAction = await dispatch(registerUser({ name, username, email, password }));
-      
+      const resultAction = await dispatch(
+        registerUser({ name, username, email, password }),
+      );
+
       if (registerUser.fulfilled.match(resultAction)) {
         // Registration successful
         router.push("/login");
@@ -83,13 +85,11 @@ export default function RegisterPanel() {
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
-            Design, code, and ship <br />
-            <span className="gradient-text-blue">without limits.</span>
+            {t("regHeroTitle1")} <br />
+            <span className="gradient-text-blue">{t("regHeroTitle2")}</span>
           </h1>
           <p className="text-[var(--text-secondary)] text-lg mb-8 leading-relaxed">
-            Create an account to join the builder community. Access premier
-            tools, connect with other developers, and scale your applications
-            effortlessly.
+            {t("regHeroDesc")}
           </p>
 
           <div className="space-y-4">
@@ -107,7 +107,7 @@ export default function RegisterPanel() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              Unlimited projects and workspaces
+              {t("regFeat1")}
             </div>
             <div className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
               <svg
@@ -123,7 +123,7 @@ export default function RegisterPanel() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              Premium community access
+              {t("regFeat2")}
             </div>
             <div className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
               <svg
@@ -139,7 +139,7 @@ export default function RegisterPanel() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              Advanced analytics and reporting
+              {t("regFeat3")}
             </div>
           </div>
         </div>
@@ -175,10 +175,10 @@ export default function RegisterPanel() {
 
           <div className="mb-8 text-center lg:text-left">
             <h2 className="text-3xl font-bold text-white mb-2">
-              Create an account
+              {t("regTitle")}
             </h2>
             <p className="text-[var(--text-secondary)] text-sm">
-              Start building your next big idea today.
+              {t("regSubtitle")}
             </p>
           </div>
 
@@ -186,7 +186,7 @@ export default function RegisterPanel() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="block text-sm font-medium text-[var(--text-secondary)]">
-                  Full Name
+                  {t("regName")}
                 </label>
                 <input
                   type="text"
@@ -194,13 +194,13 @@ export default function RegisterPanel() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full bg-[var(--color-input)] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[var(--electric-blue)] focus:ring-1 focus:ring-[var(--electric-blue)] transition-all placeholder-gray-500"
-                  placeholder="John Doe"
+                  placeholder={t("regNamePh")}
                 />
               </div>
 
               <div className="space-y-1.5">
                 <label className="block text-sm font-medium text-[var(--text-secondary)]">
-                  Username
+                  {t("regUsername")}
                 </label>
                 <input
                   type="text"
@@ -210,17 +210,17 @@ export default function RegisterPanel() {
                     setUsername(e.target.value.toLowerCase().replace(/ /g, "-"))
                   }
                   className="w-full bg-[var(--color-input)] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[var(--electric-blue)] focus:ring-1 focus:ring-[var(--electric-blue)] transition-all placeholder-gray-500"
-                  placeholder="johndoe"
+                  placeholder={t("regUsernamePh")}
                 />
                 <p className="text-[10px] text-[var(--text-muted)] absolute mt-0.5">
-                  Letters, numbers, hyphens, and underscores only.
+                  {t("regUsernameHint")}
                 </p>
               </div>
             </div>
 
             <div className="space-y-1.5 pt-2">
               <label className="block text-sm font-medium text-[var(--text-secondary)]">
-                Email address
+                {t("regEmail")}
               </label>
               <input
                 type="email"
@@ -228,13 +228,13 @@ export default function RegisterPanel() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-[var(--color-input)] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[var(--electric-blue)] focus:ring-1 focus:ring-[var(--electric-blue)] transition-all placeholder-gray-500"
-                placeholder="name@company.com"
+                placeholder={t("regEmailPh")}
               />
             </div>
 
             <div className="space-y-1.5">
               <label className="block text-sm font-medium text-[var(--text-secondary)]">
-                Password
+                {t("regPassword")}
               </label>
               <input
                 type="password"
@@ -242,7 +242,7 @@ export default function RegisterPanel() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-[var(--color-input)] border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[var(--electric-blue)] focus:ring-1 focus:ring-[var(--electric-blue)] transition-all placeholder-gray-500"
-                placeholder="••••••••"
+                placeholder={t("regPasswordPh")}
               />
             </div>
 
@@ -251,7 +251,7 @@ export default function RegisterPanel() {
               disabled={loading}
               className="w-full btn-neon py-3.5 rounded-xl mt-4 flex items-center justify-center gap-2 group"
             >
-              <span>{loading ? "Creating account..." : "Create account"}</span>
+              <span>{loading ? t("regBtnLoading") : t("regBtn")}</span>
               {!loading && (
                 <svg
                   className="w-4 h-4 group-hover:translate-x-1 transition-transform relative z-10"
@@ -271,12 +271,12 @@ export default function RegisterPanel() {
           </form>
 
           <p className="mt-8 text-center text-[var(--text-secondary)] text-sm">
-            Already have an account?{" "}
+            {t("regHasAccount")}
             <Link
               href="/login"
               className="text-white font-medium hover:text-[var(--electric-blue)] transition-colors inline-flex items-center"
             >
-              Sign in
+              {t("regSignIn")}
               <svg
                 className="w-3 h-3 ml-1"
                 fill="none"
@@ -294,10 +294,7 @@ export default function RegisterPanel() {
           </p>
         </div>
       </div>
-      <ErrorToast
-        message={error}
-        onClose={() => dispatch(setError(null))}
-      />
+      <ErrorToast message={error} onClose={() => dispatch(setError(null))} />
     </div>
   );
 }

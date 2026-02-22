@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const auth = await getAuthContext(request);
     if (auth instanceof NextResponse) return auth;
 
-    const { prompt, title, generatedHTML, generatedCSS, generatedJS } =
+    const { prompt, title, generatedHTML, generatedCSS, generatedJS, generatedJSX } =
       await request.json();
 
     if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
@@ -34,6 +34,7 @@ export async function POST(request: Request) {
       generatedHTML: generatedHTML || "",
       generatedCSS: generatedCSS || "",
       generatedJS: generatedJS || "",
+      generatedJSX: generatedJSX || "",
     });
 
     // Save the initial user message
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
     });
 
     // If there's a generated response, save it too
-    if (generatedHTML || generatedCSS || generatedJS) {
+    if (generatedHTML || generatedCSS || generatedJS || generatedJSX) {
       await Message.create({
         chatId: chat._id,
         role: "assistant",

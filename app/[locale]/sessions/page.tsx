@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import DashboardNavbar from "@/components/DashboardNavbar";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import Loader from "@/components/Loader";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { fetchUser, logoutUser } from "@/modules/Auth/AuthActions";
@@ -18,6 +19,7 @@ interface Chat {
 }
 
 export default function SessionsPage() {
+  const t = useTranslations("Sessions");
   const [chats, setChats] = useState<Chat[]>([]);
   const [chatsLoading, setChatsLoading] = useState(true);
   const [chatsError, setChatsError] = useState<string | null>(null);
@@ -46,7 +48,7 @@ export default function SessionsPage() {
             router.push("/login");
             return;
           }
-          throw new Error("Failed to fetch sessions");
+          throw new Error(t("noSessions"));
         }
         const data = await res.json();
         setChats(data.chats);
@@ -78,11 +80,9 @@ export default function SessionsPage() {
       <div className="flex-1 max-w-7xl mx-auto w-full px-5 py-10">
         <header className="mb-10">
           <h1 className="text-3xl font-bold bg-linear-to-r from-white to-[#8B9AB5] bg-clip-text text-transparent">
-            My Sessions
+            {t("title")}
           </h1>
-          <p className="text-[#6B7A99] mt-2">
-            A history of all your generated components and designs.
-          </p>
+          <p className="text-[#6B7A99] mt-2">{t("desc")}</p>
         </header>
 
         {chatsLoading ? (
@@ -109,15 +109,13 @@ export default function SessionsPage() {
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold mb-2">No sessions found</h2>
-            <p className="text-[#6B7A99] mb-8">
-              You haven't generated any components yet.
-            </p>
+            <h2 className="text-xl font-semibold mb-2">{t("noSessions")}</h2>
+            <p className="text-[#6B7A99] mb-8">{t("noSessionsDesc")}</p>
             <Link
               href="/dashboard"
               className="inline-flex items-center px-6 py-3 rounded-xl bg-[#00F5FF] text-[#0B0F19] font-bold hover:shadow-[0_0_20px_rgba(0,245,255,0.4)] transition-all duration-300"
             >
-              Start Generating
+              {t("startGen")}
             </Link>
           </div>
         ) : (
@@ -155,12 +153,12 @@ export default function SessionsPage() {
                     </div>
                     {chat.expiresAt && (
                       <div className="text-amber-500/70">
-                        Expires in{" "}
-                        {Math.ceil(
-                          (new Date(chat.expiresAt).getTime() - Date.now()) /
-                            (1000 * 60 * 60 * 24),
-                        )}
-                        d
+                        {t("expires", {
+                          days: Math.ceil(
+                            (new Date(chat.expiresAt).getTime() - Date.now()) /
+                              (1000 * 60 * 60 * 24),
+                          ),
+                        })}
                       </div>
                     )}
                   </div>
@@ -170,7 +168,7 @@ export default function SessionsPage() {
                     href={`/dashboard?chatId=${chat._id}`}
                     className="text-xs font-bold text-[#00F5FF]/80 hover:text-[#00F5FF] transition-colors flex items-center gap-1"
                   >
-                    Open in Dashboard
+                    {t("openInDash")}
                     <svg
                       width="12"
                       height="12"

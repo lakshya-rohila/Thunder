@@ -22,6 +22,7 @@ import {
   setGenerationMode,
   setProjectType,
   setStyleMode,
+  setFramework,
   setIsListening,
   setTranscript,
   setError,
@@ -46,6 +47,7 @@ export default function Dashboard() {
     generationMode,
     projectType,
     styleMode,
+    framework,
     isListening,
     transcript,
     sidebarCollapsed,
@@ -56,7 +58,7 @@ export default function Dashboard() {
   /** Save a completed generation to the DB — returns the chatId */
   const saveChat = async (
     prompt: string,
-    data: { name: string; html: string; css: string; js: string },
+    data: { name: string; html: string; css: string; js: string; jsx?: string },
   ): Promise<string | null> => {
     try {
       const resultAction = await dispatch(createChat({
@@ -79,6 +81,7 @@ export default function Dashboard() {
     chatMode?: "standard" | "reverse",
     projType?: "component" | "app" | "game" | "auto",
     sMode?: "vanilla" | "tailwind",
+    fw?: "html" | "react",
   ) => {
     dispatch(setLoading(true));
     dispatch(setError(null));
@@ -89,6 +92,7 @@ export default function Dashboard() {
     const currentMode = chatMode || mode;
     const currentProjectType = projType || projectType || "auto";
     const currentStyleMode = sMode || styleMode || "vanilla";
+    const currentFramework = fw || framework || "html";
 
     // If there is existing componentData, we include it as context for refinement
     const context = componentData
@@ -103,9 +107,10 @@ export default function Dashboard() {
       const data = await dispatch(generateComponent({
         prompt,
         context,
-        mode: currentMode,
+        mode: chatMode || generationMode,
         projectType: currentProjectType,
         styleMode: currentStyleMode,
+        framework: currentFramework,
       })).unwrap();
 
       if (data.type === "clarification") {
@@ -165,6 +170,7 @@ export default function Dashboard() {
     html: string;
     css: string;
     js: string;
+    jsx?: string;
   }) => {
     dispatch(setComponentData(data));
     dispatch(setIsPublic(false));
@@ -175,7 +181,7 @@ export default function Dashboard() {
     dispatch(fetchUser());
   };
 
-  const handleCodeUpdate = (type: "html" | "css" | "js", value: string) => {
+  const handleCodeUpdate = (type: "html" | "css" | "js" | "jsx", value: string) => {
     if (componentData) {
       dispatch(setComponentData({ ...componentData, [type]: value }));
     }
@@ -190,6 +196,7 @@ export default function Dashboard() {
         html: chat.generatedHTML || "",
         css: chat.generatedCSS || "",
         js: chat.generatedJS || "",
+        jsx: chat.generatedJSX || "",
       }),
     );
     dispatch(
@@ -245,8 +252,8 @@ export default function Dashboard() {
           <ChatInterface
             messages={messages}
             isLoading={loading}
-            onSendMessage={(msg, m, pType, sMode) =>
-              handleSendMessage(msg, m, pType, sMode)
+            onSendMessage={(msg, m, pType, sMode, fw) =>
+              handleSendMessage(msg, m, pType, sMode, fw)
             }
             mode={mode === "research" ? "research" : generationMode}
             onModeChange={(m) => dispatch(setGenerationMode(m))}
@@ -254,6 +261,8 @@ export default function Dashboard() {
             onProjectTypeChange={(t) => dispatch(setProjectType(t))}
             styleMode={styleMode || "vanilla"}
             onStyleModeChange={(s) => dispatch(setStyleMode(s))}
+            framework={framework || "html"}
+            onFrameworkChange={(f) => dispatch(setFramework(f))}
             isListening={isListening}
             onListeningChange={(l) => dispatch(setIsListening(l))}
             onTranscriptChange={(t) => dispatch(setTranscript(t))}

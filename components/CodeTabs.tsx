@@ -5,56 +5,126 @@ interface CodeTabsProps {
   html: string;
   css: string;
   js: string;
-  onUpdate: (type: "html" | "css" | "js", value: string) => void;
+  jsx?: string;
+  onUpdate: (type: "html" | "css" | "js" | "jsx", value: string) => void;
 }
 
 // Simple File Explorer Component (Mock for now, to be expanded)
-function FileExplorer({ activeTab, onSelect }: { activeTab: string, onSelect: (tab: "html" | "css" | "js") => void }) {
+function FileExplorer({
+  activeTab,
+  onSelect,
+  hasJsx,
+}: {
+  activeTab: string;
+  onSelect: (tab: "html" | "css" | "js" | "jsx") => void;
+  hasJsx?: boolean;
+}) {
   return (
     <div className="w-48 bg-[#0B0F19] border-r border-white/5 flex flex-col">
       <div className="px-4 py-3 text-xs font-bold text-[#6B7A99] uppercase tracking-wider">
         Explorer
       </div>
       <div className="flex flex-col gap-0.5 px-2">
-        <button
-          onClick={() => onSelect("html")}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
-            activeTab === "html" ? "bg-[#00F5FF]/10 text-[#00F5FF]" : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
-          }`}
-        >
-          <span className="text-orange-400">&lt;/&gt;</span>
-          index.html
-        </button>
+        {hasJsx ? (
+          <button
+            onClick={() => onSelect("jsx")}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
+              activeTab === "jsx"
+                ? "bg-[#00F5FF]/10 text-[#00F5FF]"
+                : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <span className="text-cyan-400">⚛️</span>
+            src/App.jsx
+          </button>
+        ) : (
+          <button
+            onClick={() => onSelect("html")}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
+              activeTab === "html"
+                ? "bg-[#00F5FF]/10 text-[#00F5FF]"
+                : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <span className="text-orange-400">&lt;/&gt;</span>
+            index.html
+          </button>
+        )}
+
         <button
           onClick={() => onSelect("css")}
           className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
-            activeTab === "css" ? "bg-[#00F5FF]/10 text-[#00F5FF]" : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+            activeTab === "css"
+              ? "bg-[#00F5FF]/10 text-[#00F5FF]"
+              : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
           }`}
         >
           <span className="text-[#00F5FF]">#</span>
-          style.css
+          {hasJsx ? "src/index.css" : "style.css"}
         </button>
-        <button
-          onClick={() => onSelect("js")}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
-            activeTab === "js" ? "bg-[#00F5FF]/10 text-[#00F5FF]" : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
-          }`}
-        >
-          <span className="text-yellow-400">JS</span>
-          script.js
-        </button>
+
+        {!hasJsx && (
+          <button
+            onClick={() => onSelect("js")}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
+              activeTab === "js"
+                ? "bg-[#00F5FF]/10 text-[#00F5FF]"
+                : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <span className="text-yellow-400">JS</span>
+            script.js
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
-export default function CodeTabs({ html, css, js, onUpdate }: CodeTabsProps) {
-  const [activeTab, setActiveTab] = useState<"html" | "css" | "js">("html");
+export default function CodeTabs({
+  html,
+  css,
+  js,
+  jsx,
+  onUpdate,
+}: CodeTabsProps) {
+  // Heuristic: If JSX is missing but JS looks like React, treat it as JSX
+  const isJsActuallyJsx =
+    !jsx &&
+    js &&
+    (js.includes("import React") ||
+      js.includes("export default function") ||
+      js.includes("className=") ||
+      js.includes("<div") ||
+      js.includes("return ("));
+
+  const effectiveJsx = jsx || (isJsActuallyJsx ? js : undefined);
+  const hasJsx = !!effectiveJsx;
+
+  const [activeTab, setActiveTab] = useState<"html" | "css" | "js" | "jsx">(
+    hasJsx ? "jsx" : "html",
+  );
   const [showExplorer, setShowExplorer] = useState(true);
   const [copied, setCopied] = useState(false);
 
+  // Update active tab if jsx presence changes
+  React.useEffect(() => {
+    if (hasJsx && activeTab !== "jsx" && activeTab !== "css") {
+      setActiveTab("jsx");
+    }
+  }, [hasJsx]);
+
   const currentValue =
-    activeTab === "html" ? html : activeTab === "css" ? css : js;
+    activeTab === "html"
+      ? html
+      : activeTab === "css"
+        ? css
+        : activeTab === "jsx"
+          ? effectiveJsx || ""
+          : js;
+
+  const language =
+    activeTab === "html" ? "html" : activeTab === "css" ? "css" : "javascript";
 
   const editorRef = React.useRef<any>(null);
 
@@ -107,23 +177,48 @@ export default function CodeTabs({ html, css, js, onUpdate }: CodeTabsProps) {
   return (
     <div className="flex h-full bg-[#111827] overflow-hidden">
       {/* Sidebar Explorer */}
-      {showExplorer && <FileExplorer activeTab={activeTab} onSelect={setActiveTab} />}
+      {showExplorer && (
+        <FileExplorer
+          activeTab={activeTab}
+          onSelect={setActiveTab}
+          hasJsx={hasJsx}
+        />
+      )}
 
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Top Bar */}
         <div className="flex items-center justify-between bg-[#0D1117] border-b border-white/5 h-10 px-4">
           <div className="flex items-center gap-2">
-            <button 
+            <button
               onClick={() => setShowExplorer(!showExplorer)}
               className="text-[#6B7A99] hover:text-white"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                <line x1="9" y1="3" x2="9" y2="21"/>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <line x1="9" y1="3" x2="9" y2="21" />
               </svg>
             </button>
             <span className="text-xs text-[#6B7A99] font-mono">
-              {activeTab === 'html' ? 'index.html' : activeTab === 'css' ? 'style.css' : 'script.js'}
+              {activeTab === "html"
+                ? hasJsx
+                  ? "public/index.html"
+                  : "index.html"
+                : activeTab === "css"
+                  ? hasJsx
+                    ? "src/index.css"
+                    : "style.css"
+                  : activeTab === "jsx"
+                    ? "src/App.jsx"
+                    : "script.js"}
             </span>
           </div>
 
@@ -185,14 +280,7 @@ export default function CodeTabs({ html, css, js, onUpdate }: CodeTabsProps) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <rect
-                      x="9"
-                      y="9"
-                      width="13"
-                      height="13"
-                      rx="2"
-                      ry="2"
-                    />
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                   </svg>
                   Copy
@@ -207,7 +295,7 @@ export default function CodeTabs({ html, css, js, onUpdate }: CodeTabsProps) {
           <Editor
             height="100%"
             language={
-              activeTab === "js"
+              activeTab === "js" || activeTab === "jsx"
                 ? "javascript"
                 : activeTab === "html"
                   ? "html"
@@ -215,12 +303,13 @@ export default function CodeTabs({ html, css, js, onUpdate }: CodeTabsProps) {
             }
             theme="thunder-v2"
             value={currentValue}
-            onChange={handleEditorChange}
+            onChange={(value) => onUpdate(activeTab, value || "")}
             onMount={handleEditorDidMount}
             options={{
               minimap: { enabled: false },
               fontSize: 13,
-              fontFamily: "JetBrains Mono, Menlo, Monaco, 'Courier New', monospace",
+              fontFamily:
+                "JetBrains Mono, Menlo, Monaco, 'Courier New', monospace",
               lineHeight: 20,
               padding: { top: 16 },
               scrollBeyondLastLine: false,

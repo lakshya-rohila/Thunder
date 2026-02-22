@@ -6,15 +6,66 @@ import { LearningEngine } from "./learningEngine";
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey || "");
 
+// Fallback models in order of preference
+const FALLBACK_MODELS = [
+  "gemini-2.5-flash",      // Latest Flash
+  "gemini-2.5-flash-lite", // Latest Flash Lite
+  "gemini-2.0-flash",      // Previous Flash
+  "gemini-2.0-flash-lite", // Previous Flash Lite
+];
+
+/**
+ * Generate content with automatic fallback to other models on quota/rate limit errors.
+ */
+async function generateWithFallback(prompt: string | any[]) {
+  let lastError: any;
+
+  for (const modelName of FALLBACK_MODELS) {
+    try {
+      console.log(`Attempting generation with model: ${modelName}`);
+      const model = genAI.getGenerativeModel({
+        model: modelName,
+        generationConfig: {
+          // consistent config if needed
+        },
+      });
+      
+      const result = await model.generateContent(prompt);
+      return result;
+    } catch (error: any) {
+      lastError = error;
+      
+      // Check for 429 (Too Many Requests) or 503 (Service Unavailable) or 404 (Not Found)
+      const isRetryableError = 
+        error.response?.status === 429 || 
+        error.status === 429 || 
+        error.response?.status === 503 ||
+        error.status === 503 ||
+        error.response?.status === 404 ||
+        error.status === 404 ||
+        (error.message && error.message.includes("429")) ||
+        (error.message && error.message.includes("quota")) ||
+        (error.message && error.message.includes("not found")) ||
+        (error.message && error.message.includes("404"));
+
+      if (isRetryableError) {
+        console.warn(`Model ${modelName} failed with retryable error (${error.status || error.message}). Trying next model...`);
+        continue; // Try next model
+      }
+      
+      // If it's not a retryable error (e.g., bad request 400), throw immediately
+      throw error;
+    }
+  }
+
+  // If we exhaust all models
+  console.error("All fallback models exhausted.");
+  throw lastError;
+}
+
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",
-  generationConfig: {
-    // We use JSON mode for standard generation, but text mode for reverse engineering
-    // because it returns a mix of markdown and code blocks.
-    // However, the standard mode relies on JSON schema or prompt instruction.
-    // Let's keep it flexible or switch config based on mode if needed.
-    // For now, we will handle parsing manually for text responses.
-  },
+  model: "gemini-2.5-flash", // Keep original default reference if needed elsewhere, though we'll use fallback function
+  generationConfig: {},
 });
 
 /**
@@ -110,6 +161,7 @@ export async function generateComponent(
   projectType: "component" | "app" | "game" | "auto" = "auto",
   styleMode: "vanilla" | "tailwind" = "vanilla",
   userId?: string, // Add userId to support personalization
+  framework: "html" | "react" = "html",
 ) {
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not set");
@@ -147,13 +199,34 @@ export async function generateComponent(
       prompt += `\n\nIMPORTANT: The user has explicitly selected [${styleMode.toUpperCase()}] styling. Enforce ${styleMode} mode rules.`;
     }
 
+    if (framework === "react") {
+      prompt += `\n\nIMPORTANT: The user has explicitly selected [REACT] framework.
+      
+      RULES FOR REACT GENERATION:
+      1. You MUST generate a single React Functional Component (JSX).
+      2. Do NOT generate a full HTML file. Do NOT generate separate CSS files unless absolutely necessary (prefer Tailwind or inline styles).
+      3. Return a JSON object with a "jsx" field containing the React code.
+      4. The "html" and "js" fields MUST be empty strings.
+      5. If you use Tailwind, use className="..."
+      6. The component should be named "App" or "Component".
+      7. Do NOT use 'import React from "react"'. Assume React is in scope.
+      8. Example Output Format:
+      {
+        "jsx": "export default function App() { return <div className='p-4'>Hello</div> }",
+        "html": "",
+        "css": "",
+        "js": ""
+      }
+      `;
+    }
+
     if (previousCode) {
       prompt += `\n\nPREVIOUS COMPONENT CODE:\n${JSON.stringify(previousCode, null, 2)}\n\nINSTRUCTION: Update the above component based on the User Request.`;
     }
   }
 
   try {
-    const result = await model.generateContent(prompt);
+    const result = await generateWithFallback(prompt);
     const response = await result.response;
     const text = response.text();
 
@@ -180,9 +253,30 @@ export async function generateComponent(
           // In a real production system, we would do a second LLM call here.
           // For now, we'll simulate a "Quality Check" by ensuring required fields exist.
           // This placeholder is where the "Critic Agent" logic lives.
-          if (!parsed.html || !parsed.css) {
-            console.warn("Critic: Missing core fields, triggering fallback fix...");
-            // Could trigger re-generation or patching here
+          
+          if (framework === "react") {
+             // 1. If JSX is missing, look for it in JS or HTML
+             if (!parsed.jsx) {
+                if (parsed.js && (parsed.js.includes("return") || parsed.js.includes("export default"))) {
+                   parsed.jsx = parsed.js;
+                } else if (parsed.html && (parsed.html.includes("return") || parsed.html.includes("export default"))) {
+                   parsed.jsx = parsed.html;
+                }
+             }
+
+             // 2. Force HTML and JS to be empty for React mode as requested by user
+             parsed.html = "";
+             parsed.js = "";
+
+             // 3. Ensure we have a jsx field
+             if (!parsed.jsx) {
+                parsed.jsx = "// Failed to generate JSX";
+             }
+          } else {
+             if (!parsed.html || !parsed.css) {
+               console.warn("Critic: Missing core fields, triggering fallback fix...");
+               // Could trigger re-generation or patching here
+             }
           }
         }
 
@@ -233,7 +327,7 @@ export async function synthesizeResearch(
   `;
 
   try {
-    const result = await model.generateContent(prompt);
+    const result = await generateWithFallback(prompt);
     const response = await result.response;
     return safeParseJSON(response.text());
   } catch (error) {
@@ -261,7 +355,7 @@ export async function analyzeImageComponent(
   };
 
   try {
-    const result = await model.generateContent([imagePart, textPart]);
+    const result = await generateWithFallback([imagePart, textPart]);
     const response = await result.response;
     const text = response.text();
 

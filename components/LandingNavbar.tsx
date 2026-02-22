@@ -4,8 +4,12 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { fetchUser } from "@/modules/Auth/AuthActions";
+import { useTranslations } from "next-intl";
+
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function LandingNavbar() {
+  const tNav = useTranslations("Navigation");
   const dispatch = useAppDispatch();
   const { isLoggedIn, isLoading, user } = useAppSelector((state) => state.auth);
 
@@ -16,7 +20,7 @@ export default function LandingNavbar() {
   return (
     <nav className="fixed top-5 left-0 right-0 z-50 flex justify-center px-6">
       <div
-        className="w-full max-w-4xl flex items-center justify-between px-5 h-14 rounded-2xl border border-white/8"
+        className="w-full max-w-5xl flex items-center justify-between px-5 h-14 rounded-2xl border border-white/8"
         style={{
           background: "rgba(10, 12, 20, 0.75)",
           backdropFilter: "blur(20px)",
@@ -65,12 +69,12 @@ export default function LandingNavbar() {
         {/* Nav Links */}
         <div className="hidden md:flex items-center gap-1">
           {[
-            { label: "Features", href: "#features", auth: false },
-            { label: "How It Works", href: "#how-it-works", auth: false },
-            { label: "Philosophy", href: "#philosophy", auth: false },
-            { label: "Community", href: "/community", auth: false },
+            { label: tNav("features"), href: "#features", auth: false },
+            { label: tNav("howItWorks"), href: "#how-it-works", auth: false },
+            { label: tNav("philosophy"), href: "#philosophy", auth: false },
+            { label: tNav("community"), href: "/community", auth: false },
             {
-              label: "Profile",
+              label: tNav("profile"),
               href: user?.username ? `/profile/${user.username}` : "/settings",
               auth: true,
             },
@@ -82,7 +86,7 @@ export default function LandingNavbar() {
               <Component
                 key={label}
                 href={href}
-                className="group relative px-3.5 py-2 text-[13px] font-medium text-[#6B7A99] hover:text-white transition-colors duration-200 rounded-lg hover:bg-white/4"
+                className="group relative px-3.5 py-2 text-[13px] font-medium text-[#6B7A99] hover:text-white transition-colors duration-200 rounded-lg hover:bg-white/4 whitespace-nowrap"
               >
                 {label}
                 <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#00F5FF] opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
@@ -93,12 +97,13 @@ export default function LandingNavbar() {
 
         {/* CTA */}
         <div className="flex items-center gap-2 shrink-0">
+          <LanguageSwitcher />
           {!isLoading && (
             <>
               {isLoggedIn ? (
                 <Link href="/dashboard">
                   <button
-                    className="flex items-center gap-1.5 px-5 py-1.5 rounded-xl text-[13px] font-bold text-black transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]"
+                    className="flex items-center gap-1.5 px-5 py-1.5 rounded-xl text-[13px] font-bold text-black transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] whitespace-nowrap"
                     style={{
                       background:
                         "linear-gradient(135deg, #00F5FF 0%, #00C8FF 100%)",
@@ -127,7 +132,7 @@ export default function LandingNavbar() {
                     href="/login"
                     className="hidden sm:flex items-center px-3.5 py-1.5 rounded-lg text-[13px] font-medium text-[#6B7A99] hover:text-white hover:bg-white/5 transition-all duration-200"
                   >
-                    Log in
+                    {tNav("login")}
                   </Link>
                   <Link href="/register">
                     <button
@@ -139,7 +144,7 @@ export default function LandingNavbar() {
                           "0 0 20px rgba(0,245,255,0.3), 0 2px 8px rgba(0,0,0,0.3)",
                       }}
                     >
-                      Get Started
+                      {tNav("getStarted")}
                       <svg
                         width="12"
                         height="12"

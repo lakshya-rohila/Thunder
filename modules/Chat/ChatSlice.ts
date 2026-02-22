@@ -23,6 +23,7 @@ interface ComponentData {
   html: string;
   css: string;
   js: string;
+  jsx?: string; // Add support for React JSX
   files?: FileNode[]; // New field for multi-file support
 }
 
@@ -37,6 +38,7 @@ export interface ChatState {
   generationMode: "standard" | "reverse";
   projectType: "component" | "app" | "game" | "auto";
   styleMode: "vanilla" | "tailwind";
+  framework: "html" | "react";
   isListening: boolean;
   transcript: string;
   error: string | null;
@@ -44,6 +46,7 @@ export interface ChatState {
 }
 
 const initialState: ChatState = {
+  framework: "react",
   messages: [],
   componentData: null,
   activeChatId: null,
@@ -90,7 +93,7 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<
         "prompt" | "screenshot" | "research" | "image" | "code"
-      >
+      >,
     ) {
       state.mode = action.payload;
     },
@@ -99,12 +102,15 @@ const chatSlice = createSlice({
     },
     setProjectType(
       state,
-      action: PayloadAction<"component" | "app" | "game" | "auto">
+      action: PayloadAction<"component" | "app" | "game" | "auto">,
     ) {
       state.projectType = action.payload;
     },
     setStyleMode(state, action: PayloadAction<"vanilla" | "tailwind">) {
       state.styleMode = action.payload;
+    },
+    setFramework(state, action: PayloadAction<"html" | "react">) {
+      state.framework = action.payload;
     },
     setIsListening(state, action: PayloadAction<boolean>) {
       state.isListening = action.payload;
@@ -138,9 +144,9 @@ const chatSlice = createSlice({
       })
       .addCase(generateComponent.fulfilled, (state, action) => {
         state.loading = false;
-        // Data handling is typically done in the component via result, 
-        // but we can update state here if needed. 
-        // For now, we'll leave it to the component to dispatch setComponentData 
+        // Data handling is typically done in the component via result,
+        // but we can update state here if needed.
+        // For now, we'll leave it to the component to dispatch setComponentData
         // or handle it here if we want to move logic out of the component completely.
       })
       .addCase(generateComponent.rejected, (state, action) => {
@@ -162,6 +168,7 @@ export const {
   setGenerationMode,
   setProjectType,
   setStyleMode,
+  setFramework,
   setIsListening,
   setTranscript,
   setError,

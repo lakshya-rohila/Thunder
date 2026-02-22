@@ -1,14 +1,19 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { fetchUser, logoutUser } from "@/modules/Auth/AuthActions";
+import { useTranslations } from "next-intl";
 
 interface DashboardNavbarProps {
   onLogout?: () => void;
   showModeToggle?: boolean;
   mode?: "prompt" | "screenshot" | "research" | "image" | "code";
-  onModeChange?: (mode: "prompt" | "screenshot" | "research" | "image" | "code") => void;
+  onModeChange?: (
+    mode: "prompt" | "screenshot" | "research" | "image" | "code",
+  ) => void;
 }
 
 export default function DashboardNavbar({
@@ -17,6 +22,7 @@ export default function DashboardNavbar({
   mode,
   onModeChange,
 }: DashboardNavbarProps) {
+  const tNav = useTranslations("DashboardNavbar");
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -29,10 +35,16 @@ export default function DashboardNavbar({
 
   // Check for low credits
   useEffect(() => {
-    if (user?.dailyCredits !== undefined && user.dailyCredits < 20 && user.dailyCredits > 0) {
+    if (
+      user?.dailyCredits !== undefined &&
+      user.dailyCredits < 20 &&
+      user.dailyCredits > 0
+    ) {
       // Only show if we haven't shown it this session (or simple state for now)
       // For now, let's show it if it's low, but maybe we can use a dismiss state
-      const hasDismissed = localStorage.getItem(`low-credit-dismissed-${new Date().toDateString()}`);
+      const hasDismissed = localStorage.getItem(
+        `low-credit-dismissed-${new Date().toDateString()}`,
+      );
       if (!hasDismissed) {
         setShowLowCreditWarning(true);
       }
@@ -41,7 +53,10 @@ export default function DashboardNavbar({
 
   const dismissWarning = () => {
     setShowLowCreditWarning(false);
-    localStorage.setItem(`low-credit-dismissed-${new Date().toDateString()}`, "true");
+    localStorage.setItem(
+      `low-credit-dismissed-${new Date().toDateString()}`,
+      "true",
+    );
   };
 
   const handleLogout = async () => {
@@ -84,11 +99,12 @@ export default function DashboardNavbar({
         {/* Navigation Links */}
         <div className="hidden md:flex items-center gap-1">
           {[
-            { label: "Dashboard", href: "/dashboard", auth: true },
-            { label: "Community", href: "/community", auth: false },
-            { label: "Sessions", href: "/sessions", auth: true },
+            { label: tNav("dashboard"), href: "/dashboard", auth: true },
+            { label: tNav("tools"), href: "/ai-tools", auth: true },
+            { label: tNav("community"), href: "/community", auth: false },
+            { label: tNav("sessions"), href: "/sessions", auth: true },
             {
-              label: "Profile",
+              label: tNav("profile"),
               href: user?.username ? `/profile/${user.username}` : "/settings",
               auth: true,
             },
@@ -113,20 +129,26 @@ export default function DashboardNavbar({
 
         {/* Credits Display */}
         {isLoggedIn && user?.dailyCredits !== undefined && (
-             <div className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border ml-4 mr-4 transition-all duration-300 ${
-               user.dailyCredits < 20 
-                 ? "bg-red-500/10 border-red-500/30 animate-pulse" 
-                 : "bg-white/5 border-white/10"
-             }`}>
-                <span className={`w-2 h-2 rounded-full animate-pulse ${
-                  user.dailyCredits < 20 ? "bg-red-500" : "bg-emerald-400"
-                }`} />
-                <span className={`text-xs font-medium ${
-                  user.dailyCredits < 20 ? "text-red-400" : "text-emerald-400"
-                }`}>
-                  {user.dailyCredits} Credits
-                </span>
-             </div>
+          <div
+            className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border ml-4 mr-4 transition-all duration-300 ${
+              user.dailyCredits < 20
+                ? "bg-red-500/10 border-red-500/30 animate-pulse"
+                : "bg-white/5 border-white/10"
+            }`}
+          >
+            <span
+              className={`w-2 h-2 rounded-full animate-pulse ${
+                user.dailyCredits < 20 ? "bg-red-500" : "bg-emerald-400"
+              }`}
+            />
+            <span
+              className={`text-xs font-medium ${
+                user.dailyCredits < 20 ? "text-red-400" : "text-emerald-400"
+              }`}
+            >
+              {user.dailyCredits} {tNav("credits")}
+            </span>
+          </div>
         )}
       </div>
 
@@ -134,34 +156,61 @@ export default function DashboardNavbar({
       {showLowCreditWarning && (
         <div className="fixed bottom-6 right-6 z-[100] animate-fade-in-up">
           <div className="bg-[#0D1117] border border-red-500/30 rounded-xl shadow-2xl p-4 w-80 relative overflow-hidden">
-             <div className="absolute top-0 left-0 w-1 h-full bg-red-500" />
-             <div className="flex items-start gap-3">
-               <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0 text-red-400">
-                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                   <circle cx="12" cy="12" r="10"></circle>
-                   <line x1="12" y1="8" x2="12" y2="12"></line>
-                   <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                 </svg>
-               </div>
-               <div className="flex-1">
-                 <h4 className="text-sm font-bold text-white mb-1">Low Credits Warning</h4>
-                 <p className="text-xs text-gray-400 mb-3">
-                   You have <span className="text-red-400 font-bold">{user?.dailyCredits}</span> credits remaining for today. Please use them precisely!
-                 </p>
-                 <button 
-                   onClick={dismissWarning}
-                   className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg transition-colors font-medium"
-                 >
-                   I understand
-                 </button>
-               </div>
-               <button onClick={dismissWarning} className="text-gray-500 hover:text-white">
-                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                   <line x1="18" y1="6" x2="6" y2="18"></line>
-                   <line x1="6" y1="6" x2="18" y2="18"></line>
-                 </svg>
-               </button>
-             </div>
+            <div className="absolute top-0 left-0 w-1 h-full bg-red-500" />
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0 text-red-400">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-bold text-white mb-1">
+                  {tNav("lowCreditsTitle")}
+                </h4>
+                <p className="text-xs text-gray-400 mb-3">
+                  {tNav("lowCreditsDesc1")}
+                  <span className="text-red-400 font-bold">
+                    {user?.dailyCredits}
+                  </span>
+                  {tNav("lowCreditsDesc2")}
+                </p>
+                <button
+                  onClick={dismissWarning}
+                  className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg transition-colors font-medium"
+                >
+                  {tNav("iUnderstand")}
+                </button>
+              </div>
+              <button
+                onClick={dismissWarning}
+                className="text-gray-500 hover:text-white"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -189,31 +238,7 @@ export default function DashboardNavbar({
             >
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
-            Prompt
-          </button>
-          <button
-            onClick={() => onModeChange("screenshot")}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-              mode === "screenshot"
-                ? "bg-[#8A2BE2]/15 text-[#8A2BE2] border border-[#8A2BE2]/25 shadow-[0_0_10px_rgba(138,43,226,0.1)]"
-                : "text-[#4A5568] hover:text-[#8B9AB5]"
-            }`}
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-              <circle cx="9" cy="9" r="2" />
-              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-            </svg>
-            Screenshot
+            {tNav("prompt")}
           </button>
           <button
             onClick={() => onModeChange("research")}
@@ -236,33 +261,7 @@ export default function DashboardNavbar({
               <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
               <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
             </svg>
-            Research
-          </button>
-          <button
-            onClick={() => onModeChange("image")}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-              mode === "image"
-                ? "bg-pink-500/15 text-pink-500 border border-pink-500/25 shadow-[0_0_10px_rgba(236,72,153,0.1)]"
-                : "text-[#4A5568] hover:text-[#8B9AB5]"
-            }`}
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
-              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
-              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
-              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
-              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />
-            </svg>
-            Image
+            {tNav("research")}
           </button>
           <button
             onClick={() => onModeChange("code")}
@@ -285,7 +284,7 @@ export default function DashboardNavbar({
               <polyline points="16 18 22 12 16 6" />
               <polyline points="8 6 2 12 8 18" />
             </svg>
-            Code
+            {tNav("code")}
           </button>
         </div>
       )}
@@ -317,19 +316,19 @@ export default function DashboardNavbar({
                     <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
-                  Settings
+                  {tNav("settings")}
                 </Link>
                 <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#00F5FF]/15 bg-[#00F5FF]/5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="text-xs text-[#8B9AB5] font-medium">
-                    Online
+                    {tNav("online")}
                   </span>
                 </div>
                 <button
                   onClick={handleLogout}
                   className="px-3 py-1.5 rounded-lg text-sm text-[#8B9AB5] hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 font-medium"
                 >
-                  Logout
+                  {tNav("logout")}
                 </button>
               </>
             ) : (
@@ -337,7 +336,7 @@ export default function DashboardNavbar({
                 href="/login"
                 className="bg-white/10 text-white font-bold px-5 py-2 rounded-xl text-xs hover:bg-white/20 transition-all"
               >
-                Log In
+                {tNav("logIn")}
               </Link>
             )}
           </>

@@ -5,8 +5,16 @@ import React, { useEffect } from "react";
 import LandingNavbar from "@/components/LandingNavbar";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { fetchUser } from "@/modules/Auth/AuthActions";
+import { useTranslations } from "next-intl";
 
 export default function LandingPage() {
+  const tHero = useTranslations("Hero");
+  const tFeatures = useTranslations("Features");
+  const tProcess = useTranslations("Process");
+  const tPhilosophy = useTranslations("Philosophy");
+  const tCTA = useTranslations("CTA");
+  const tFooter = useTranslations("Footer");
+
   const dispatch = useAppDispatch();
   const { isLoggedIn, isLoading } = useAppSelector((state) => state.auth);
 
@@ -37,7 +45,7 @@ export default function LandingPage() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00F5FF]/20 bg-[#00F5FF]/8 text-[#00F5FF] text-xs font-semibold mb-8 uppercase tracking-widest animate-fade-in-up backdrop-blur-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00F5FF] animate-pulse" />
-            AI-Powered Frontend Development
+            {tHero("badge")}
           </div>
 
           {/* Headline */}
@@ -45,9 +53,9 @@ export default function LandingPage() {
             className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-[1.05] animate-fade-in-up"
             style={{ animationDelay: "100ms" }}
           >
-            Build stunning UI
+            {tHero("titleLine1")}
             <br />
-            <span className="gradient-text-blue">in seconds, not hours.</span>
+            <span className="gradient-text-blue">{tHero("titleLine2")}</span>
           </h1>
 
           {/* Subtext */}
@@ -55,9 +63,7 @@ export default function LandingPage() {
             className="text-lg md:text-xl text-[#8B9AB5] mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in-up"
             style={{ animationDelay: "200ms" }}
           >
-            Describe your component. Thunder generates production-ready HTML,
-            CSS, and JS instantly. No frameworks. No bloat. Just pure, clean
-            code.
+            {tHero("description")}
           </p>
 
           {/* CTAs */}
@@ -70,13 +76,13 @@ export default function LandingPage() {
                 {isLoggedIn ? (
                   <Link href="/dashboard" className="w-full sm:w-auto">
                     <button className="btn-neon w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold relative overflow-hidden shadow-[0_0_30px_rgba(0,245,255,0.25)]">
-                      <span>Open Dashboard →</span>
+                      <span>{tHero("openDashboard")}</span>
                     </button>
                   </Link>
                 ) : (
                   <Link href="/register" className="w-full sm:w-auto">
                     <button className="btn-neon w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold relative overflow-hidden shadow-[0_0_30px_rgba(0,245,255,0.25)]">
-                      <span>Start Building Free →</span>
+                      <span>{tHero("startBuildingFree")}</span>
                     </button>
                   </Link>
                 )}
@@ -85,7 +91,7 @@ export default function LandingPage() {
                   className="w-full sm:w-auto"
                 >
                   <button className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-semibold border border-white/10 bg-white/5 text-[#8B9AB5] hover:text-white hover:border-white/20 hover:bg-white/8 transition-all duration-300">
-                    {isLoggedIn ? "Explore Feed" : "View Demo"}
+                    {isLoggedIn ? tHero("exploreFeed") : tHero("viewDemo")}
                   </button>
                 </Link>
               </>
@@ -155,58 +161,88 @@ export default function LandingPage() {
       </section>
 
       {/* ── Capabilities Section (Redesigned) ───────────────────────────── */}
-      <section id="features" className="py-24 px-6 bg-[#0D1117] border-t border-white/5">
+      <section
+        id="features"
+        className="py-24 px-6 bg-[#0D1117] border-t border-white/5"
+      >
         <div className="max-w-7xl mx-auto space-y-32">
-          
           {/* Instant UI Generation */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1 relative">
-               <div className="absolute -inset-1 bg-gradient-to-r from-[#00F5FF]/20 to-[#8A2BE2]/20 rounded-2xl blur-lg opacity-50" />
-               <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl">
-                 <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-[#161B22]">
-                   <div className="flex gap-1.5">
-                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
-                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
-                     <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
-                   </div>
-                   <div className="ml-4 flex-1 h-5 bg-[#0B0F19] rounded text-[10px] text-gray-500 flex items-center px-2 font-mono">
-                     prompt.txt
-                   </div>
-                 </div>
-                 <div className="p-6 font-mono text-sm text-gray-300 space-y-2">
-                   <p className="text-[#00F5FF]">User:</p>
-                   <p className="bg-white/5 p-3 rounded-lg border-l-2 border-[#00F5FF]">
-                     "Create a modern pricing card with a gradient border, 3 distinct tiers, and a toggle for monthly/yearly billing."
-                   </p>
-                   <p className="text-[#8A2BE2] mt-4">Thunder AI:</p>
-                   <div className="space-y-1 text-gray-400">
-                     <p>Generating HTML structure... <span className="text-green-400">Done</span></p>
-                     <p>Applying Tailwind classes... <span className="text-green-400">Done</span></p>
-                     <p>Adding interactive JS... <span className="text-green-400">Done</span></p>
-                   </div>
-                 </div>
-               </div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#00F5FF]/20 to-[#8A2BE2]/20 rounded-2xl blur-lg opacity-50" />
+              <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl">
+                <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-[#161B22]">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+                  </div>
+                  <div className="ml-4 flex-1 h-5 bg-[#0B0F19] rounded text-[10px] text-gray-500 flex items-center px-2 font-mono">
+                    prompt.txt
+                  </div>
+                </div>
+                <div className="p-6 font-mono text-sm text-gray-300 space-y-2">
+                  <p className="text-[#00F5FF]">User:</p>
+                  <p className="bg-white/5 p-3 rounded-lg border-l-2 border-[#00F5FF]">
+                    "Create a modern pricing card with a gradient border, 3
+                    distinct tiers, and a toggle for monthly/yearly billing."
+                  </p>
+                  <p className="text-[#8A2BE2] mt-4">Thunder AI:</p>
+                  <div className="space-y-1 text-gray-400">
+                    <p>
+                      Generating HTML structure...{" "}
+                      <span className="text-green-400">Done</span>
+                    </p>
+                    <p>
+                      Applying Tailwind classes...{" "}
+                      <span className="text-green-400">Done</span>
+                    </p>
+                    <p>
+                      Adding interactive JS...{" "}
+                      <span className="text-green-400">Done</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="order-1 lg:order-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00F5FF]/30 bg-[#00F5FF]/10 text-[#00F5FF] text-xs font-bold uppercase tracking-wider mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00F5FF] animate-pulse" />
-                Core Engine
+                {tFeatures("instantGen_badge")}
               </div>
               <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
-                Instant UI <span className="text-[#00F5FF]">Generation</span>
+                {tFeatures("instantGen_title").split(" ")[0]}{" "}
+                <span className="text-[#00F5FF]">
+                  {tFeatures("instantGen_title").split(" ").slice(1).join(" ")}
+                </span>
               </h3>
               <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
-                Transform plain text into production-ready code instantly. Our advanced LLM pipeline understands design intent, accessibility standards, and modern best practices.
+                {tFeatures("instantGen_desc")}
               </p>
               <ul className="space-y-3">
                 {[
-                  "Context-aware component generation",
-                  "Tailwind CSS or Vanilla CSS support",
-                  "Responsive by default",
-                  "Interactive JavaScript logic included"
+                  tFeatures("instantGen_point1"),
+                  tFeatures("instantGen_point2"),
+                  tFeatures("instantGen_point3"),
+                  tFeatures("instantGen_point4"),
                 ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
-                    <svg className="w-5 h-5 text-[#00F5FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-[#F0F6FF]"
+                  >
+                    <svg
+                      className="w-5 h-5 text-[#00F5FF]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                     {item}
                   </li>
                 ))}
@@ -219,101 +255,170 @@ export default function LandingPage() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-400 text-xs font-bold uppercase tracking-wider mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
-                Visual Intelligence
+                {tFeatures("screenshot_badge")}
               </div>
               <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
-                Screenshot to <span className="text-pink-400">Code</span>
+                {tFeatures("screenshot_title").split(" ")[0]}{" "}
+                <span className="text-pink-400">
+                  {tFeatures("screenshot_title").split(" ").slice(1).join(" ")}
+                </span>
               </h3>
               <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
-                See a design you love? Simply upload a screenshot. Thunder analyzes the layout, typography, and colors to recreate it in pixel-perfect code.
+                {tFeatures("screenshot_desc")}
               </p>
               <ul className="space-y-3">
                 {[
-                  "High-fidelity layout replication",
-                  "Automatic color palette extraction",
-                  "Typography matching",
-                  "Works with sketches and wireframes"
+                  tFeatures("screenshot_point1"),
+                  tFeatures("screenshot_point2"),
+                  tFeatures("screenshot_point3"),
+                  tFeatures("screenshot_point4"),
                 ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
-                    <svg className="w-5 h-5 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-[#F0F6FF]"
+                  >
+                    <svg
+                      className="w-5 h-5 text-pink-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
             <div className="relative">
-               <div className="absolute -inset-1 bg-gradient-to-l from-pink-500/20 to-purple-500/20 rounded-2xl blur-lg opacity-50" />
-               <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl p-8 flex flex-col items-center justify-center min-h-[300px] border-dashed border-2 border-pink-500/30">
-                  <div className="w-20 h-20 rounded-2xl bg-pink-500/10 flex items-center justify-center mb-6 animate-float">
-                    <svg className="w-10 h-10 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+              <div className="absolute -inset-1 bg-gradient-to-l from-pink-500/20 to-purple-500/20 rounded-2xl blur-lg opacity-50" />
+              <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl p-8 flex flex-col items-center justify-center min-h-[300px] border-dashed border-2 border-pink-500/30">
+                <div className="w-20 h-20 rounded-2xl bg-pink-500/10 flex items-center justify-center mb-6 animate-float">
+                  <svg
+                    className="w-10 h-10 text-pink-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                </div>
+                <div className="space-y-2 text-center">
+                  <h4 className="text-lg font-bold text-white">
+                    Upload Design
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    Drag & drop or paste an image
+                  </p>
+                </div>
+
+                {/* Processing Visual */}
+                <div className="mt-8 w-full max-w-xs bg-[#161B22] rounded-lg p-3 border border-white/5 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-pink-500/20 animate-pulse" />
+                  <div className="flex-1 space-y-1.5">
+                    <div className="h-2 w-3/4 bg-white/10 rounded" />
+                    <div className="h-2 w-1/2 bg-white/5 rounded" />
                   </div>
-                  <div className="space-y-2 text-center">
-                    <h4 className="text-lg font-bold text-white">Upload Design</h4>
-                    <p className="text-sm text-gray-500">Drag & drop or paste an image</p>
+                  <div className="text-xs text-pink-400 font-bold">
+                    Processing...
                   </div>
-                  
-                  {/* Processing Visual */}
-                  <div className="mt-8 w-full max-w-xs bg-[#161B22] rounded-lg p-3 border border-white/5 flex items-center gap-3">
-                     <div className="w-8 h-8 rounded bg-pink-500/20 animate-pulse" />
-                     <div className="flex-1 space-y-1.5">
-                       <div className="h-2 w-3/4 bg-white/10 rounded" />
-                       <div className="h-2 w-1/2 bg-white/5 rounded" />
-                     </div>
-                     <div className="text-xs text-pink-400 font-bold">Processing...</div>
-                  </div>
-               </div>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Deep Research */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1 relative">
-               <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 rounded-2xl blur-lg opacity-50" />
-               <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl p-6">
-                 <div className="flex gap-4 mb-6">
-                    <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
-                      <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 rounded-2xl blur-lg opacity-50" />
+              <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl p-6">
+                <div className="flex gap-4 mb-6">
+                  <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
+                    <svg
+                      className="w-5 h-5 text-purple-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <div className="h-10 w-full bg-[#161B22] rounded-lg border border-white/5 flex items-center px-4 text-sm text-gray-400">
+                      Research: "UX trends for fintech dashboards 2026"
                     </div>
-                    <div className="flex-1">
-                      <div className="h-10 w-full bg-[#161B22] rounded-lg border border-white/5 flex items-center px-4 text-sm text-gray-400">
-                        Research: "UX trends for fintech dashboards 2026"
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="flex gap-3 p-3 rounded-lg bg-[#161B22]/50 border border-white/5 hover:border-purple-500/30 transition-colors"
+                    >
+                      <div className="w-1 h-full bg-purple-500/50 rounded-full" />
+                      <div className="space-y-1.5 flex-1">
+                        <div className="h-2.5 w-1/3 bg-white/10 rounded" />
+                        <div className="h-2 w-full bg-white/5 rounded" />
+                        <div className="h-2 w-5/6 bg-white/5 rounded" />
                       </div>
                     </div>
-                 </div>
-                 <div className="space-y-3">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="flex gap-3 p-3 rounded-lg bg-[#161B22]/50 border border-white/5 hover:border-purple-500/30 transition-colors">
-                        <div className="w-1 h-full bg-purple-500/50 rounded-full" />
-                        <div className="space-y-1.5 flex-1">
-                           <div className="h-2.5 w-1/3 bg-white/10 rounded" />
-                           <div className="h-2 w-full bg-white/5 rounded" />
-                           <div className="h-2 w-5/6 bg-white/5 rounded" />
-                        </div>
-                      </div>
-                    ))}
-                 </div>
-               </div>
+                  ))}
+                </div>
+              </div>
             </div>
             <div className="order-1 lg:order-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-400 text-xs font-bold uppercase tracking-wider mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
-                Knowledge Engine
+                {tFeatures("research_badge")}
               </div>
               <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
-                Deep <span className="text-purple-400">Research</span>
+                {tFeatures("research_title").split(" ")[0]}{" "}
+                <span className="text-purple-400">
+                  {tFeatures("research_title").split(" ").slice(1).join(" ")}
+                </span>
               </h3>
               <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
-                Don't just build—understand. Our integrated research agent scrapes the web, summarizes key documentation, and gathers insights to inform your development decisions.
+                {tFeatures("research_desc")}
               </p>
               <ul className="space-y-3">
                 {[
-                  "Real-time web scraping & summarization",
-                  "Documentation analysis",
-                  "Competitor UI research",
-                  "Technology stack recommendations"
+                  tFeatures("research_point1"),
+                  tFeatures("research_point2"),
+                  tFeatures("research_point3"),
+                  tFeatures("research_point4"),
                 ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
-                    <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-[#F0F6FF]"
+                  >
+                    <svg
+                      className="w-5 h-5 text-purple-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                     {item}
                   </li>
                 ))}
@@ -326,96 +431,175 @@ export default function LandingPage() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
-                Expert Partner
+                {tFeatures("assistant_badge")}
               </div>
               <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
-                Code <span className="text-cyan-400">Assistant</span>
+                {tFeatures("assistant_title").split(" ")[0]}{" "}
+                <span className="text-cyan-400">
+                  {tFeatures("assistant_title").split(" ").slice(1).join(" ")}
+                </span>
               </h3>
               <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
-                Stuck on complex logic? The Code Assistant is your specialized pair programmer. It generates functions, optimizes algorithms, and debugs issues on the fly.
+                {tFeatures("assistant_desc")}
               </p>
               <ul className="space-y-3">
                 {[
-                  "Complex function generation",
-                  "Algorithm optimization",
-                  "Regex & data parsing helpers",
-                  "Code explanation & refactoring"
+                  tFeatures("assistant_point1"),
+                  tFeatures("assistant_point2"),
+                  tFeatures("assistant_point3"),
+                  tFeatures("assistant_point4"),
                 ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
-                    <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-[#F0F6FF]"
+                  >
+                    <svg
+                      className="w-5 h-5 text-cyan-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
             <div className="relative">
-               <div className="absolute -inset-1 bg-gradient-to-l from-cyan-500/20 to-blue-500/20 rounded-2xl blur-lg opacity-50" />
-               <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl">
-                  {/* Editor Header */}
-                  <div className="flex items-center justify-between px-4 py-2 bg-[#161B22] border-b border-white/5">
-                    <span className="text-xs text-cyan-400 font-mono">helper.ts</span>
-                    <div className="flex gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-white/20" />
-                      <div className="w-2 h-2 rounded-full bg-white/20" />
-                    </div>
+              <div className="absolute -inset-1 bg-gradient-to-l from-cyan-500/20 to-blue-500/20 rounded-2xl blur-lg opacity-50" />
+              <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl">
+                {/* Editor Header */}
+                <div className="flex items-center justify-between px-4 py-2 bg-[#161B22] border-b border-white/5">
+                  <span className="text-xs text-cyan-400 font-mono">
+                    helper.ts
+                  </span>
+                  <div className="flex gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-white/20" />
+                    <div className="w-2 h-2 rounded-full bg-white/20" />
                   </div>
-                  {/* Code Area */}
-                  <div className="p-5 font-mono text-xs md:text-sm leading-relaxed text-gray-300">
-                    <div className="text-gray-500 mb-2">// Generate a debounce function</div>
-                    <div><span className="text-purple-400">export</span> <span className="text-purple-400">function</span> <span className="text-blue-400">debounce</span><span className="text-yellow-400">&lt;T&gt;</span>(</div>
-                    <div className="pl-4">func: <span className="text-yellow-400">T</span>,</div>
-                    <div className="pl-4">wait: <span className="text-yellow-400">number</span></div>
-                    <div>): <span className="text-yellow-400">T</span> {'{'}</div>
-                    <div className="pl-4"><span className="text-purple-400">let</span> timeout: <span className="text-yellow-400">NodeJS.Timeout</span>;</div>
-                    <div className="pl-4"><span className="text-purple-400">return</span> ((...args: <span className="text-yellow-400">any</span>[]) =&gt; {'{'}</div>
-                    <div className="pl-8"><span className="text-blue-400">clearTimeout</span>(timeout);</div>
-                    <div className="pl-8">timeout = <span className="text-blue-400">setTimeout</span>(() =&gt; func(...args), wait);</div>
-                    <div className="pl-4">{'}'}) <span className="text-purple-400">as</span> <span className="text-purple-400">any</span>;</div>
-                    <div>{'}'}</div>
+                </div>
+                {/* Code Area */}
+                <div className="p-5 font-mono text-xs md:text-sm leading-relaxed text-gray-300">
+                  <div className="text-gray-500 mb-2">
+                    // Generate a debounce function
                   </div>
-               </div>
+                  <div>
+                    <span className="text-purple-400">export</span>{" "}
+                    <span className="text-purple-400">function</span>{" "}
+                    <span className="text-blue-400">debounce</span>
+                    <span className="text-yellow-400">&lt;T&gt;</span>(
+                  </div>
+                  <div className="pl-4">
+                    func: <span className="text-yellow-400">T</span>,
+                  </div>
+                  <div className="pl-4">
+                    wait: <span className="text-yellow-400">number</span>
+                  </div>
+                  <div>
+                    ): <span className="text-yellow-400">T</span> {"{"}
+                  </div>
+                  <div className="pl-4">
+                    <span className="text-purple-400">let</span> timeout:{" "}
+                    <span className="text-yellow-400">NodeJS.Timeout</span>;
+                  </div>
+                  <div className="pl-4">
+                    <span className="text-purple-400">return</span> ((...args:{" "}
+                    <span className="text-yellow-400">any</span>[]) =&gt; {"{"}
+                  </div>
+                  <div className="pl-8">
+                    <span className="text-blue-400">clearTimeout</span>
+                    (timeout);
+                  </div>
+                  <div className="pl-8">
+                    timeout = <span className="text-blue-400">setTimeout</span>
+                    (() =&gt; func(...args), wait);
+                  </div>
+                  <div className="pl-4">
+                    {"}"}) <span className="text-purple-400">as</span>{" "}
+                    <span className="text-purple-400">any</span>;
+                  </div>
+                  <div>{"}"}</div>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* AI Image Studio */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1 relative group">
-               <div className="absolute -inset-1 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-2xl blur-lg opacity-50" />
-               <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl aspect-video flex items-center justify-center">
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620641788421-7f1c33850486?q=80&w=2836&auto=format&fit=crop')] bg-cover bg-center opacity-50 group-hover:opacity-70 transition-opacity duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <div className="bg-black/60 backdrop-blur-md p-3 rounded-lg border border-white/10 flex items-center gap-3">
-                      <div className="w-8 h-8 rounded bg-orange-500/20 flex items-center justify-center text-orange-400">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                      </div>
-                      <div className="text-xs text-gray-300 truncate">
-                        "Abstract 3D geometric shapes, neon lighting, dark background, 4k"
-                      </div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-2xl blur-lg opacity-50" />
+              <div className="relative rounded-2xl bg-[#0B0F19] border border-white/10 overflow-hidden shadow-2xl aspect-video flex items-center justify-center">
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620641788421-7f1c33850486?q=80&w=2836&auto=format&fit=crop')] bg-cover bg-center opacity-50 group-hover:opacity-70 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="bg-black/60 backdrop-blur-md p-3 rounded-lg border border-white/10 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded bg-orange-500/20 flex items-center justify-center text-orange-400">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="text-xs text-gray-300 truncate">
+                      "Abstract 3D geometric shapes, neon lighting, dark
+                      background, 4k"
                     </div>
                   </div>
-               </div>
+                </div>
+              </div>
             </div>
             <div className="order-1 lg:order-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-bold uppercase tracking-wider mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-                Asset Generation
+                {tFeatures("assets_badge")}
               </div>
               <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
-                AI Image <span className="text-orange-400">Studio</span>
+                {tFeatures("assets_title").split(" ")[0]}{" "}
+                <span className="text-orange-400">
+                  {tFeatures("assets_title").split(" ").slice(1).join(" ")}
+                </span>
               </h3>
               <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
-                Never use generic placeholders again. Generate custom, high-quality assets for your UI directly within the platform. From hero backgrounds to icon sets.
+                {tFeatures("assets_desc")}
               </p>
               <ul className="space-y-3">
                 {[
-                  "High-resolution image generation",
-                  "Style consistency control",
-                  "Seamless integration with generated UI",
-                  "Commercial usage rights"
+                  tFeatures("assets_point1"),
+                  tFeatures("assets_point2"),
+                  tFeatures("assets_point3"),
+                  tFeatures("assets_point4"),
                 ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
-                    <svg className="w-5 h-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-[#F0F6FF]"
+                  >
+                    <svg
+                      className="w-5 h-5 text-orange-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                     {item}
                   </li>
                 ))}
@@ -428,48 +612,68 @@ export default function LandingPage() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-green-500/30 bg-green-500/10 text-green-400 text-xs font-bold uppercase tracking-wider mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                Ecosystem
+                {tFeatures("community_badge")}
               </div>
               <h3 className="text-3xl md:text-5xl font-black mb-6 text-white">
-                Community <span className="text-green-400">Showcase</span>
+                {tFeatures("community_title").split(" ")[0]}{" "}
+                <span className="text-green-400">
+                  {tFeatures("community_title").split(" ").slice(1).join(" ")}
+                </span>
               </h3>
               <p className="text-[#8B9AB5] text-lg leading-relaxed mb-8">
-                Discover what others are building. Share your best creations, get inspired by the community, and fork existing components to jumpstart your project.
+                {tFeatures("community_desc")}
               </p>
               <ul className="space-y-3">
                 {[
-                  "Explore trending components",
-                  "One-click cloning/forking",
-                  "Share your profile & portfolio",
-                  "Collaborative improvement"
+                  tFeatures("community_point1"),
+                  tFeatures("community_point2"),
+                  tFeatures("community_point3"),
+                  tFeatures("community_point4"),
                 ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-[#F0F6FF]">
-                    <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  <li
+                    key={i}
+                    className="flex items-center gap-3 text-[#F0F6FF]"
+                  >
+                    <svg
+                      className="w-5 h-5 text-green-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
             <div className="relative">
-               <div className="absolute -inset-1 bg-gradient-to-l from-green-500/20 to-teal-500/20 rounded-2xl blur-lg opacity-50" />
-               <div className="grid grid-cols-2 gap-4 relative">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className={`rounded-xl bg-[#161B22] border border-white/5 overflow-hidden p-3 hover:-translate-y-1 transition-transform duration-300 ${i === 2 ? 'mt-8' : i === 1 ? 'mt-8' : ''}`}>
-                       <div className="aspect-[4/3] bg-[#0B0F19] rounded-lg mb-3 border border-white/5" />
-                       <div className="h-2 w-2/3 bg-white/10 rounded mb-2" />
-                       <div className="flex justify-between items-center">
-                         <div className="flex items-center gap-1">
-                           <div className="w-4 h-4 rounded-full bg-white/10" />
-                           <div className="h-1.5 w-8 bg-white/5 rounded" />
-                         </div>
-                         <div className="h-1.5 w-4 bg-green-500/30 rounded" />
-                       </div>
+              <div className="absolute -inset-1 bg-gradient-to-l from-green-500/20 to-teal-500/20 rounded-2xl blur-lg opacity-50" />
+              <div className="grid grid-cols-2 gap-4 relative">
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className={`rounded-xl bg-[#161B22] border border-white/5 overflow-hidden p-3 hover:-translate-y-1 transition-transform duration-300 ${i === 2 ? "mt-8" : i === 1 ? "mt-8" : ""}`}
+                  >
+                    <div className="aspect-[4/3] bg-[#0B0F19] rounded-lg mb-3 border border-white/5" />
+                    <div className="h-2 w-2/3 bg-white/10 rounded mb-2" />
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-1">
+                        <div className="w-4 h-4 rounded-full bg-white/10" />
+                        <div className="h-1.5 w-8 bg-white/5 rounded" />
+                      </div>
+                      <div className="h-1.5 w-4 bg-green-500/30 rounded" />
                     </div>
-                  ))}
-               </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-
         </div>
       </section>
 
@@ -484,13 +688,16 @@ export default function LandingPage() {
           <div className="text-center mb-20">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00F5FF]/20 bg-[#00F5FF]/8 text-[#00F5FF] text-xs font-semibold mb-6 uppercase tracking-widest">
               <span className="w-1.5 h-1.5 rounded-full bg-[#00F5FF]" />
-              Process
+              {tProcess("badge")}
             </div>
             <h2 className="text-3xl md:text-5xl font-black mb-5 tracking-tight">
-              How <span className="gradient-text-blue">Thunder</span> works
+              {tProcess("titleLine1").split(" ")[0]}{" "}
+              <span className="gradient-text-blue">
+                {tProcess("titleLine1").split(" ").slice(1).join(" ")}
+              </span>
             </h2>
             <p className="text-[#8B9AB5] max-w-xl mx-auto text-lg">
-              Three steps from idea to working component.
+              {tProcess("description")}
             </p>
           </div>
 
@@ -500,7 +707,23 @@ export default function LandingPage() {
             <div className="hidden md:block absolute top-10 left-[16.66%] right-[16.66%] h-px bg-gradient-to-r from-transparent via-[#00F5FF]/30 to-transparent" />
 
             <div className="grid md:grid-cols-3 gap-8">
-              {steps.map((step, i) => (
+              {[
+                {
+                  title: tProcess("step1_title"),
+                  desc: tProcess("step1_desc"),
+                  icon: steps[0].icon,
+                },
+                {
+                  title: tProcess("step2_title"),
+                  desc: tProcess("step2_desc"),
+                  icon: steps[1].icon,
+                },
+                {
+                  title: tProcess("step3_title"),
+                  desc: tProcess("step3_desc"),
+                  icon: steps[2].icon,
+                },
+              ].map((step, i) => (
                 <div
                   key={i}
                   className="flex flex-col items-center text-center group"
@@ -519,7 +742,7 @@ export default function LandingPage() {
                     {step.title}
                   </h3>
                   <p className="text-[#8B9AB5] text-sm leading-relaxed max-w-xs">
-                    {step.description}
+                    {step.desc}
                   </p>
                 </div>
               ))}
@@ -539,22 +762,19 @@ export default function LandingPage() {
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#8A2BE2]/30 bg-[#8A2BE2]/8 text-[#8A2BE2] text-xs font-semibold mb-8 uppercase tracking-widest">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#8A2BE2]" />
-                Our Philosophy
+                {tPhilosophy("badge")}
               </div>
               <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tight leading-tight">
-                Code should be{" "}
-                <span className="gradient-text-blue">fast, clean,</span>
-                <br />
-                and yours.
+                {tPhilosophy("titleLine1")} <br />
+                <span className="gradient-text-blue">
+                  {tPhilosophy("titleLine2")}
+                </span>
               </h2>
               <p className="text-[#8B9AB5] text-lg leading-relaxed mb-6">
-                We built Thunder because we believe AI should accelerate your
-                workflow, not replace your craft. Every component Thunder
-                generates is readable, maintainable, and dependency-free.
+                {tPhilosophy("desc1")}
               </p>
               <p className="text-[#8B9AB5] text-lg leading-relaxed mb-10">
-                No black boxes. No vendor lock-in. Just pure, portable code that
-                you own completely.
+                {tPhilosophy("desc2")}
               </p>
               <div className="flex flex-col sm:flex-row gap-6">
                 {philosophyStats.map((stat, i) => (
@@ -572,7 +792,6 @@ export default function LandingPage() {
 
             {/* Right: Abstract visual */}
             <div className="relative flex items-center justify-center h-[500px] w-full max-w-[500px] mx-auto md:mx-0">
-              
               {/* 1. Outer Glow/Shockwave */}
               <div className="absolute inset-0 bg-gradient-to-r from-[#00F5FF]/20 to-[#8A2BE2]/20 rounded-full blur-3xl animate-pulse opacity-20" />
 
@@ -588,57 +807,67 @@ export default function LandingPage() {
               {/* 5. Central Logo (Pulse + Float) */}
               <div className="relative z-10 w-32 h-32 rounded-3xl bg-[#0B0F19] border border-[#00F5FF]/30 flex items-center justify-center shadow-[0_0_30px_rgba(0,245,255,0.15)] animate-float">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#00F5FF]/10 to-[#8A2BE2]/10 rounded-3xl animate-pulse" />
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" strokeWidth="2">
-                   <defs>
-                     <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
-                       <stop offset="0%" stopColor="#00F5FF" />
-                       <stop offset="100%" stopColor="#8A2BE2" />
-                     </linearGradient>
-                   </defs>
-                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="url(#gradient)"
+                  strokeWidth="2"
+                >
+                  <defs>
+                    <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#00F5FF" />
+                      <stop offset="100%" stopColor="#8A2BE2" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
+                  />
                 </svg>
               </div>
 
               {/* 6. Orbiting Elements */}
-              
+
               {/* Outer Orbit Items Container (Matches Track 3: 40s reverse) */}
               <div className="absolute w-[350px] h-[350px] animate-[spin_40s_linear_infinite_reverse]">
-                 {/* Item 1: Top */}
-                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div className="glass-card px-4 py-2 rounded-full text-xs font-bold text-[#8A2BE2] animate-[spin_40s_linear_infinite] shadow-[0_0_15px_rgba(138,43,226,0.3)]">
-                      AI-Powered
-                    </div>
-                 </div>
-                 {/* Item 2: Bottom */}
-                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
-                    <div className="glass-card px-4 py-2 rounded-full text-xs font-bold text-[#8A2BE2] animate-[spin_40s_linear_infinite] shadow-[0_0_15px_rgba(138,43,226,0.3)]">
-                      Dependency-Free
-                    </div>
-                 </div>
+                {/* Item 1: Top */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <div className="glass-card px-4 py-2 rounded-full text-xs font-bold text-[#8A2BE2] animate-[spin_40s_linear_infinite] shadow-[0_0_15px_rgba(138,43,226,0.3)]">
+                    AI-Powered
+                  </div>
+                </div>
+                {/* Item 2: Bottom */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
+                  <div className="glass-card px-4 py-2 rounded-full text-xs font-bold text-[#8A2BE2] animate-[spin_40s_linear_infinite] shadow-[0_0_15px_rgba(138,43,226,0.3)]">
+                    Dependency-Free
+                  </div>
+                </div>
               </div>
 
               {/* Inner Orbit Items Container (Matches Track 4: 20s normal) */}
               <div className="absolute w-[250px] h-[250px] animate-[spin_20s_linear_infinite]">
-                 {/* Item 1: Right */}
-                 <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2">
-                    <div className="glass-card px-3 py-1.5 rounded-full text-xs font-mono text-[#00F5FF] animate-[spin_20s_linear_infinite_reverse] shadow-[0_0_10px_rgba(0,245,255,0.3)]">
-                      &lt;html&gt;
-                    </div>
-                 </div>
-                 {/* Item 2: Left */}
-                 <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2">
-                    <div className="glass-card px-3 py-1.5 rounded-full text-xs font-mono text-[#00F5FF] animate-[spin_20s_linear_infinite_reverse] shadow-[0_0_10px_rgba(0,245,255,0.3)]">
-                      .css
-                    </div>
-                 </div>
-                 {/* Item 3: Top (Offset) */}
-                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div className="glass-card px-3 py-1.5 rounded-full text-xs font-mono text-yellow-400 animate-[spin_20s_linear_infinite_reverse] shadow-[0_0_10px_rgba(250,204,21,0.3)]">
-                      JS
-                    </div>
-                 </div>
+                {/* Item 1: Right */}
+                <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2">
+                  <div className="glass-card px-3 py-1.5 rounded-full text-xs font-mono text-[#00F5FF] animate-[spin_20s_linear_infinite_reverse] shadow-[0_0_10px_rgba(0,245,255,0.3)]">
+                    &lt;html&gt;
+                  </div>
+                </div>
+                {/* Item 2: Left */}
+                <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2">
+                  <div className="glass-card px-3 py-1.5 rounded-full text-xs font-mono text-[#00F5FF] animate-[spin_20s_linear_infinite_reverse] shadow-[0_0_10px_rgba(0,245,255,0.3)]">
+                    .css
+                  </div>
+                </div>
+                {/* Item 3: Top (Offset) */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <div className="glass-card px-3 py-1.5 rounded-full text-xs font-mono text-yellow-400 animate-[spin_20s_linear_infinite_reverse] shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+                    JS
+                  </div>
+                </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -653,16 +882,15 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00F5FF]/20 bg-[#00F5FF]/8 text-[#00F5FF] text-xs font-semibold mb-8 uppercase tracking-widest">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00F5FF] animate-pulse" />
-            Ready to build?
+            {tCTA("badge")}
           </div>
           <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
-            Stop designing.
+            {tCTA("titleLine1")}
             <br />
-            <span className="gradient-text-blue">Start shipping.</span>
+            <span className="gradient-text-blue">{tCTA("titleLine2")}</span>
           </h2>
           <p className="text-[#8B9AB5] text-xl mb-12 max-w-xl mx-auto leading-relaxed">
-            Join thousands of developers who build faster with Thunder. Free to
-            start, no credit card required.
+            {tCTA("desc")}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             {!isLoading && (
@@ -670,20 +898,20 @@ export default function LandingPage() {
                 {isLoggedIn ? (
                   <Link href="/dashboard">
                     <button className="btn-neon px-10 py-4 rounded-xl text-lg font-bold relative overflow-hidden shadow-[0_0_40px_rgba(0,245,255,0.3)] animate-electric-pulse">
-                      <span>Open Dashboard</span>
+                      <span>{tCTA("openDashboard")}</span>
                     </button>
                   </Link>
                 ) : (
                   <Link href="/register">
                     <button className="btn-neon px-10 py-4 rounded-xl text-lg font-bold relative overflow-hidden shadow-[0_0_40px_rgba(0,245,255,0.3)] animate-electric-pulse">
-                      <span>Start Building Free</span>
+                      <span>{tCTA("startBuildingFree")}</span>
                     </button>
                   </Link>
                 )}
                 {!isLoggedIn && (
                   <Link href="/login">
                     <button className="px-10 py-4 rounded-xl text-lg font-semibold border border-white/10 bg-white/5 text-[#8B9AB5] hover:text-white hover:border-white/20 transition-all duration-300">
-                      Sign In
+                      {tCTA("signIn")}
                     </button>
                   </Link>
                 )}
@@ -713,17 +941,15 @@ export default function LandingPage() {
             </div>
             <span className="font-bold text-white">Thunder</span>
           </div>
-          <div className="text-[#4A5568] text-sm">
-            © 2026 Thunder AI. Built for builders.
-          </div>
+          <div className="text-[#4A5568] text-sm">{tFooter("copyright")}</div>
           <div className="flex gap-6 text-sm text-[#4A5568]">
-            {["Privacy", "Terms", "Twitter", "GitHub"].map((link) => (
+            {["privacy", "terms", "twitter", "github"].map((linkKey) => (
               <a
-                key={link}
+                key={linkKey}
                 href="#"
                 className="hover:text-[#00F5FF] transition-colors duration-200"
               >
-                {link}
+                {tFooter(linkKey as any)}
               </a>
             ))}
           </div>

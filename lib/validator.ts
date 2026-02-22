@@ -3,6 +3,7 @@ export interface GeneratedComponent {
   html: string;
   css: string;
   js: string;
+  jsx?: string;
 }
 
 export function validateComponent(component: any): {
@@ -11,6 +12,12 @@ export function validateComponent(component: any): {
 } {
   if (!component || typeof component !== "object") {
     return { isValid: false, error: "Invalid JSON response" };
+  }
+
+  // Check for React Component (JSX)
+  if (component.jsx && typeof component.jsx === "string" && component.jsx.trim().length > 0) {
+    // If JSX is present, HTML is allowed to be empty
+    return { isValid: true };
   }
 
   if (!component.html || typeof component.html !== "string") {
@@ -35,7 +42,7 @@ export function validateComponent(component: any): {
     // "<head>",  <-- We allow <head> now for full app mode
     // "<body>",  <-- We allow <body> now for full app mode
     // "<script src=", <-- We allow <script src> now for external libraries (charts, p5.js, etc.)
-    "import ",
+    // "import ", // Removed to allow imports in general, sanitizer will handle it
     "require(",
   ];
   const lowerHtml = component.html.toLowerCase();

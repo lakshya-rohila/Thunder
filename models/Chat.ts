@@ -11,6 +11,7 @@ export interface IChat extends Document {
   generatedHTML: string;
   generatedCSS: string;
   generatedJS: string;
+  generatedJSX: string;
   isPublic: boolean;
   likesCount: number;
   commentsCount: number;
@@ -47,6 +48,7 @@ const ChatSchema = new Schema<IChat>(
     generatedHTML: { type: String, default: "" },
     generatedCSS: { type: String, default: "" },
     generatedJS: { type: String, default: "" },
+    generatedJSX: { type: String, default: "" },
     isPublic: {
       type: Boolean,
       default: false,

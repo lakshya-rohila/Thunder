@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import PreviewPanel from "./PreviewPanel";
 import CodeTabs from "./CodeTabs";
 import PublishModal from "./PublishModal";
@@ -14,8 +15,9 @@ interface WorkspaceProps {
     html: string;
     css: string;
     js: string;
+    jsx?: string;
   } | null;
-  onCodeUpdate: (type: "html" | "css" | "js", value: string) => void;
+  onCodeUpdate: (type: "html" | "css" | "js" | "jsx", value: string) => void;
   chatId?: string | null;
   isPublic?: boolean;
   onPublished?: (isPublic: boolean) => void;
@@ -30,7 +32,10 @@ export default function Workspace({
   onPublished,
   mode = "prompt",
 }: WorkspaceProps) {
-  const [activeTab, setActiveTab] = useState<"preview" | "code" | "research">("preview");
+  const t = useTranslations("Workspace");
+  const [activeTab, setActiveTab] = useState<"preview" | "code" | "research">(
+    "preview",
+  );
   const [showPublishModal, setShowPublishModal] = useState(false);
 
   // If in research mode, always show ResearchPanel
@@ -76,7 +81,7 @@ export default function Workspace({
         <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none z-0" />
 
         <div className="relative z-10 glass-card border border-white/6 p-12 rounded-3xl text-center max-w-sm shadow-2xl">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#00F5FF]/15 to-[#8A2BE2]/15 border border-[#00F5FF]/20 flex items-center justify-center mb-6 mx-auto animate-float">
+          <div className="w-20 h-20 rounded-2xl bg-linear-to-br from-[#00F5FF]/15 to-[#8A2BE2]/15 border border-[#00F5FF]/20 flex items-center justify-center mb-6 mx-auto animate-float">
             <svg
               width="32"
               height="32"
@@ -90,10 +95,11 @@ export default function Workspace({
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
           </div>
-          <h3 className="text-lg font-bold text-white mb-2">Workspace Ready</h3>
+          <h3 className="text-lg font-bold text-white mb-2">
+            {t("readyTitle")}
+          </h3>
           <p className="text-[#4A5568] text-sm leading-relaxed">
-            Your generated components will appear here. Use the prompt panel to
-            start building.
+            {t("readyDesc")}
           </p>
         </div>
       </div>
@@ -107,10 +113,10 @@ export default function Workspace({
         <div className="flex items-center gap-3">
           <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           <h2 className="font-semibold text-sm text-white">
-            {componentData.name || "Untitled Component"}
+            {componentData.name || t("untitled")}
           </h2>
           <span className="text-[10px] bg-[#00F5FF]/10 text-[#00F5FF] px-2 py-0.5 rounded-full border border-[#00F5FF]/20 font-semibold uppercase tracking-wider">
-            Active
+            {t("active")}
           </span>
           {chatId && <FeedbackWidget generationId={chatId} />}
         </div>
@@ -125,7 +131,7 @@ export default function Workspace({
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
                 isPublic
                   ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20"
-                  : "bg-gradient-to-r from-[#00F5FF]/10 to-[#8A2BE2]/10 text-[#00F5FF] border border-[#00F5FF]/20 hover:from-[#00F5FF]/20 hover:to-[#8A2BE2]/20"
+                  : "bg-linear-to-r from-[#00F5FF]/10 to-[#8A2BE2]/10 text-[#00F5FF] border border-[#00F5FF]/20 hover:from-[#00F5FF]/20 hover:to-[#8A2BE2]/20"
               }`}
             >
               <svg
@@ -143,7 +149,7 @@ export default function Workspace({
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
-              {isPublic ? "Manage Post" : "Publish"}
+              {isPublic ? t("managePost") : t("publish")}
             </button>
           )}
 
@@ -155,7 +161,7 @@ export default function Workspace({
                 onClick={() => setActiveTab(tab)}
                 className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 capitalize ${
                   activeTab === tab
-                    ? "bg-gradient-to-r from-[#00F5FF]/20 to-[#8A2BE2]/20 text-[#00F5FF] border border-[#00F5FF]/25 shadow-[0_0_10px_rgba(0,245,255,0.1)]"
+                    ? "bg-linear-to-r from-[#00F5FF]/20 to-[#8A2BE2]/20 text-[#00F5FF] border border-[#00F5FF]/25 shadow-[0_0_10px_rgba(0,245,255,0.1)]"
                     : "text-[#4A5568] hover:text-[#8B9AB5] hover:bg-white/3"
                 }`}
               >
@@ -203,7 +209,13 @@ export default function Workspace({
                     <line x1="21" y1="21" x2="16.65" y2="16.65" />
                   </svg>
                 )}
-                {tab}
+                {t(
+                  tab === "preview"
+                    ? "tabPreview"
+                    : tab === "code"
+                      ? "tabCode"
+                      : "tabResearch",
+                )}
               </button>
             ))}
           </div>
@@ -216,12 +228,14 @@ export default function Workspace({
             html={componentData.html}
             css={componentData.css}
             js={componentData.js}
+            jsx={componentData.jsx}
           />
         ) : activeTab === "code" ? (
           <CodeTabs
             html={componentData.html}
             css={componentData.css}
             js={componentData.js}
+            jsx={componentData.jsx}
             onUpdate={onCodeUpdate}
           />
         ) : (
