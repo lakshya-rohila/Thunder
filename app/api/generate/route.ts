@@ -7,7 +7,7 @@ import { deductCredits } from "@/lib/credits";
 
 export async function POST(request: Request) {
   try {
-    const { prompt, context, mode, projectType, styleMode, framework } =
+    const { prompt, context, mode, projectType, styleMode } =
       await request.json();
 
     if (!prompt) {
@@ -20,24 +20,27 @@ export async function POST(request: Request) {
     // Try to get auth context for personalization (optional)
     let userId: string | undefined;
     const auth = await getAuthContext(request);
-    
+
     // Check credits if user is authenticated
     if (!(auth instanceof NextResponse)) {
       userId = auth.userId.toString();
       const hasCredits = await deductCredits(userId, 5); // 5 credits per generation
-      
+
       if (!hasCredits) {
         return NextResponse.json(
-          { error: "Insufficient daily credits. Please upgrade or wait for tomorrow." },
-          { status: 402 } // Payment Required
+          {
+            error:
+              "Insufficient daily credits. Please upgrade or wait for tomorrow.",
+          },
+          { status: 402 }, // Payment Required
         );
       }
     } else {
-       // Require authentication for generation
-       return NextResponse.json(
-         { error: "Authentication required to generate components" },
-         { status: 401 }
-       );
+      // Require authentication for generation
+      return NextResponse.json(
+        { error: "Authentication required to generate components" },
+        { status: 401 },
+      );
     }
 
     // 1. Generate (with optional context for refinement)
@@ -48,7 +51,6 @@ export async function POST(request: Request) {
       projectType,
       styleMode,
       userId,
-      framework,
     );
 
     // 2. Validate (Skip if it is a clarification question)

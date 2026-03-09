@@ -21,7 +21,6 @@ interface ChatInterfaceProps {
     mode: "standard" | "reverse",
     projectType?: "component" | "app" | "game" | "auto",
     styleMode?: "vanilla" | "tailwind",
-    framework?: "html" | "react",
   ) => void;
   mode: "standard" | "reverse" | "research";
   onModeChange: (mode: "standard" | "reverse") => void;
@@ -29,8 +28,6 @@ interface ChatInterfaceProps {
   onProjectTypeChange: (type: "component" | "app" | "game" | "auto") => void;
   styleMode: "vanilla" | "tailwind";
   onStyleModeChange: (mode: "vanilla" | "tailwind") => void;
-  framework: "html" | "react";
-  onFrameworkChange: (framework: "html" | "react") => void;
   isListening?: boolean;
   onListeningChange?: (isListening: boolean) => void;
   onTranscriptChange?: (transcript: string) => void;
@@ -46,8 +43,7 @@ export default function ChatInterface({
   onProjectTypeChange,
   styleMode,
   onStyleModeChange,
-  framework,
-  onFrameworkChange,
+  isListening,
   onListeningChange,
   onTranscriptChange,
 }: ChatInterfaceProps) {
@@ -81,8 +77,6 @@ export default function ChatInterface({
     }
   }, [localIsListening, onListeningChange]);
 
-  const isListening = localIsListening;
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -101,7 +95,6 @@ export default function ChatInterface({
         mode === "research" ? "standard" : mode,
         projectType,
         styleMode,
-        framework,
       );
       setInput("");
     }
@@ -130,7 +123,6 @@ export default function ChatInterface({
       mode === "research" ? "standard" : mode,
       projectType,
       styleMode,
-      framework,
     );
     setClarificationAnswers({}); // Reset after sending
   };
@@ -195,26 +187,6 @@ export default function ChatInterface({
                   }`}
                 >
                   {sMode.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Framework */}
-            <div className="flex gap-1 bg-[#050505] p-1 border-2 border-white/10">
-              {[
-                { id: "html", label: t("fwHtml") },
-                // { id: "react", label: "React" },
-              ].map((fw) => (
-                <button
-                  key={fw.id}
-                  onClick={() => onFrameworkChange(fw.id as any)}
-                  className={`flex-1 px-2 py-1.5 text-[9px] uppercase font-black font-mono tracking-widest transition-colors border-2 ${
-                    framework === fw.id
-                      ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00]"
-                      : "text-[#A1A1AA] border-transparent hover:text-[#FAFAFA] hover:border-white/20"
-                  }`}
-                >
-                  {fw.label}
                 </button>
               ))}
             </div>

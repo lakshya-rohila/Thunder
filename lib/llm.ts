@@ -1,5 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { systemPrompt, visionSystemPrompt } from "./promptTemplate";
+import {
+  generateSystemPrompt,
+  generateVisionSystemPrompt,
+} from "./promptTemplate";
 import { reverseEngineeringSystemPrompt } from "./reverseEngineeringPrompt";
 import { LearningEngine } from "./learningEngine";
 
@@ -8,9 +11,9 @@ const genAI = new GoogleGenerativeAI(apiKey || "");
 
 // Fallback models in order of preference
 const FALLBACK_MODELS = [
-  "gemini-2.5-flash",      // Latest Flash
+  "gemini-2.5-flash", // Latest Flash
   "gemini-2.5-flash-lite", // Latest Flash Lite
-  "gemini-2.0-flash",      // Previous Flash
+  "gemini-2.0-flash", // Previous Flash
   "gemini-2.0-flash-lite", // Previous Flash Lite
 ];
 
@@ -29,16 +32,16 @@ async function generateWithFallback(prompt: string | any[]) {
           // consistent config if needed
         },
       });
-      
+
       const result = await model.generateContent(prompt);
       return result;
     } catch (error: any) {
       lastError = error;
-      
+
       // Check for 429 (Too Many Requests) or 503 (Service Unavailable) or 404 (Not Found)
-      const isRetryableError = 
-        error.response?.status === 429 || 
-        error.status === 429 || 
+      const isRetryableError =
+        error.response?.status === 429 ||
+        error.status === 429 ||
         error.response?.status === 503 ||
         error.status === 503 ||
         error.response?.status === 404 ||
@@ -49,10 +52,12 @@ async function generateWithFallback(prompt: string | any[]) {
         (error.message && error.message.includes("404"));
 
       if (isRetryableError) {
-        console.warn(`Model ${modelName} failed with retryable error (${error.status || error.message}). Trying next model...`);
+        console.warn(
+          `Model ${modelName} failed with retryable error (${error.status || error.message}). Trying next model...`,
+        );
         continue; // Try next model
       }
-      
+
       // If it's not a retryable error (e.g., bad request 400), throw immediately
       throw error;
     }
@@ -161,7 +166,6 @@ export async function generateComponent(
   projectType: "component" | "app" | "game" | "auto" = "auto",
   styleMode: "vanilla" | "tailwind" = "vanilla",
   userId?: string, // Add userId to support personalization
-  framework: "html" | "react" = "html",
 ) {
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not set");
@@ -189,7 +193,7 @@ export async function generateComponent(
     const ragBlock = await LearningEngine.getRelevantExamples(userPrompt);
 
     // Combine all blocks
-    prompt = `${systemPrompt}${learningBlock}${personalizationBlock}${ragBlock}\n\nUser Request: ${userPrompt}`;
+    prompt = `${generateSystemPrompt(userPrompt)}${learningBlock}${personalizationBlock}${ragBlock}\n\nUser Request: ${userPrompt}`;
 
     if (projectType && projectType !== "auto") {
       prompt += `\n\nIMPORTANT: The user has explicitly selected to build a [${projectType.toUpperCase()}]. Enforce ${projectType} mode rules.`;
@@ -197,27 +201,6 @@ export async function generateComponent(
 
     if (styleMode) {
       prompt += `\n\nIMPORTANT: The user has explicitly selected [${styleMode.toUpperCase()}] styling. Enforce ${styleMode} mode rules.`;
-    }
-
-    if (framework === "react") {
-      prompt += `\n\nIMPORTANT: The user has explicitly selected [REACT] framework.
-      
-      RULES FOR REACT GENERATION:
-      1. You MUST generate a single React Functional Component (JSX).
-      2. Do NOT generate a full HTML file. Do NOT generate separate CSS files unless absolutely necessary (prefer Tailwind or inline styles).
-      3. Return a JSON object with a "jsx" field containing the React code.
-      4. The "html" and "js" fields MUST be empty strings.
-      5. If you use Tailwind, use className="..."
-      6. The component should be named "App" or "Component".
-      7. Do NOT use 'import React from "react"'. Assume React is in scope.
-      8. Example Output Format:
-      {
-        "jsx": "export default function App() { return <div className='p-4'>Hello</div> }",
-        "html": "",
-        "css": "",
-        "js": ""
-      }
-      `;
     }
 
     if (previousCode) {
@@ -250,33 +233,11 @@ export async function generateComponent(
         // --- AUTOMATED CRITIC PASS ---
         // If this is a new generation (not clarification), run a quick critique
         if (!parsed.clarification && !parsed.type?.includes("clarification")) {
-          // In a real production system, we would do a second LLM call here.
-          // For now, we'll simulate a "Quality Check" by ensuring required fields exist.
-          // This placeholder is where the "Critic Agent" logic lives.
-          
-          if (framework === "react") {
-             // 1. If JSX is missing, look for it in JS or HTML
-             if (!parsed.jsx) {
-                if (parsed.js && (parsed.js.includes("return") || parsed.js.includes("export default"))) {
-                   parsed.jsx = parsed.js;
-                } else if (parsed.html && (parsed.html.includes("return") || parsed.html.includes("export default"))) {
-                   parsed.jsx = parsed.html;
-                }
-             }
-
-             // 2. Force HTML and JS to be empty for React mode as requested by user
-             parsed.html = "";
-             parsed.js = "";
-
-             // 3. Ensure we have a jsx field
-             if (!parsed.jsx) {
-                parsed.jsx = "// Failed to generate JSX";
-             }
-          } else {
-             if (!parsed.html || !parsed.css) {
-               console.warn("Critic: Missing core fields, triggering fallback fix...");
-               // Could trigger re-generation or patching here
-             }
+          if (!parsed.html || !parsed.css) {
+            console.warn(
+              "Critic: Missing core fields, triggering fallback fix...",
+            );
+            // Could trigger re-generation or patching here
           }
         }
 
@@ -351,7 +312,7 @@ export async function analyzeImageComponent(
   };
 
   const textPart = {
-    text: visionSystemPrompt,
+    text: generateVisionSystemPrompt(),
   };
 
   try {

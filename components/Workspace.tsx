@@ -15,9 +15,8 @@ interface WorkspaceProps {
     html: string;
     css: string;
     js: string;
-    jsx?: string;
   } | null;
-  onCodeUpdate: (type: "html" | "css" | "js" | "jsx", value: string) => void;
+  onCodeUpdate: (type: "html" | "css" | "js", value: string) => void;
   chatId?: string | null;
   isPublic?: boolean;
   onPublished?: (isPublic: boolean) => void;
@@ -217,14 +216,12 @@ export default function Workspace({
             html={componentData.html}
             css={componentData.css}
             js={componentData.js}
-            jsx={componentData.jsx}
           />
         ) : activeTab === "code" ? (
           <CodeTabs
             html={componentData.html}
             css={componentData.css}
             js={componentData.js}
-            jsx={componentData.jsx}
             onUpdate={onCodeUpdate}
           />
         ) : (

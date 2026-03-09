@@ -23,7 +23,6 @@ interface ComponentData {
   html: string;
   css: string;
   js: string;
-  jsx?: string; // Add support for React JSX
   files?: FileNode[]; // New field for multi-file support
 }
 
@@ -38,7 +37,6 @@ export interface ChatState {
   generationMode: "standard" | "reverse";
   projectType: "component" | "app" | "game" | "auto";
   styleMode: "vanilla" | "tailwind";
-  framework: "html" | "react";
   isListening: boolean;
   transcript: string;
   error: string | null;
@@ -46,7 +44,6 @@ export interface ChatState {
 }
 
 const initialState: ChatState = {
-  framework: "react",
   messages: [],
   componentData: null,
   activeChatId: null,
@@ -109,9 +106,6 @@ const chatSlice = createSlice({
     setStyleMode(state, action: PayloadAction<"vanilla" | "tailwind">) {
       state.styleMode = action.payload;
     },
-    setFramework(state, action: PayloadAction<"html" | "react">) {
-      state.framework = action.payload;
-    },
     setIsListening(state, action: PayloadAction<boolean>) {
       state.isListening = action.payload;
     },
@@ -168,7 +162,6 @@ export const {
   setGenerationMode,
   setProjectType,
   setStyleMode,
-  setFramework,
   setIsListening,
   setTranscript,
   setError,
