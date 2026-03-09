@@ -18,56 +18,34 @@ export default function LandingNavbar() {
   }, [dispatch]);
 
   return (
-    <nav className="fixed top-5 left-0 right-0 z-50 flex justify-center px-6">
-      <div
-        className="w-full max-w-5xl flex items-center justify-between px-5 h-14 rounded-2xl border border-white/8"
-        style={{
-          background: "rgba(10, 12, 20, 0.75)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          boxShadow:
-            "0 0 0 1px rgba(255,255,255,0.04), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)",
-        }}
-      >
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050505] border-b border-white/10 px-6 h-20 flex items-center justify-between">
+      <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-          <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200"
-            style={{
-              background: "linear-gradient(135deg, #00F5FF 0%, #8A2BE2 100%)",
-              boxShadow: "0 0 16px rgba(0,245,255,0.25)",
-            }}
-          >
+        <Link href="/" className="flex items-center gap-3 shrink-0 group">
+          <div className="w-8 h-8 bg-[#FAFAFA] flex items-center justify-center transition-transform group-hover:-rotate-6 shadow-[4px_4px_0_rgba(223,255,0,0.5)]">
             <svg
-              width="15"
-              height="15"
+              width="14"
+              height="14"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#000"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              stroke="#050505"
+              strokeWidth="3"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
             >
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
           </div>
-          <span className="font-bold text-[15px] tracking-tight text-white">
+          <span className="font-black text-xl text-white tracking-widest uppercase display-font">
             Thunder
           </span>
-          <span
-            className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-semibold tracking-wider"
-            style={{
-              background: "rgba(0,245,255,0.08)",
-              border: "1px solid rgba(0,245,255,0.2)",
-              color: "#00F5FF",
-            }}
-          >
+          <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 border border-[#FF4500] bg-[#FF4500]/10 text-[#FF4500] text-[10px] font-bold font-mono tracking-widest uppercase ml-1">
             BETA
           </span>
         </Link>
 
         {/* Nav Links */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-8">
           {[
             { label: tNav("features"), href: "#features", auth: false },
             { label: tNav("howItWorks"), href: "#how-it-works", auth: false },
@@ -86,77 +64,36 @@ export default function LandingNavbar() {
               <Component
                 key={label}
                 href={href}
-                className="group relative px-3.5 py-2 text-[13px] font-medium text-[#6B7A99] hover:text-white transition-colors duration-200 rounded-lg hover:bg-white/4 whitespace-nowrap"
+                className="font-mono text-xs font-bold text-[#A1A1AA] uppercase tracking-wider hover:text-[#DFFF00] transition-colors"
               >
                 {label}
-                <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#00F5FF] opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
               </Component>
             );
           })}
         </div>
 
         {/* CTA */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-4 shrink-0">
           <LanguageSwitcher />
           {!isLoading && (
             <>
               {isLoggedIn ? (
                 <Link href="/dashboard">
-                  <button
-                    className="flex items-center gap-1.5 px-5 py-1.5 rounded-xl text-[13px] font-bold text-black transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] whitespace-nowrap"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #00F5FF 0%, #00C8FF 100%)",
-                      boxShadow:
-                        "0 0 20px rgba(0,245,255,0.3), 0 2px 8px rgba(0,0,0,0.3)",
-                    }}
-                  >
-                    Go to Dashboard
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                  <button className="bg-[#DFFF00] text-[#050505] px-5 py-2.5 text-xs font-bold font-mono tracking-widest uppercase hover:bg-white hover:-translate-y-0.5 transition-transform border-2 border-[#050505] shadow-[6px_6px_0_rgba(255,255,255,0.15)]">
+                    Dashboard
                   </button>
                 </Link>
               ) : (
                 <>
                   <Link
                     href="/login"
-                    className="hidden sm:flex items-center px-3.5 py-1.5 rounded-lg text-[13px] font-medium text-[#6B7A99] hover:text-white hover:bg-white/5 transition-all duration-200"
+                    className="hidden sm:block font-mono text-xs font-bold text-white uppercase tracking-wider hover:text-[#DFFF00] transition-colors"
                   >
                     {tNav("login")}
                   </Link>
                   <Link href="/register">
-                    <button
-                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-[13px] font-semibold text-black transition-all duration-200 hover:scale-[1.03] active:scale-[0.98]"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, #00F5FF 0%, #00C8FF 100%)",
-                        boxShadow:
-                          "0 0 20px rgba(0,245,255,0.3), 0 2px 8px rgba(0,0,0,0.3)",
-                      }}
-                    >
+                    <button className="bg-[#FAFAFA] text-[#050505] px-5 py-2.5 text-xs font-bold font-mono tracking-widest uppercase hover:bg-[#DFFF00] hover:-translate-y-0.5 transition-transform border-2 border-[#050505] shadow-[6px_6px_0_rgba(223,255,0,0.4)]">
                       {tNav("getStarted")}
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
                     </button>
                   </Link>
                 </>

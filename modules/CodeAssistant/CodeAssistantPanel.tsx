@@ -36,13 +36,13 @@ export default function CodeAssistantPanel() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-[#0B0F19] overflow-hidden text-white">
+    <div className="h-full flex flex-col bg-[#050505] overflow-hidden text-[#FAFAFA]">
       {/* Header */}
-      <div className="h-14 border-b border-white/5 flex items-center px-6 shrink-0 bg-[#0D1117]">
-        <h2 className="font-semibold text-sm flex items-center gap-2">
-          <span className="text-cyan-400">⚡</span>
+      <div className="h-16 border-b border-white/10 flex items-center px-6 shrink-0 bg-[#050505]">
+        <h2 className="font-black text-sm flex items-center gap-3 tracking-widest font-mono uppercase">
+          <span className="text-[#DFFF00]">⚡</span>
           Code Assistant
-          <span className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded ml-2">
+          <span className="text-[10px] text-[#050505] bg-[#DFFF00] font-bold px-2 py-0.5 ml-2 shadow-[2px_2px_0_rgba(255,255,255,0.2)]">
             {CODE_MODEL.name}
           </span>
         </h2>
@@ -50,16 +50,16 @@ export default function CodeAssistantPanel() {
 
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* Input Panel */}
-        <div className="w-full lg:w-1/3 border-r border-white/5 p-6 flex flex-col bg-[#0B0F19]">
-          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center justify-between">
+        <div className="w-full lg:w-1/3 border-r border-white/10 p-6 flex flex-col bg-[#050505]">
+          <h3 className="text-xs font-bold text-[#A1A1AA] uppercase tracking-widest font-mono mb-6 flex items-center justify-between">
             <span>Describe Task</span>
             <button
               type="button"
               onClick={toggleListening}
-              className={`flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full transition-all ${
+              className={`flex items-center gap-1.5 text-[10px] px-3 py-1 font-bold uppercase tracking-wider transition-colors border-2 ${
                 isListening
-                  ? "bg-red-500/20 text-red-400 animate-pulse"
-                  : "bg-white/5 text-gray-400 hover:text-white"
+                  ? "bg-[#FF4500] text-white border-[#FF4500] shadow-[2px_2px_0_rgba(255,69,0,0.5)]"
+                  : "bg-transparent text-[#A1A1AA] border-white/20 hover:text-white hover:border-white/40"
               }`}
             >
               {isListening ? (
@@ -92,13 +92,13 @@ export default function CodeAssistantPanel() {
 
           <form
             onSubmit={handleGenerate}
-            className="flex-1 flex flex-col gap-4"
+            className="flex-1 flex flex-col gap-5"
           >
             <div className="flex gap-2">
               <select
                 value={language}
                 onChange={(e) => dispatch(setLanguage(e.target.value))}
-                className="bg-[#161B22] border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-300 focus:outline-none focus:border-cyan-500/50"
+                className="bg-[#050505] border-2 border-white/20 px-3 py-2 text-sm text-[#FAFAFA] font-mono uppercase tracking-wider focus:outline-none focus:border-[#DFFF00] transition-colors"
               >
                 <option value="javascript">JavaScript</option>
                 <option value="typescript">TypeScript</option>
@@ -114,12 +114,12 @@ export default function CodeAssistantPanel() {
             <textarea
               value={prompt}
               onChange={(e) => dispatch(setPrompt(e.target.value))}
-              placeholder="E.g., Write a function to validate email addresses using regex..."
-              className="flex-1 w-full bg-[#161B22] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-cyan-500/50 resize-none font-mono"
+              placeholder="E.g., WRITE A FUNCTION TO VALIDATE EMAIL ADDRESSES USING REGEX"
+              className="flex-1 w-full bg-[#0A0A0A] border-2 border-white/10 p-5 text-sm focus:outline-none focus:border-[#DFFF00] resize-none font-mono text-[#FAFAFA] transition-colors"
             />
 
             {error && (
-              <div className="text-red-400 text-xs bg-red-500/10 p-3 rounded-lg border border-red-500/20">
+              <div className="text-[#FF4500] text-[10px] font-bold font-mono tracking-widest uppercase bg-[#FF4500]/10 p-4 border-2 border-[#FF4500]">
                 {error}
               </div>
             )}
@@ -127,40 +127,26 @@ export default function CodeAssistantPanel() {
             <button
               type="submit"
               disabled={isLoading || !prompt}
-              className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2"
+              className="w-full bg-[#DFFF00] text-[#050505] font-black py-4 uppercase tracking-widest transition-transform disabled:opacity-50 disabled:cursor-not-allowed border-2 border-transparent shadow-[6px_6px_0_rgba(255,255,255,0.2)] hover:shadow-none hover:translate-y-1 hover:translate-x-1 flex items-center justify-center gap-3"
             >
               {isLoading ? (
                 <>
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
-                  Coding...
+                  <span className="w-2 h-2 bg-[#050505] animate-ping" />
+                  CODING...
                 </>
               ) : (
-                "Generate Code"
+                "GENERATE CODE"
               )}
             </button>
           </form>
         </div>
 
         {/* Output Panel */}
-        <div className="flex-1 bg-[#1E1E1E] overflow-hidden flex flex-col relative">
+        <div className="flex-1 bg-[#0A0A0A] overflow-hidden flex flex-col relative border-l border-white/10">
           <div className="absolute top-4 right-4 z-10">
             <button
               onClick={copyToClipboard}
-              className="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors backdrop-blur-sm border border-white/5"
+              className="bg-[#050505] hover:bg-[#DFFF00] hover:text-[#050505] text-[#FAFAFA] px-4 py-2 text-[10px] font-bold font-mono uppercase tracking-wider transition-colors border-2 border-white/20 hover:border-[#DFFF00] shadow-[4px_4px_0_rgba(255,255,255,0.1)]"
             >
               Copy Code
             </button>
@@ -185,28 +171,28 @@ export default function CodeAssistantPanel() {
                 {generatedCode}
               </SyntaxHighlighter>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-gray-500 p-8 text-center">
-                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-4">
+              <div className="h-full flex flex-col items-center justify-center text-[#A1A1AA] p-8 text-center shrink-0">
+                <div className="w-20 h-20 border-2 border-white/10 flex items-center justify-center mb-6 shadow-[8px_8px_0_rgba(255,255,255,0.05)]">
                   <svg
-                    width="32"
-                    height="32"
+                    width="40"
+                    height="40"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="square"
+                    strokeLinejoin="miter"
                   >
                     <polyline points="16 18 22 12 16 6" />
                     <polyline points="8 6 2 12 8 18" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-300 mb-2">
+                <h3 className="text-xl font-black text-white mb-2 uppercase tracking-widest">
                   Code Assistant
                 </h3>
-                <p className="max-w-md">
-                  Enter a description of the code you need, and StarCoder2 will
-                  generate a solution for you.
+                <p className="max-w-md font-mono text-sm leading-relaxed">
+                  ENTER A DESCRIPTION OF THE CODE YOU NEED, AND STARCODER2 WILL
+                  GENERATE A SOLUTION FOR YOU.
                 </p>
               </div>
             )}

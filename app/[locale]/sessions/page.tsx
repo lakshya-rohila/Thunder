@@ -74,15 +74,17 @@ export default function SessionsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0B0F19] text-[#F0F6FF] font-sans flex flex-col">
+    <main className="min-h-screen bg-[#050505] text-[#FAFAFA] font-sans flex flex-col">
       <DashboardNavbar onLogout={handleLogout} />
 
-      <div className="flex-1 max-w-7xl mx-auto w-full px-5 py-10">
-        <header className="mb-10">
-          <h1 className="text-3xl font-bold bg-linear-to-r from-white to-[#8B9AB5] bg-clip-text text-transparent">
+      <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-12">
+        <header className="mb-12">
+          <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
             {t("title")}
           </h1>
-          <p className="text-[#6B7A99] mt-2">{t("desc")}</p>
+          <p className="text-[#A1A1AA] font-mono text-sm max-w-2xl">
+            {t("desc")}
+          </p>
         </header>
 
         {chatsLoading ? (
@@ -90,30 +92,34 @@ export default function SessionsPage() {
             <Loader />
           </div>
         ) : chatsError ? (
-          <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-2xl text-red-400">
+          <div className="bg-[#FF4500]/10 border-2 border-[#FF4500] p-6 text-[#FF4500] font-mono tracking-widest uppercase text-sm font-bold">
             {chatsError}
           </div>
         ) : chats.length === 0 ? (
-          <div className="bg-white/5 border border-white/10 p-20 rounded-3xl text-center">
-            <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <div className="border-2 border-white/10 bg-[#050505] p-20 text-center">
+            <div className="w-16 h-16 border-2 border-white/10 flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0_rgba(255,255,255,0.1)]">
               <svg
                 width="32"
                 height="32"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#6B7A99"
+                stroke="#FAFAFA"
                 strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
               >
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
             </div>
-            <h2 className="text-xl font-semibold mb-2">{t("noSessions")}</h2>
-            <p className="text-[#6B7A99] mb-8">{t("noSessionsDesc")}</p>
+            <h2 className="text-xl font-black uppercase tracking-widest mb-2">
+              {t("noSessions")}
+            </h2>
+            <p className="text-[#A1A1AA] font-mono mb-8">
+              {t("noSessionsDesc")}
+            </p>
             <Link
               href="/dashboard"
-              className="inline-flex items-center px-6 py-3 rounded-xl bg-[#00F5FF] text-[#0B0F19] font-bold hover:shadow-[0_0_20px_rgba(0,245,255,0.4)] transition-all duration-300"
+              className="inline-flex items-center px-6 py-4 bg-[#DFFF00] text-[#050505] font-black uppercase tracking-widest shadow-[6px_6px_0_rgba(255,255,255,0.2)] hover:shadow-none hover:translate-y-1 hover:translate-x-1 transition-all border-2 border-transparent"
             >
               {t("startGen")}
             </Link>
@@ -123,19 +129,19 @@ export default function SessionsPage() {
             {chats.map((chat) => (
               <div
                 key={chat._id}
-                className="group bg-[#0D1117] border border-white/5 rounded-2xl overflow-hidden hover:border-[#00F5FF]/30 transition-all duration-300 flex flex-col"
+                className="group bg-[#050505] border-2 border-white/10 hover:border-[#DFFF00] transition-all flex flex-col hover:shadow-[8px_8px_0_rgba(223,255,0,0.2)] hover:-translate-y-1 hover:-translate-x-1"
               >
-                <div className="p-5 flex-1">
+                <div className="p-6 flex-1">
                   <div className="flex items-start justify-between mb-4">
-                    <h3 className="font-bold text-lg text-white group-hover:text-[#00F5FF] transition-colors line-clamp-1">
+                    <h3 className="font-black text-lg text-white uppercase tracking-widest group-hover:text-[#DFFF00] transition-colors line-clamp-1">
                       {chat.title}
                     </h3>
                   </div>
-                  <p className="text-sm text-[#8B9AB5] line-clamp-3 mb-6 bg-white/5 p-3 rounded-xl border border-white/5">
+                  <p className="text-sm font-mono text-[#A1A1AA] line-clamp-3 mb-6 bg-[#0A0A0A] p-4 border border-white/10">
                     {chat.prompt}
                   </p>
-                  <div className="flex items-center justify-between text-[11px] text-[#4A5568] font-medium uppercase tracking-wider">
-                    <div className="flex items-center gap-1.5">
+                  <div className="flex items-center justify-between text-[10px] text-[#71717A] font-bold font-mono uppercase tracking-widest">
+                    <div className="flex items-center gap-2">
                       <svg
                         width="12"
                         height="12"
@@ -143,8 +149,8 @@ export default function SessionsPage() {
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
                       >
                         <circle cx="12" cy="12" r="10" />
                         <polyline points="12 6 12 12 16 14" />
@@ -152,7 +158,7 @@ export default function SessionsPage() {
                       {new Date(chat.createdAt).toLocaleDateString()}
                     </div>
                     {chat.expiresAt && (
-                      <div className="text-amber-500/70">
+                      <div className="text-[#FF4500]">
                         {t("expires", {
                           days: Math.ceil(
                             (new Date(chat.expiresAt).getTime() - Date.now()) /
@@ -163,10 +169,10 @@ export default function SessionsPage() {
                     )}
                   </div>
                 </div>
-                <div className="px-5 py-4 bg-white/5 border-t border-white/5 flex items-center justify-between">
+                <div className="px-6 py-4 bg-[#0A0A0A] border-t border-white/10 flex items-center justify-between mt-auto">
                   <Link
                     href={`/dashboard?chatId=${chat._id}`}
-                    className="text-xs font-bold text-[#00F5FF]/80 hover:text-[#00F5FF] transition-colors flex items-center gap-1"
+                    className="text-[10px] font-bold font-mono tracking-widest uppercase text-[#A1A1AA] group-hover:text-[#DFFF00] transition-colors flex items-center gap-2"
                   >
                     {t("openInDash")}
                     <svg
@@ -176,8 +182,8 @@ export default function SessionsPage() {
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      strokeLinecap="square"
+                      strokeLinejoin="miter"
                     >
                       <line x1="7" y1="17" x2="17" y2="7" />
                       <polyline points="7 7 17 7 17 17" />

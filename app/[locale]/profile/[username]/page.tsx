@@ -125,12 +125,12 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center">
         <div className="flex gap-1.5">
           {[0, 1, 2].map((i) => (
             <span
               key={i}
-              className="w-2 h-2 rounded-full bg-[#00F5FF] animate-bounce"
+              className="w-4 h-4 bg-[#DFFF00] animate-pulse shadow-[2px_2px_0_rgba(223,255,0,0.5)]"
               style={{ animationDelay: `${i * 150}ms` }}
             />
           ))}
@@ -141,11 +141,13 @@ export default function ProfilePage() {
 
   if (error || !user) {
     return (
-      <div className="min-h-screen bg-[#0B0F19] flex flex-col items-center justify-center gap-4">
-        <p className="text-red-400 text-sm">{error ?? "User not found"}</p>
+      <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center gap-4">
+        <p className="text-red-400 text-sm font-mono">
+          {error ?? "User not found"}
+        </p>
         <Link
           href="/community"
-          className="text-xs text-[#00F5FF] hover:underline"
+          className="text-xs text-[#DFFF00] hover:underline uppercase tracking-widest font-bold"
         >
           ← Back to Community
         </Link>
@@ -154,47 +156,42 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-[#F0F6FF] font-sans flex flex-col">
+    <div className="min-h-screen bg-[#050505] text-[#FAFAFA] font-sans flex flex-col">
       <DashboardNavbar />
 
       {/* Profile Header */}
       <div
-        className="border-b border-white/5 shrink-0"
+        className="border-b-2 border-white/10 shrink-0"
         style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(120,180,255,0.12), transparent 70%), #0B0F19",
+          background: "#000000",
         }}
       >
-        <div className="max-w-5xl mx-auto px-6 pt-20 pb-12">
+        <div className="max-w-5xl mx-auto px-6 py-20">
           <div className="flex items-start gap-6 flex-wrap">
             {/* Avatar */}
-            <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white shrink-0"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(0,245,255,0.2), rgba(138,43,226,0.2))",
-                border: "1px solid rgba(255,255,255,0.1)",
-                boxShadow: "0 0 40px rgba(0,245,255,0.1)",
-              }}
-            >
+            <div className="w-20 h-20 flex items-center justify-center text-3xl font-black text-[#050505] shrink-0 border-2 border-white/20 bg-[#FAFAFA] shadow-[6px_6px_0_rgba(255,255,255,0.2)]">
               {user.name.charAt(0).toUpperCase()}
             </div>
 
             {/* Info */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-4 flex-wrap">
-                <h1 className="text-2xl font-bold text-white">{user.name}</h1>
+                <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">
+                  {user.name}
+                </h1>
                 {isOwner && (
                   <Link
                     href="/settings"
-                    className="px-3 py-1 rounded-lg text-xs font-semibold bg-white/5 border border-white/10 text-[#8B9AB5] hover:text-white hover:bg-white/10 transition-all"
+                    className="px-4 py-2 border-2 border-white/20 bg-[#0A0A0A] text-[#FAFAFA] font-bold font-mono text-[10px] uppercase tracking-widest hover:border-[#DFFF00] hover:text-[#DFFF00] transition-all"
                   >
                     Edit Profile
                   </Link>
                 )}
               </div>
-              <p className="text-sm text-[#4A5568] mt-0.5">@{user.username}</p>
-              <p className="text-xs text-[#4A5568] mt-1">
+              <p className="text-sm text-[#DFFF00] font-mono mt-1 font-bold">
+                @{user.username}
+              </p>
+              <p className="text-xs text-[#A1A1AA] font-mono mt-2">
                 Joined {formatDate(user.createdAt)}
               </p>
 
@@ -205,10 +202,12 @@ export default function ProfilePage() {
                   { label: "Total Likes", value: stats.totalLikes },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex flex-col">
-                    <span className="text-xl font-bold text-white">
+                    <span className="text-2xl font-black text-white">
                       {value.toLocaleString()}
                     </span>
-                    <span className="text-xs text-[#4A5568]">{label}</span>
+                    <span className="text-[10px] font-mono text-[#71717A] uppercase tracking-widest mt-1 font-bold">
+                      {label}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -220,27 +219,27 @@ export default function ProfilePage() {
       {/* Components Grid */}
       <div className="flex-1 max-w-5xl mx-auto w-full px-6 py-10">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-xs font-semibold text-[#6B7A99] uppercase tracking-widest flex items-center gap-2">
+          <h2 className="text-[10px] font-bold text-[#A1A1AA] font-mono uppercase tracking-widest flex items-center gap-2">
             <svg
               width="14"
               height="14"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeWidth="2"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
             >
-              <rect width="7" height="7" x="3" y="3" rx="1" />
-              <rect width="7" height="7" x="14" y="3" rx="1" />
-              <rect width="7" height="7" x="14" y="14" rx="1" />
-              <rect width="7" height="7" x="3" y="14" rx="1" />
+              <rect width="7" height="7" x="3" y="3" rx="0" />
+              <rect width="7" height="7" x="14" y="3" rx="0" />
+              <rect width="7" height="7" x="14" y="14" rx="0" />
+              <rect width="7" height="7" x="3" y="14" rx="0" />
             </svg>
             {isOwner ? "My Components" : "Public Components"}
           </h2>
           {isOwner && (
             <Link href="/dashboard">
-              <button className="text-xs font-bold text-[#00F5FF] hover:underline">
+              <button className="text-[10px] font-bold font-mono uppercase tracking-widest text-[#DFFF00] border-2 border-transparent hover:border-[#DFFF00] px-3 py-1 transition-all">
                 + Create New
               </button>
             </Link>
@@ -248,29 +247,29 @@ export default function ProfilePage() {
         </div>
 
         {components.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="w-16 h-16 rounded-full bg-white/5 border border-white/5 flex items-center justify-center mb-4">
+          <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-white/10 bg-[#0A0A0A]">
+            <div className="w-16 h-16 bg-[#050505] border-2 border-white/20 shadow-[4px_4px_0_rgba(255,255,255,0.1)] flex items-center justify-center mb-6">
               <svg
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#4A5568"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                stroke="#FAFAFA"
+                strokeWidth="2"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
               >
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
             </div>
-            <p className="text-[#4A5568] text-sm mb-4">
+            <p className="text-[#A1A1AA] font-mono text-sm mb-6">
               {isOwner
                 ? "You haven't created any components yet."
                 : "No public components yet."}
             </p>
             {isOwner && (
               <Link href="/dashboard">
-                <button className="px-6 py-2 rounded-xl bg-[#00F5FF] text-black font-bold text-xs hover:scale-105 transition-all">
+                <button className="px-6 py-3 border-2 border-transparent bg-[#DFFF00] text-[#050505] font-black uppercase tracking-widest text-[10px] shadow-[4px_4px_0_rgba(255,255,255,0.2)] hover:shadow-none hover:translate-y-1 hover:translate-x-1 transition-all">
                   Generate Your First UI
                 </button>
               </Link>
@@ -281,15 +280,9 @@ export default function ProfilePage() {
             {components.map((comp) => (
               <div key={comp._id} className="group relative">
                 <Link href={`/community/${comp._id}`} className="block">
-                  <div
-                    className="rounded-2xl border border-white/6 overflow-hidden transition-all duration-300 group-hover:border-[#00F5FF]/30 group-hover:-translate-y-1"
-                    style={{
-                      background: "rgba(255,255,255,0.02)",
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-                    }}
-                  >
+                  <div className="border-2 border-white/10 bg-[#050505] overflow-hidden transition-all duration-300 hover:border-[#DFFF00] hover:shadow-[8px_8px_0_rgba(223,255,0,0.2)] hover:-translate-y-1 hover:-translate-x-1">
                     {/* Preview */}
-                    <div className="h-48 bg-[#0D1117] relative overflow-hidden group/prev">
+                    <div className="h-48 bg-[#0D1117] relative overflow-hidden group/prev border-b-2 border-white/10">
                       <ComponentPreview
                         html={comp.generatedHTML}
                         css={comp.generatedCSS}
@@ -300,7 +293,7 @@ export default function ProfilePage() {
                       {/* Labels */}
                       <div className="absolute top-3 left-3 flex gap-2">
                         {!comp.isPublic && isOwner && (
-                          <span className="px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[9px] font-bold uppercase tracking-wider backdrop-blur-md">
+                          <span className="px-2 py-1 bg-[#050505] border border-white/20 text-[#FAFAFA] text-[9px] font-bold font-mono tracking-widest uppercase">
                             Private
                           </span>
                         )}
@@ -308,38 +301,23 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Card body */}
-                    <div className="p-4 relative">
+                    <div className="p-5 relative">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-semibold text-white truncate mb-1 pr-6 hover:text-[#00F5FF] transition-colors">
+                          <h3 className="text-sm font-black uppercase tracking-widest text-[#FAFAFA] truncate mb-2 pr-6 group-hover:text-[#DFFF00] transition-colors">
                             {comp.title}
                           </h3>
                           {comp.description && (
-                            <p className="text-[11px] text-[#4A5568] line-clamp-1">
+                            <p className="text-[10px] font-mono text-[#A1A1AA] line-clamp-2 leading-relaxed">
                               {comp.description}
                             </p>
                           )}
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/5">
+                      <div className="flex items-center gap-3 mt-6 pt-4 border-t border-white/10">
                         <div className="flex items-center gap-3">
-                          <span className="flex items-center gap-1.5 text-[11px] text-[#4A5568]">
-                            <svg
-                              width="12"
-                              height="12"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                            </svg>
-                            {comp.likesCount}
-                          </span>
-                          <span className="flex items-center gap-1.5 text-[11px] text-[#4A5568]">
+                          <span className="flex items-center gap-1.5 text-[10px] font-bold font-mono text-[#71717A]">
                             <svg
                               width="12"
                               height="12"
@@ -347,15 +325,30 @@ export default function ProfilePage() {
                               fill="none"
                               stroke="currentColor"
                               strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
+                              strokeLinecap="square"
+                              strokeLinejoin="miter"
+                            >
+                              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                            </svg>
+                            {comp.likesCount}
+                          </span>
+                          <span className="flex items-center gap-1.5 text-[10px] font-bold font-mono text-[#71717A]">
+                            <svg
+                              width="12"
+                              height="12"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="square"
+                              strokeLinejoin="miter"
                             >
                               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                             </svg>
                             {comp.commentsCount}
                           </span>
                         </div>
-                        <span className="ml-auto text-[10px] text-[#4A5568]">
+                        <span className="ml-auto text-[9px] font-mono font-bold uppercase tracking-widest text-[#71717A]">
                           {new Date(comp.createdAt).toLocaleDateString(
                             "en-US",
                             {
@@ -374,11 +367,11 @@ export default function ProfilePage() {
                   <button
                     onClick={(e) => handleDelete(e, comp._id)}
                     disabled={deletingId === comp._id}
-                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-[#4A5568] hover:text-red-400 hover:border-red-500/30 transition-all opacity-0 group-hover:opacity-100 shadow-xl"
+                    className="absolute top-3 right-3 w-8 h-8 border-2 border-white/20 bg-[#050505] flex items-center justify-center text-[#71717A] hover:text-[#FF4500] hover:border-[#FF4500] transition-all opacity-0 group-hover:opacity-100 shadow-[2px_2px_0_rgba(255,255,255,0.1)]"
                     title="Delete component"
                   >
                     {deletingId === comp._id ? (
-                      <span className="w-3 h-3 border-2 border-[#00F5FF] border-t-transparent rounded-full animate-spin" />
+                      <span className="w-2 h-2 bg-[#FF4500] animate-ping" />
                     ) : (
                       <svg
                         width="14"
@@ -387,8 +380,8 @@ export default function ProfilePage() {
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
                       >
                         <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6" />
                       </svg>
@@ -400,21 +393,19 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-12">
+          <div className="flex items-center justify-center gap-4 mt-12">
             <button
               onClick={() => {
                 setPage((p) => Math.max(1, p - 1));
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
               disabled={page === 1}
-              className="px-4 py-2 rounded-xl text-xs font-medium text-[#6B7A99] border border-white/6 hover:border-white/12 hover:text-white transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
-              style={{ background: "rgba(255,255,255,0.02)" }}
+              className="px-4 py-2 border-2 border-white/20 bg-[#0A0A0A] text-[#FAFAFA] font-bold font-mono text-[10px] uppercase tracking-widest hover:border-[#DFFF00] hover:text-[#DFFF00] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              ← Prev
+              Previous
             </button>
-            <span className="text-xs text-[#4A5568] px-3 font-mono">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#A1A1AA] px-3">
               {page} / {totalPages}
             </span>
             <button
@@ -423,10 +414,9 @@ export default function ProfilePage() {
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
               disabled={page === totalPages}
-              className="px-4 py-2 rounded-xl text-xs font-medium text-[#6B7A99] border border-white/6 hover:border-white/12 hover:text-white transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
-              style={{ background: "rgba(255,255,255,0.02)" }}
+              className="px-4 py-2 border-2 border-white/20 bg-[#0A0A0A] text-[#FAFAFA] font-bold font-mono text-[10px] uppercase tracking-widest hover:border-[#DFFF00] hover:text-[#DFFF00] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              Next →
+              Next
             </button>
           </div>
         )}

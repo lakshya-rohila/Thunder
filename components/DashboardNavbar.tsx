@@ -73,25 +73,25 @@ export default function DashboardNavbar({
   };
 
   return (
-    <nav className="h-14 border-b border-white/5 bg-[#0B0F19]/95 backdrop-blur-xl flex items-center justify-between px-5 shrink-0 z-50">
+    <nav className="h-16 border-b border-white/10 bg-[#050505] flex items-center justify-between px-6 shrink-0 z-50">
       {/* Left: Logo + Home Link */}
       <div className="flex items-center gap-6">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg bg-linear-to-br from-[#00F5FF] to-[#8A2BE2] flex items-center justify-center shadow-lg shadow-[#00F5FF]/20 group-hover:shadow-[#00F5FF]/40 transition-all duration-200">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-8 h-8 bg-[#FAFAFA] flex items-center justify-center transition-transform group-hover:-rotate-6 shadow-[4px_4px_0_rgba(223,255,0,0.5)]">
             <svg
-              width="16"
-              height="16"
+              width="14"
+              height="14"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#0B0F19"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              stroke="#050505"
+              strokeWidth="3"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
             >
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
           </div>
-          <span className="font-bold text-base tracking-tight text-white group-hover:text-[#00F5FF] transition-colors duration-200">
+          <span className="font-black text-xl tracking-widest text-white uppercase display-font group-hover:text-[#DFFF00] transition-colors">
             Thunder
           </span>
         </Link>
@@ -115,10 +115,10 @@ export default function DashboardNavbar({
               <Link
                 key={label}
                 href={href}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                className={`px-3 py-1.5 text-xs font-bold font-mono tracking-wider uppercase transition-colors duration-200 ${
                   isActive
-                    ? "text-white bg-white/10"
-                    : "text-[#6B7A99] hover:text-white hover:bg-white/5"
+                    ? "text-[#DFFF00] border-b-2 border-[#DFFF00]"
+                    : "text-[#A1A1AA] hover:text-[#FAFAFA]"
                 }`}
               >
                 {label}
@@ -217,13 +217,13 @@ export default function DashboardNavbar({
 
       {/* Center: Mode Toggle (Optional) */}
       {showModeToggle && onModeChange && (
-        <div className="flex bg-[#0D1117] p-1 rounded-xl border border-white/5 gap-1">
+        <div className="flex bg-[#050505] p-1 border border-white/20 gap-1 font-mono uppercase tracking-wider">
           <button
             onClick={() => onModeChange("prompt")}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+            className={`flex items-center gap-1.5 px-4 py-2 text-[10px] font-bold transition-colors ${
               mode === "prompt"
-                ? "bg-[#00F5FF]/15 text-[#00F5FF] border border-[#00F5FF]/25 shadow-[0_0_10px_rgba(0,245,255,0.1)]"
-                : "text-[#4A5568] hover:text-[#8B9AB5]"
+                ? "bg-[#DFFF00] text-[#050505]"
+                : "text-[#A1A1AA] hover:text-white"
             }`}
           >
             <svg
@@ -233,8 +233,8 @@ export default function DashboardNavbar({
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
             >
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
             </svg>
@@ -242,10 +242,10 @@ export default function DashboardNavbar({
           </button>
           <button
             onClick={() => onModeChange("research")}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+            className={`flex items-center gap-1.5 px-4 py-2 text-[10px] font-bold transition-colors ${
               mode === "research"
-                ? "bg-amber-500/15 text-amber-500 border border-amber-500/25 shadow-[0_0_10px_rgba(245,158,11,0.1)]"
-                : "text-[#4A5568] hover:text-[#8B9AB5]"
+                ? "bg-[#FF4500] text-white"
+                : "text-[#A1A1AA] hover:text-white"
             }`}
           >
             <svg
@@ -255,8 +255,8 @@ export default function DashboardNavbar({
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
             >
               <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
               <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
@@ -297,10 +297,10 @@ export default function DashboardNavbar({
               <>
                 <Link
                   href="/settings"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold font-mono tracking-wider uppercase transition-colors ${
                     pathname === "/settings"
-                      ? "text-white bg-white/10"
-                      : "text-[#6B7A99] hover:text-white hover:bg-white/5"
+                      ? "text-[#DFFF00]"
+                      : "text-[#A1A1AA] hover:text-white"
                   }`}
                 >
                   <svg
@@ -310,23 +310,21 @@ export default function DashboardNavbar({
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
                   >
                     <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
                   {tNav("settings")}
                 </Link>
-                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#00F5FF]/15 bg-[#00F5FF]/5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-xs text-[#8B9AB5] font-medium">
+                <div className="hidden md:flex items-center gap-2 px-3 py-1 border border-[#DFFF00] bg-[#050505]">
+                  <span className="w-1.5 h-1.5 bg-[#DFFF00] animate-pulse shrink-0" />
+                  <span className="text-[10px] text-[#DFFF00] font-mono font-bold tracking-widest uppercase">
                     {tNav("online")}
                   </span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="px-3 py-1.5 rounded-lg text-sm text-[#8B9AB5] hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 font-medium"
+                  className="px-3 py-2 text-[10px] font-bold font-mono text-[#A1A1AA] hover:text-[#FAFAFA] uppercase tracking-wider transition-colors"
                 >
                   {tNav("logout")}
                 </button>
@@ -334,7 +332,7 @@ export default function DashboardNavbar({
             ) : (
               <Link
                 href="/login"
-                className="bg-white/10 text-white font-bold px-5 py-2 rounded-xl text-xs hover:bg-white/20 transition-all"
+                className="bg-white text-[#050505] font-mono font-bold px-5 py-2 text-xs uppercase tracking-widest hover:bg-[#DFFF00] transition-colors border-2 border-[#050505] shadow-[4px_4px_0_rgba(255,255,255,0.2)]"
               >
                 {tNav("logIn")}
               </Link>

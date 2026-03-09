@@ -68,81 +68,70 @@ export default function Workspace({
   if (!componentData) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
-        {/* Dark Horizon Glow background */}
-        <div
-          className="absolute inset-0 z-0"
-          style={{
-            background:
-              "radial-gradient(125% 125% at 50% 90%, #000000 40%, #0d1a36 100%)",
-          }}
-        />
-
         {/* Subtle grid overlay */}
-        <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none z-0" />
+        <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none z-0" />
 
-        <div className="relative z-10 glass-card border border-white/6 p-12 rounded-3xl text-center max-w-sm shadow-2xl">
-          <div className="w-20 h-20 rounded-2xl bg-linear-to-br from-[#00F5FF]/15 to-[#8A2BE2]/15 border border-[#00F5FF]/20 flex items-center justify-center mb-6 mx-auto animate-float">
+        <div className="relative z-10 border-2 border-white/10 bg-[#050505] p-12 max-w-sm">
+          <div className="w-16 h-16 bg-[#DFFF00] flex items-center justify-center mb-6 mx-auto shadow-[4px_4px_0_rgba(255,255,255,0.1)]">
             <svg
-              width="32"
-              height="32"
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#00F5FF"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              stroke="#050505"
+              strokeWidth="2.5"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
             >
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
           </div>
-          <h3 className="text-lg font-bold text-white mb-2">
+          <h3 className="text-xl font-black text-white mb-2 uppercase tracking-widest">
             {t("readyTitle")}
           </h3>
-          <p className="text-[#4A5568] text-sm leading-relaxed">
-            {t("readyDesc")}
-          </p>
+          <p className="text-[#A1A1AA] text-sm font-mono">{t("readyDesc")}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0B0F19] overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-[#050505] overflow-hidden">
       {/* Workspace Header */}
-      <div className="h-14 bg-[#0D1117] border-b border-white/5 flex items-center justify-between px-5 shrink-0 z-30">
-        <div className="flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <h2 className="font-semibold text-sm text-white">
+      <div className="h-16 bg-[#050505] border-b border-white/10 flex items-center justify-between px-6 shrink-0 z-30">
+        <div className="flex items-center gap-4">
+          <div className="w-3 h-3 bg-[#DFFF00] border border-[#050505] shadow-[2px_2px_0_rgba(223,255,0,0.5)] animate-pulse" />
+          <h2 className="font-bold text-sm text-white font-mono tracking-widest uppercase">
             {componentData.name || t("untitled")}
           </h2>
-          <span className="text-[10px] bg-[#00F5FF]/10 text-[#00F5FF] px-2 py-0.5 rounded-full border border-[#00F5FF]/20 font-semibold uppercase tracking-wider">
+          <span className="text-[10px] bg-[#FAFAFA] text-[#050505] px-2 py-0.5 font-bold uppercase tracking-widest shadow-[2px_2px_0_rgba(255,255,255,0.4)]">
             {t("active")}
           </span>
           {chatId && <FeedbackWidget generationId={chatId} />}
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {/* <DeployButton componentData={componentData} /> */}
 
           {chatId && (
             <button
               onClick={() => setShowPublishModal(true)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
+              className={`flex items-center gap-2 px-4 py-2 text-[10px] font-bold font-mono uppercase tracking-wider transition-all border-2 border-transparent ${
                 isPublic
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20"
-                  : "bg-linear-to-r from-[#00F5FF]/10 to-[#8A2BE2]/10 text-[#00F5FF] border border-[#00F5FF]/20 hover:from-[#00F5FF]/20 hover:to-[#8A2BE2]/20"
+                  ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00] shadow-[4px_4px_0_rgba(223,255,0,0.3)] hover:shadow-none hover:translate-y-1 hover:translate-x-1"
+                  : "bg-[#FAFAFA] text-[#050505] shadow-[4px_4px_0_rgba(255,255,255,0.3)] hover:bg-[#DFFF00] hover:shadow-none hover:translate-y-1 hover:translate-x-1"
               }`}
             >
               <svg
-                width="12"
-                height="12"
+                width="14"
+                height="14"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
               >
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
@@ -154,41 +143,41 @@ export default function Workspace({
           )}
 
           {/* Tab toggle */}
-          <div className="flex bg-[#0B0F19] p-1 rounded-xl border border-white/5 gap-1">
+          <div className="flex bg-[#050505] p-1 border border-white/20 gap-1">
             {(["preview", "code", "research"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 capitalize ${
+                className={`px-4 py-2 text-[10px] font-bold font-mono uppercase tracking-wider transition-colors flex items-center gap-2 ${
                   activeTab === tab
-                    ? "bg-linear-to-r from-[#00F5FF]/20 to-[#8A2BE2]/20 text-[#00F5FF] border border-[#00F5FF]/25 shadow-[0_0_10px_rgba(0,245,255,0.1)]"
-                    : "text-[#4A5568] hover:text-[#8B9AB5] hover:bg-white/3"
+                    ? "bg-[#DFFF00] text-[#050505]"
+                    : "text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-white/5"
                 }`}
               >
                 {tab === "preview" ? (
                   <svg
-                    width="12"
-                    height="12"
+                    width="14"
+                    height="14"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeLinecap="square"
+                    strokeLinejoin="miter"
                   >
                     <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
                 ) : tab === "code" ? (
                   <svg
-                    width="12"
-                    height="12"
+                    width="14"
+                    height="14"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeLinecap="square"
+                    strokeLinejoin="miter"
                   >
                     <path d="m18 16 4-4-4-4" />
                     <path d="m6 8-4 4 4 4" />
@@ -196,14 +185,14 @@ export default function Workspace({
                   </svg>
                 ) : (
                   <svg
-                    width="12"
-                    height="12"
+                    width="14"
+                    height="14"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeLinecap="square"
+                    strokeLinejoin="miter"
                   >
                     <circle cx="11" cy="11" r="8" />
                     <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -222,7 +211,7 @@ export default function Workspace({
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden relative bg-[#0B0F19]">
+      <div className="flex-1 overflow-hidden relative bg-[#050505]">
         {activeTab === "preview" ? (
           <PreviewPanel
             html={componentData.html}

@@ -136,15 +136,15 @@ export default function ChatInterface({
   };
 
   return (
-    <div className="flex flex-col h-full w-[380px] bg-[#0D1117] border-r border-white/5 shrink-0 relative z-20">
+    <div className="flex flex-col h-full w-[380px] bg-[#050505] border-r-2 border-white/10 shrink-0 relative z-20">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-white/5 flex flex-col gap-3">
+      <div className="px-5 py-4 border-b-2 border-white/10 flex flex-col gap-3 bg-[#0A0A0A]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div
-              className={`w-2 h-2 rounded-full animate-pulse ${mode === "reverse" ? "bg-purple-500" : mode === "research" ? "bg-amber-500" : "bg-[#00F5FF]"}`}
+              className={`w-3 h-3 border border-[#050505] animate-pulse ${mode === "reverse" ? "bg-[#FF4500] shadow-[2px_2px_0_rgba(255,69,0,0.5)]" : mode === "research" ? "bg-amber-500" : "bg-[#DFFF00] shadow-[2px_2px_0_rgba(223,255,0,0.5)]"}`}
             />
-            <h2 className="text-sm font-semibold text-white tracking-wide">
+            <h2 className="text-[10px] font-black text-[#FAFAFA] uppercase tracking-widest font-mono">
               {mode === "reverse"
                 ? t("titleReverse")
                 : mode === "research"
@@ -158,7 +158,7 @@ export default function ChatInterface({
         {mode !== "research" && (
           <div className="flex flex-col gap-2">
             {/* Type */}
-            <div className="flex gap-1 bg-black/20 p-1 rounded-lg border border-white/5">
+            <div className="flex gap-1 bg-[#050505] p-1 border-2 border-white/10">
               {[
                 { id: "auto", label: t("typeAuto") },
                 { id: "component", label: t("typeComponent") },
@@ -168,10 +168,10 @@ export default function ChatInterface({
                 <button
                   key={type.id}
                   onClick={() => onProjectTypeChange(type.id as any)}
-                  className={`flex-1 px-2 py-1.5 text-[10px] uppercase font-bold tracking-wider rounded transition-all ${
+                  className={`flex-1 px-2 py-1.5 text-[9px] uppercase font-black font-mono tracking-widest transition-colors border-2 ${
                     projectType === type.id
-                      ? "bg-[#00F5FF]/10 text-[#00F5FF] shadow-[0_0_10px_rgba(0,245,255,0.2)]"
-                      : "text-[#6B7A99] hover:text-white"
+                      ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00]"
+                      : "text-[#A1A1AA] border-transparent hover:text-[#FAFAFA] hover:border-white/20"
                   }`}
                 >
                   {type.label}
@@ -180,7 +180,7 @@ export default function ChatInterface({
             </div>
 
             {/* Style Mode */}
-            <div className="flex gap-1 bg-black/20 p-1 rounded-lg border border-white/5">
+            <div className="flex gap-1 bg-[#050505] p-1 border-2 border-white/10">
               {[
                 { id: "vanilla", label: t("styleVanilla") },
                 { id: "tailwind", label: t("styleTailwind") },
@@ -188,10 +188,10 @@ export default function ChatInterface({
                 <button
                   key={sMode.id}
                   onClick={() => onStyleModeChange(sMode.id as any)}
-                  className={`flex-1 px-2 py-1.5 text-[10px] uppercase font-bold tracking-wider rounded transition-all ${
+                  className={`flex-1 px-2 py-1.5 text-[9px] uppercase font-black font-mono tracking-widest transition-colors border-2 ${
                     styleMode === sMode.id
-                      ? "bg-[#8A2BE2]/15 text-[#8A2BE2] shadow-[0_0_10px_rgba(138,43,226,0.2)]"
-                      : "text-[#6B7A99] hover:text-white"
+                      ? "bg-[#FF4500] text-[#050505] border-[#FF4500]"
+                      : "text-[#A1A1AA] border-transparent hover:text-[#FAFAFA] hover:border-white/20"
                   }`}
                 >
                   {sMode.label}
@@ -200,7 +200,7 @@ export default function ChatInterface({
             </div>
 
             {/* Framework */}
-            <div className="flex gap-1 bg-black/20 p-1 rounded-lg border border-white/5">
+            <div className="flex gap-1 bg-[#050505] p-1 border-2 border-white/10">
               {[
                 { id: "html", label: t("fwHtml") },
                 // { id: "react", label: "React" },
@@ -208,10 +208,10 @@ export default function ChatInterface({
                 <button
                   key={fw.id}
                   onClick={() => onFrameworkChange(fw.id as any)}
-                  className={`flex-1 px-2 py-1.5 text-[10px] uppercase font-bold tracking-wider rounded transition-all ${
+                  className={`flex-1 px-2 py-1.5 text-[9px] uppercase font-black font-mono tracking-widest transition-colors border-2 ${
                     framework === fw.id
-                      ? "bg-[#00F5FF]/10 text-[#00F5FF] shadow-[0_0_10px_rgba(0,245,255,0.2)]"
-                      : "text-[#6B7A99] hover:text-white"
+                      ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00]"
+                      : "text-[#A1A1AA] border-transparent hover:text-[#FAFAFA] hover:border-white/20"
                   }`}
                 >
                   {fw.label}
@@ -223,14 +223,14 @@ export default function ChatInterface({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-5">
+      <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-[#050505]">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center p-6">
+          <div className="flex flex-col items-center justify-center h-full text-center p-6 mt-8">
             <div
-              className={`w-16 h-16 rounded-2xl border flex items-center justify-center mb-4 animate-float ${
+              className={`w-16 h-16 border-2 flex items-center justify-center mb-6 shadow-[4px_4px_0_rgba(255,255,255,0.1)] ${
                 mode === "reverse"
-                  ? "bg-linear-to-br from-purple-500/15 to-pink-500/15 border-purple-500/15"
-                  : "bg-linear-to-br from-[#00F5FF]/15 to-[#8A2BE2]/15 border-[#00F5FF]/15"
+                  ? "bg-[#FF4500]/10 border-[#FF4500]"
+                  : "bg-[#DFFF00]/10 border-[#DFFF00]"
               }`}
             >
               <svg
@@ -238,10 +238,10 @@ export default function ChatInterface({
                 height="28"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke={mode === "reverse" ? "#A855F7" : "#00F5FF"}
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                stroke={mode === "reverse" ? "#FF4500" : "#DFFF00"}
+                strokeWidth="2"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
               >
                 {mode === "reverse" ? (
                   <>
@@ -254,14 +254,14 @@ export default function ChatInterface({
                 )}
               </svg>
             </div>
-            <h3 className="text-white font-semibold mb-2 text-sm">
+            <h3 className="text-[#FAFAFA] font-black font-mono tracking-widest uppercase mb-3 text-sm">
               {mode === "reverse" ? t("stateReverse") : t("stateReady")}
             </h3>
-            <p className="text-[#4A5568] text-xs leading-relaxed max-w-[200px]">
+            <p className="text-[#A1A1AA] text-[10px] font-mono uppercase tracking-widest leading-relaxed max-w-[240px]">
               {mode === "reverse" ? t("descReverse") : t("descReady")}
             </p>
             {/* Suggestion chips */}
-            <div className="mt-6 flex flex-col gap-2 w-full">
+            <div className="mt-8 flex flex-col gap-2 w-full">
               {(mode === "reverse"
                 ? [t("sugRev1"), t("sugRev2"), t("sugRev3")]
                 : [t("sugReady1"), t("sugReady2"), t("sugReady3")]
@@ -274,10 +274,10 @@ export default function ChatInterface({
                       mode === "research" ? "standard" : mode,
                     )
                   }
-                  className={`text-left text-xs px-3 py-2 rounded-lg border border-white/5 bg-white/3 transition-all duration-200 ${
+                  className={`text-left text-[10px] font-mono uppercase tracking-widest px-4 py-3 border-2 transition-transform duration-200 ${
                     mode === "reverse"
-                      ? "text-[#8B9AB5] hover:border-purple-500/20 hover:text-purple-400 hover:bg-purple-500/5"
-                      : "text-[#8B9AB5] hover:border-[#00F5FF]/20 hover:text-[#00F5FF] hover:bg-[#00F5FF]/5"
+                      ? "text-[#A1A1AA] border-white/10 bg-[#050505] hover:border-[#FF4500] hover:text-[#FAFAFA] hover:-translate-y-1 hover:shadow-[4px_4px_0_rgba(255,69,0,0.3)]"
+                      : "text-[#A1A1AA] border-white/10 bg-[#050505] hover:border-[#DFFF00] hover:text-[#FAFAFA] hover:-translate-y-1 hover:shadow-[4px_4px_0_rgba(223,255,0,0.3)]"
                   }`}
                 >
                   {suggestion}
@@ -292,21 +292,26 @@ export default function ChatInterface({
             key={idx}
             className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
           >
-            <span className="text-[10px] text-[#4A5568] mb-1.5 px-1 font-medium">
+            <span className="text-[9px] text-[#A1A1AA] mb-1.5 px-1 font-mono font-bold tracking-widest uppercase">
               {msg.role === "user" ? t("roleUser") : t("roleAI")}
             </span>
             <div
-              className={`max-w-[95%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+              className={`max-w-[95%] px-4 py-3 text-sm leading-relaxed border-2 ${
                 msg.role === "user"
                   ? mode === "reverse"
-                    ? "bg-linear-to-br from-purple-600 to-indigo-600 text-white font-medium rounded-br-sm shadow-[0_0_20px_rgba(168,85,247,0.2)]"
-                    : "bg-linear-to-br from-[#00F5FF] to-[#0080FF] text-[#0B0F19] font-medium rounded-br-sm shadow-[0_0_20px_rgba(0,245,255,0.2)]"
-                  : "glass-card text-[#C8D8F0] rounded-bl-sm border border-white/6 w-full"
+                    ? "bg-[#FF4500] text-[#050505] border-[#FF4500] font-mono shadow-[4px_4px_0_rgba(255,69,0,0.3)]"
+                    : "bg-[#DFFF00] text-[#050505] border-[#DFFF00] font-mono shadow-[4px_4px_0_rgba(223,255,0,0.3)]"
+                  : "bg-[#0A0A0A] text-[#FAFAFA] border-white/10 shadow-[4px_4px_0_rgba(255,255,255,0.05)] w-full relative"
               }`}
             >
-              <div className="prose prose-invert prose-xs max-w-none">
+              {msg.role === "ai" && (
+                <div className="absolute -left-[5px] top-4 w-2 h-2 bg-[#DFFF00] border border-[#050505]" />
+              )}
+              <div
+                className={`prose prose-invert prose-sm max-w-none ${msg.role === "user" ? "text-[#050505] font-black" : "text-[#FAFAFA]"}`}
+              >
                 {msg.role === "ai" ? (
-                  <div className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
+                  <div className="whitespace-pre-wrap font-mono text-xs leading-relaxed">
                     {msg.content}
                   </div>
                 ) : (
@@ -314,13 +319,13 @@ export default function ChatInterface({
                 )}
 
                 {msg.questions && (
-                  <div className="mt-4 space-y-4 font-sans border-t border-white/10 pt-4">
+                  <div className="mt-6 space-y-5 font-mono border-t-2 border-white/10 pt-5">
                     {msg.questions.map((q, qIdx) => {
                       const selected = clarificationAnswers[q.id];
                       return (
-                        <div key={qIdx} className="space-y-2">
-                          <p className="text-xs uppercase tracking-wider font-bold text-[#6B7A99]">
-                            {q.text}
+                        <div key={qIdx} className="space-y-3">
+                          <p className="text-[10px] uppercase tracking-widest font-black text-[#DFFF00]">
+                            ► {q.text}
                           </p>
                           <div className="flex flex-wrap gap-2">
                             {q.options.map((opt, oIdx) => {
@@ -329,10 +334,10 @@ export default function ChatInterface({
                                 <button
                                   key={oIdx}
                                   onClick={() => handleSelectOption(q.id, opt)}
-                                  className={`px-3 py-1.5 rounded-md text-xs transition-all text-left ${
+                                  className={`px-3 py-2 text-[10px] font-bold tracking-widest uppercase transition-all border-2 text-left ${
                                     isSelected
-                                      ? "bg-[#00F5FF]/20 text-[#00F5FF] border border-[#00F5FF]/50 shadow-[0_0_10px_rgba(0,245,255,0.2)]"
-                                      : "bg-white/5 border border-white/10 text-[#A0AEC0] hover:bg-[#00F5FF]/10 hover:text-[#00F5FF] hover:border-[#00F5FF]/30"
+                                      ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00] shadow-[2px_2px_0_rgba(223,255,0,0.5)]"
+                                      : "bg-[#050505] border-white/20 text-[#A1A1AA] hover:bg-white/5 hover:text-[#FAFAFA] hover:border-white/40"
                                   }`}
                                 >
                                   {opt}
@@ -345,7 +350,7 @@ export default function ChatInterface({
                     })}
 
                     {/* Submit Button */}
-                    <div className="pt-2">
+                    <div className="pt-4">
                       <button
                         onClick={() =>
                           msg.questions &&
@@ -355,7 +360,7 @@ export default function ChatInterface({
                           !msg.questions ||
                           msg.questions.some((q) => !clarificationAnswers[q.id])
                         }
-                        className="w-full py-2 rounded-lg bg-[#00F5FF] text-[#0B0F19] font-bold text-xs uppercase tracking-wider hover:bg-[#00F5FF]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-[0_0_15px_rgba(0,245,255,0.3)]"
+                        className="w-full py-3 bg-[#FAFAFA] text-[#050505] font-black font-mono text-[10px] uppercase tracking-widest border-2 border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#DFFF00] shadow-[4px_4px_0_rgba(255,255,255,0.2)] hover:shadow-none hover:translate-y-1 hover:translate-x-1"
                       >
                         {t("btnGenerateAnswers")}
                       </button>
@@ -370,25 +375,26 @@ export default function ChatInterface({
         {isLoading && (
           <div className="flex items-start">
             <div
-              className={`glass-card border text-[#8B9AB5] rounded-2xl rounded-bl-sm px-4 py-3 flex items-center gap-3 ${
-                mode === "reverse"
-                  ? "border-purple-500/15"
-                  : "border-[#00F5FF]/15"
+              className={`bg-[#0A0A0A] border-2 text-[#FAFAFA] font-mono px-4 py-3 flex items-center gap-3 shadow-[4px_4px_0_rgba(255,255,255,0.05)] relative ${
+                mode === "reverse" ? "border-[#FF4500]" : "border-[#DFFF00]"
               }`}
             >
-              <div className="flex space-x-1">
+              <div
+                className={`absolute -left-[5px] top-4 w-2 h-2 border border-[#050505] ${mode === "reverse" ? "bg-[#FF4500]" : "bg-[#DFFF00]"}`}
+              />
+              <div className="flex space-x-1.5">
                 <div
-                  className={`w-1.5 h-1.5 rounded-full loading-dot ${mode === "reverse" ? "bg-purple-500" : "bg-[#00F5FF]"}`}
+                  className={`w-2 h-2 loading-dot border border-[#050505] ${mode === "reverse" ? "bg-[#FF4500]" : "bg-[#DFFF00]"}`}
                 />
                 <div
-                  className={`w-1.5 h-1.5 rounded-full loading-dot ${mode === "reverse" ? "bg-purple-500" : "bg-[#00F5FF]"}`}
+                  className={`w-2 h-2 loading-dot delay-75 border border-[#050505] ${mode === "reverse" ? "bg-[#FF4500]" : "bg-[#DFFF00]"}`}
                 />
                 <div
-                  className={`w-1.5 h-1.5 rounded-full loading-dot ${mode === "reverse" ? "bg-purple-500" : "bg-[#00F5FF]"}`}
+                  className={`w-2 h-2 loading-dot delay-150 border border-[#050505] ${mode === "reverse" ? "bg-[#FF4500]" : "bg-[#DFFF00]"}`}
                 />
               </div>
               <span
-                className={`text-xs font-medium ${mode === "reverse" ? "text-purple-400" : "text-[#00F5FF]"}`}
+                className={`text-[10px] font-black uppercase tracking-widest ${mode === "reverse" ? "text-[#FF4500]" : "text-[#DFFF00]"}`}
               >
                 {mode === "reverse"
                   ? t("statusAnalyzing")
@@ -401,7 +407,7 @@ export default function ChatInterface({
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-white/5 bg-[#0B0F19]">
+      <div className="p-4 border-t-2 border-white/10 bg-[#0A0A0A]">
         <form onSubmit={handleSubmit} className="relative">
           <textarea
             value={input}
@@ -419,24 +425,24 @@ export default function ChatInterface({
                   ? t("phReverse")
                   : t("phReady")
             }
-            className={`w-full bg-[#0D1117] border rounded-xl px-4 py-3 pr-24 text-sm text-white focus:outline-none focus:ring-1 transition-all resize-none h-[52px] scrollbar-hide placeholder:text-[#4A5568] ${
+            className={`w-full bg-[#050505] border-2 px-4 py-3 pr-24 text-sm font-mono text-[#FAFAFA] focus:outline-none transition-all resize-none h-[52px] scrollbar-hide placeholder:text-[#A1A1AA] ${
               mode === "reverse"
-                ? "border-purple-500/20 focus:border-purple-500/50 focus:ring-purple-500/20"
+                ? "border-[#FF4500]/50 focus:border-[#FF4500]"
                 : isListening
-                  ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20 animate-pulse"
-                  : "border-white/10 focus:border-[#00F5FF]/50 focus:ring-[#00F5FF]/20"
+                  ? "border-red-500 bg-red-500/5 animate-pulse"
+                  : "border-white/20 focus:border-[#DFFF00]"
             }`}
           />
 
-          <div className="absolute right-2 top-2 flex items-center gap-1">
+          <div className="absolute right-2 top-2 flex items-center gap-2">
             {/* Voice Button */}
             <button
               type="button"
               onClick={toggleListening}
-              className={`p-2 rounded-lg transition-all ${
+              className={`p-1.5 transition-colors border-2 ${
                 isListening
-                  ? "text-red-500 bg-red-500/10 animate-pulse"
-                  : "text-[#4A5568] hover:text-white hover:bg-white/5"
+                  ? "border-red-500 text-red-500 bg-red-500/10 animate-pulse"
+                  : "border-transparent text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-white/20"
               }`}
               title={isListening ? "Stop Listening" : "Start Voice Input"}
             >
@@ -480,16 +486,16 @@ export default function ChatInterface({
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className={`p-2 rounded-lg transition-all ${
+              className={`p-1.5 transition-all outline-none border-2 border-transparent ${
                 input.trim() && !isLoading
                   ? mode === "reverse"
-                    ? "bg-purple-500 text-white shadow-[0_0_10px_rgba(168,85,247,0.4)] hover:bg-purple-400"
-                    : "bg-[#00F5FF] text-[#0B0F19] shadow-[0_0_10px_rgba(0,245,255,0.4)] hover:bg-[#00F5FF]/90"
-                  : "bg-white/5 text-[#4A5568] cursor-not-allowed"
+                    ? "bg-[#FF4500] text-[#050505] shadow-[2px_2px_0_rgba(255,69,0,0.5)] hover:shadow-none hover:translate-y-px hover:translate-x-px"
+                    : "bg-[#DFFF00] text-[#050505] shadow-[2px_2px_0_rgba(223,255,0,0.5)] hover:shadow-none hover:translate-y-px hover:translate-x-px"
+                  : "bg-white/5 text-[#A1A1AA] cursor-not-allowed"
               }`}
             >
               {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-white/20 border-t-[#DFFF00] rounded-none animate-spin" />
               ) : (
                 <svg
                   width="16"
@@ -498,8 +504,8 @@ export default function ChatInterface({
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  strokeLinecap="square"
+                  strokeLinejoin="miter"
                 >
                   <line x1="22" y1="2" x2="11" y2="13" />
                   <polygon points="22 2 15 22 11 13 2 9 22 2" />
@@ -508,12 +514,16 @@ export default function ChatInterface({
             </button>
           </div>
         </form>
-        <div className="text-center mt-2">
-          <p className="text-[10px] text-[#4A5568]">
+        <div className="text-center mt-3">
+          <p className="text-[9px] font-mono tracking-widest uppercase text-[#A1A1AA]">
             {t("hintPress")}
-            <span className="text-[#6B7A99]">{t("hintEnter")}</span>
+            <span className="text-[#FAFAFA] font-black mx-1">
+              {t("hintEnter")}
+            </span>
             {t("hintToSend")}
-            <span className="text-[#6B7A99]">{t("hintShiftEnter")}</span>
+            <span className="text-[#FAFAFA] font-black mx-1">
+              {t("hintShiftEnter")}
+            </span>
             {t("hintNewline")}
           </p>
         </div>

@@ -107,14 +107,13 @@ export default function ChatHistorySidebar({
     }
   };
 
-  // Collapsed state — just a thin icon strip
   if (isCollapsed) {
     return (
-      <div className="w-12 h-full bg-[#0D1117] border-r border-white/5 flex flex-col items-center py-3 gap-3 shrink-0">
+      <div className="w-12 h-full bg-[#050505] border-r border-white/10 flex flex-col items-center py-4 gap-4 shrink-0">
         <button
           onClick={onToggleCollapse}
           title="Expand sidebar"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-[#4A5568] hover:text-[#00F5FF] hover:bg-[#00F5FF]/8 transition-all duration-200"
+          className="w-8 h-8 flex items-center justify-center text-[#A1A1AA] hover:text-[#DFFF00] hover:bg-white/5 transition-colors border border-transparent hover:border-[#DFFF00]/50"
         >
           <svg
             width="14"
@@ -123,8 +122,8 @@ export default function ChatHistorySidebar({
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            strokeLinecap="square"
+            strokeLinejoin="miter"
           >
             <path d="m9 18 6-6-6-6" />
           </svg>
@@ -132,7 +131,7 @@ export default function ChatHistorySidebar({
         <button
           onClick={onNewChat}
           title="New chat"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-[#4A5568] hover:text-[#00F5FF] hover:bg-[#00F5FF]/8 transition-all duration-200"
+          className="w-8 h-8 flex items-center justify-center text-[#A1A1AA] hover:text-[#DFFF00] hover:bg-white/5 transition-colors border border-transparent hover:border-[#DFFF00]/50"
         >
           <svg
             width="14"
@@ -141,25 +140,25 @@ export default function ChatHistorySidebar({
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            strokeLinecap="square"
+            strokeLinejoin="miter"
           >
             <path d="M12 5v14M5 12h14" />
           </svg>
         </button>
-        <div className="w-6 h-px bg-white/5 my-1" />
+        <div className="w-6 h-px bg-white/10 my-2" />
         {chats.slice(0, 6).map((chat) => (
           <button
             key={chat._id}
             onClick={() => handleSelectChat(chat._id)}
             title={chat.title}
-            className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-all duration-200 ${
+            className={`w-8 h-8 flex items-center justify-center text-xs font-bold font-mono uppercase transition-colors border ${
               activeChatId === chat._id
-                ? "bg-[#00F5FF]/15 text-[#00F5FF]"
-                : "text-[#4A5568] hover:text-[#8B9AB5] hover:bg-white/5"
+                ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00]"
+                : "text-[#A1A1AA] hover:text-[#FAFAFA] border-transparent hover:border-white/20"
             }`}
           >
-            {chat.title.charAt(0).toUpperCase()}
+            {chat.title.charAt(0)}
           </button>
         ))}
       </div>
@@ -167,47 +166,47 @@ export default function ChatHistorySidebar({
   }
 
   return (
-    <div className="w-64 h-full bg-[#0D1117] border-r border-white/5 flex flex-col shrink-0">
+    <div className="w-64 h-full bg-[#050505] border-r border-white/10 flex flex-col shrink-0">
       {/* Header */}
-      <div className="px-3 py-3 border-b border-white/5 flex items-center justify-between gap-2">
+      <div className="px-4 py-4 border-b border-white/10 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <svg
-            width="13"
-            height="13"
+            width="14"
+            height="14"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#00F5FF"
+            stroke="#FAFAFA"
             strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            strokeLinecap="square"
+            strokeLinejoin="miter"
           >
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
-          <span className="text-xs font-semibold text-white tracking-wide">
+          <span className="text-xs font-bold text-white tracking-widest font-mono uppercase">
             {t("title")}
           </span>
           {chats.length > 0 && (
-            <span className="text-[10px] bg-white/5 text-[#4A5568] px-1.5 py-0.5 rounded-full font-medium">
+            <span className="text-[10px] bg-[#DFFF00] text-[#050505] px-1.5 py-0.5 font-bold font-mono">
               {chats.length}
             </span>
           )}
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           {/* New chat */}
           <button
             onClick={onNewChat}
             title="New chat"
-            className="w-6 h-6 rounded-md flex items-center justify-center text-[#4A5568] hover:text-[#00F5FF] hover:bg-[#00F5FF]/8 transition-all duration-200"
+            className="w-6 h-6 flex items-center justify-center text-[#A1A1AA] hover:text-[#DFFF00] transition-colors"
           >
             <svg
-              width="12"
-              height="12"
+              width="14"
+              height="14"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeWidth="2"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
             >
               <path d="M12 5v14M5 12h14" />
             </svg>
@@ -216,17 +215,17 @@ export default function ChatHistorySidebar({
           <button
             onClick={onToggleCollapse}
             title="Collapse sidebar"
-            className="w-6 h-6 rounded-md flex items-center justify-center text-[#4A5568] hover:text-[#8B9AB5] hover:bg-white/5 transition-all duration-200"
+            className="w-6 h-6 flex items-center justify-center text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors"
           >
             <svg
-              width="12"
-              height="12"
+              width="14"
+              height="14"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
             >
               <path d="m15 18-6-6 6-6" />
             </svg>
@@ -289,35 +288,30 @@ export default function ChatHistorySidebar({
                 <div
                   key={chat._id}
                   onClick={() => handleSelectChat(chat._id)}
-                  className={`group relative flex flex-col gap-0.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-200 ${
+                  className={`group relative flex flex-col gap-1 px-4 py-3 cursor-pointer transition-colors border-b border-white/5 ${
                     isActive
-                      ? "bg-[#00F5FF]/8 border border-[#00F5FF]/15"
-                      : "hover:bg-white/3 border border-transparent"
+                      ? "bg-[#111111] border-l-[3px] border-l-[#DFFF00]"
+                      : "hover:bg-white/5 border-l-[3px] border-l-transparent"
                   }`}
                 >
-                  {/* Active indicator */}
-                  {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-[#00F5FF] rounded-r-full" />
-                  )}
-
                   <div className="flex items-start justify-between gap-2">
                     <p
-                      className={`text-xs font-medium leading-snug truncate flex-1 ${
-                        isActive ? "text-[#00F5FF]" : "text-[#C8D8F0]"
+                      className={`text-[11px] font-bold leading-snug truncate flex-1 font-mono uppercase tracking-wider ${
+                        isActive ? "text-[#FAFAFA]" : "text-[#A1A1AA]"
                       }`}
                     >
                       {isLoadingThis ? (
                         <span className="flex items-center gap-1.5">
                           <span
-                            className="w-1 h-1 bg-[#00F5FF] rounded-full animate-bounce"
+                            className="w-1.5 h-1.5 bg-[#DFFF00] animate-pulse"
                             style={{ animationDelay: "0ms" }}
                           />
                           <span
-                            className="w-1 h-1 bg-[#00F5FF] rounded-full animate-bounce"
+                            className="w-1.5 h-1.5 bg-[#DFFF00] animate-pulse"
                             style={{ animationDelay: "150ms" }}
                           />
                           <span
-                            className="w-1 h-1 bg-[#00F5FF] rounded-full animate-bounce"
+                            className="w-1.5 h-1.5 bg-[#DFFF00] animate-pulse"
                             style={{ animationDelay: "300ms" }}
                           />
                         </span>
@@ -328,18 +322,18 @@ export default function ChatHistorySidebar({
                     {/* Delete button — shows on hover */}
                     <button
                       onClick={(e) => handleDeleteChat(e, chat._id)}
-                      className="opacity-0 group-hover:opacity-100 w-5 h-5 rounded flex items-center justify-center text-[#4A5568] hover:text-red-400 hover:bg-red-500/10 transition-all duration-150 shrink-0"
+                      className="opacity-0 group-hover:opacity-100 w-5 h-5 flex items-center justify-center text-[#A1A1AA] hover:text-[#FF4500] hover:bg-[#FF4500]/10 transition-colors shrink-0"
                       title="Delete chat"
                     >
                       <svg
-                        width="10"
-                        height="10"
+                        width="12"
+                        height="12"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
                       >
                         <path d="M18 6 6 18M6 6l12 12" />
                       </svg>
@@ -347,11 +341,11 @@ export default function ChatHistorySidebar({
                   </div>
 
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-[10px] text-[#4A5568] truncate flex-1">
-                      {chat.prompt.slice(0, 45)}
-                      {chat.prompt.length > 45 ? "…" : ""}
+                    <p className="text-[10px] text-[#71717A] truncate flex-1 font-sans">
+                      {chat.prompt.slice(0, 40)}
+                      {chat.prompt.length > 40 ? "..." : ""}
                     </p>
-                    <span className="text-[10px] text-[#4A5568]/60 shrink-0">
+                    <span className="text-[9px] text-[#A1A1AA] font-mono shrink-0 uppercase">
                       {timeAgo(chat.updatedAt, t)}
                     </span>
                   </div>
@@ -364,17 +358,17 @@ export default function ChatHistorySidebar({
               <button
                 onClick={() => fetchChats(pagination.page + 1, true)}
                 disabled={loadingMore}
-                className="w-full py-2 text-xs text-[#4A5568] hover:text-[#8B9AB5] transition-colors duration-200 flex items-center justify-center gap-2"
+                className="w-full py-3 text-xs font-bold font-mono tracking-widest uppercase text-[#A1A1AA] hover:text-[#FAFAFA] border-t border-white/5 transition-colors flex items-center justify-center gap-2"
               >
                 {loadingMore ? (
                   <>
-                    <span className="w-1 h-1 bg-[#4A5568] rounded-full animate-bounce" />
+                    <span className="w-1.5 h-1.5 bg-[#A1A1AA] animate-pulse" />
                     <span
-                      className="w-1 h-1 bg-[#4A5568] rounded-full animate-bounce"
+                      className="w-1.5 h-1.5 bg-[#A1A1AA] animate-pulse"
                       style={{ animationDelay: "150ms" }}
                     />
                     <span
-                      className="w-1 h-1 bg-[#4A5568] rounded-full animate-bounce"
+                      className="w-1.5 h-1.5 bg-[#A1A1AA] animate-pulse"
                       style={{ animationDelay: "300ms" }}
                     />
                   </>
@@ -388,8 +382,8 @@ export default function ChatHistorySidebar({
       </div>
 
       {/* Footer */}
-      <div className="px-3 py-2.5 border-t border-white/5">
-        <p className="text-[10px] text-[#4A5568]/50 text-center">
+      <div className="px-4 py-3 border-t border-white/10">
+        <p className="text-[9px] font-mono text-[#71717A] text-center uppercase tracking-widest">
           {t("footer")}
         </p>
       </div>

@@ -61,14 +61,16 @@ export default function Dashboard() {
     data: { name: string; html: string; css: string; js: string; jsx?: string },
   ): Promise<string | null> => {
     try {
-      const resultAction = await dispatch(createChat({
-        prompt,
-        data
-      }));
-      
+      const resultAction = await dispatch(
+        createChat({
+          prompt,
+          data,
+        }),
+      );
+
       if (createChat.fulfilled.match(resultAction)) {
-         setSidebarKey((k) => k + 1);
-         return resultAction.payload as string;
+        setSidebarKey((k) => k + 1);
+        return resultAction.payload as string;
       }
       return null;
     } catch {
@@ -104,14 +106,16 @@ export default function Dashboard() {
       : undefined;
 
     try {
-      const data = await dispatch(generateComponent({
-        prompt,
-        context,
-        mode: chatMode || generationMode,
-        projectType: currentProjectType,
-        styleMode: currentStyleMode,
-        framework: currentFramework,
-      })).unwrap();
+      const data = await dispatch(
+        generateComponent({
+          prompt,
+          context,
+          mode: chatMode || generationMode,
+          projectType: currentProjectType,
+          styleMode: currentStyleMode,
+          framework: currentFramework,
+        }),
+      ).unwrap();
 
       if (data.type === "clarification") {
         // It's a structured question set
@@ -176,12 +180,15 @@ export default function Dashboard() {
     dispatch(setIsPublic(false));
     const chatId = await saveChat(`[Screenshot] ${data.name}`, data);
     dispatch(setSavedChatId(chatId));
-    
+
     // Refresh user credits
     dispatch(fetchUser());
   };
 
-  const handleCodeUpdate = (type: "html" | "css" | "js" | "jsx", value: string) => {
+  const handleCodeUpdate = (
+    type: "html" | "css" | "js" | "jsx",
+    value: string,
+  ) => {
     if (componentData) {
       dispatch(setComponentData({ ...componentData, [type]: value }));
     }
@@ -223,7 +230,7 @@ export default function Dashboard() {
   };
 
   return (
-    <main className="flex flex-col h-screen w-full bg-[#0B0F19] text-[#F0F6FF] font-sans overflow-hidden">
+    <main className="flex flex-col h-screen w-full bg-[#050505] text-[#FAFAFA] font-sans overflow-hidden">
       <DashboardNavbar
         onLogout={handleLogout}
         showModeToggle={true}

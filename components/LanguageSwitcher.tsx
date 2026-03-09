@@ -5,11 +5,12 @@ import { usePathname, useRouter } from "@/i18n/routing";
 import { ChangeEvent, useTransition } from "react";
 
 const languages = [
-  { code: "en", name: "English", flag: "🇺🇸" },
-  { code: "ja", name: "日本語", flag: "🇯🇵" },
-  { code: "hi", name: "हिंदी", flag: "🇮🇳" },
-  { code: "ta", name: "தமிழ்", flag: "🇮🇳" },
-  { code: "sa", name: "संस्कृतम्", flag: "🕉️" },
+  { code: "en", name: "ENG", flag: "🇺🇸" },
+  { code: "ja", name: "JPN", flag: "🇯🇵" },
+  { code: "hi", name: "HIN", flag: "🇮🇳" },
+  { code: "ta", name: "TAM", flag: "🇮🇳" },
+  { code: "sa", name: "SAN", flag: "🕉️" },
+  { code: "fr", name: "FRA", flag: "🇫🇷" },
 ];
 
 export default function LanguageSwitcher() {
@@ -34,29 +35,29 @@ export default function LanguageSwitcher() {
         defaultValue={locale}
         disabled={isPending}
         onChange={onSelectChange}
-        className="appearance-none bg-white/5 border border-white/10 hover:border-white/20 text-[#8B9AB5] hover:text-white text-[13px] font-medium py-1.5 pl-3 pr-8 rounded-lg outline-none cursor-pointer transition-all duration-200"
+        className="appearance-none bg-[#050505] border border-white/20 hover:border-[#DFFF00] text-white text-xs font-mono font-bold tracking-widest uppercase py-2 pl-3 pr-8 outline-none cursor-pointer transition-colors duration-200"
       >
         {languages.map((lang) => (
           <option
             key={lang.code}
             value={lang.code}
-            className="bg-[#0B0F19] text-white"
+            className="bg-[#050505] text-white font-mono"
           >
             {lang.flag} {lang.name}
           </option>
         ))}
       </select>
-      <div className="absolute right-2.5 pointer-events-none opacity-50">
+      <div className="absolute right-2.5 pointer-events-none text-white">
         <svg
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          className="w-4 h-4 text-white"
+          className="w-3 h-3"
+          strokeWidth="3"
         >
           <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
+            strokeLinecap="square"
+            strokeLinejoin="miter"
             d="M19 9l-7 7-7-7"
           />
         </svg>

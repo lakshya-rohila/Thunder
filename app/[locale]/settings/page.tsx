@@ -74,7 +74,7 @@ export default function SettingsPage() {
 
   if (isLoading || localLoading) {
     return (
-      <main className="min-h-screen bg-[#0B0F19] text-[#F0F6FF] flex flex-col">
+      <main className="min-h-screen bg-[#050505] text-[#FAFAFA] flex flex-col">
         <DashboardNavbar onLogout={handleLogout} />
         <div className="flex-1 flex items-center justify-center">
           <Loader />
@@ -84,24 +84,26 @@ export default function SettingsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0B0F19] text-[#F0F6FF] font-sans flex flex-col">
+    <main className="min-h-screen bg-[#050505] text-[#FAFAFA] font-sans flex flex-col">
       <DashboardNavbar onLogout={handleLogout} />
 
-      <div className="flex-1 max-w-3xl mx-auto w-full px-5 py-10">
-        <header className="mb-10">
-          <h1 className="text-3xl font-bold bg-linear-to-r from-white to-[#8B9AB5] bg-clip-text text-transparent">
+      <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-12">
+        <header className="mb-12">
+          <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white mb-4">
             {t("title")}
           </h1>
-          <p className="text-[#6B7A99] mt-2">{t("desc")}</p>
+          <p className="text-[#A1A1AA] font-mono text-sm max-w-2xl mt-2">
+            {t("desc")}
+          </p>
         </header>
 
         <form onSubmit={handleSave} className="space-y-8">
-          <div className="bg-[#0D1117] border border-white/5 rounded-3xl p-8 space-y-6">
+          <div className="bg-[#000000] border-2 border-white/10 p-8 space-y-6">
             {/* Name Field */}
             <div className="space-y-2">
               <label
                 htmlFor="name"
-                className="text-sm font-semibold text-[#8B9AB5] ml-1"
+                className="text-[10px] font-bold font-mono tracking-widest uppercase text-[#71717A] ml-1"
               >
                 {t("fullName")}
               </label>
@@ -111,7 +113,7 @@ export default function SettingsPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder={t("fullNamePh")}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-[#00F5FF]/50 focus:ring-1 focus:ring-[#00F5FF]/50 transition-all text-white"
+                className="w-full bg-[#050505] border-2 border-white/10 px-5 py-4 focus:outline-none focus:border-[#DFFF00] transition-all text-white font-mono"
                 required
               />
             </div>
@@ -120,11 +122,11 @@ export default function SettingsPage() {
             <div className="space-y-2">
               <label
                 htmlFor="username"
-                className="text-sm font-semibold text-[#8B9AB5] ml-1 flex items-center justify-between"
+                className="text-[10px] font-bold font-mono tracking-widest uppercase text-[#71717A] ml-1 flex items-center justify-between"
               >
                 <span>{t("username")}</span>
                 {username && (
-                  <span className="text-[10px] text-[#00F5FF]/50 font-normal">
+                  <span className="text-[#DFFF00]">
                     thunder.app/profile/{username}
                   </span>
                 )}
@@ -137,21 +139,21 @@ export default function SettingsPage() {
                   setUsername(e.target.value.toLowerCase().replace(/ /g, "-"))
                 }
                 placeholder="Ex. johndoe"
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-[#00F5FF]/50 focus:ring-1 focus:ring-[#00F5FF]/50 transition-all text-white font-mono text-sm"
+                className="w-full bg-[#050505] border-2 border-white/10 px-5 py-4 focus:outline-none focus:border-[#DFFF00] transition-all text-white font-mono text-sm"
               />
-              <p className="text-[10px] text-[#4A5568] ml-1">
+              <p className="text-[10px] text-[#A1A1AA] font-mono ml-1">
                 {t("usernameHint")}
               </p>
             </div>
 
             {/* Email Field (Disabled) */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-[#8B9AB5] ml-1">
+              <label className="text-[10px] font-bold font-mono tracking-widest uppercase text-[#71717A] ml-1">
                 {t("email")}
               </label>
-              <div className="w-full bg-white/2 border border-white/5 rounded-2xl px-5 py-4 text-[#4A5568] flex items-center justify-between">
+              <div className="w-full bg-[#0A0A0A] border-2 border-white/5 px-5 py-4 text-[#71717A] font-mono flex items-center justify-between">
                 <span>{user?.email}</span>
-                <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                <span className="text-[10px] bg-[#050505] border border-white/10 px-2 py-1 uppercase tracking-widest font-mono text-[#FAFAFA]">
                   {t("locked")}
                 </span>
               </div>
@@ -159,13 +161,13 @@ export default function SettingsPage() {
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl text-red-400 text-sm">
+            <div className="bg-[#FF4500]/10 border-2 border-[#FF4500] p-4 text-[#FF4500] text-xs font-mono tracking-widest uppercase font-bold">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-2xl text-emerald-400 text-sm">
+            <div className="bg-[#DFFF00]/10 border-2 border-[#DFFF00] p-4 text-[#DFFF00] text-xs font-mono tracking-widest uppercase font-bold">
               {t("successMsg")}
             </div>
           )}
@@ -174,25 +176,27 @@ export default function SettingsPage() {
             <button
               type="submit"
               disabled={saving}
-              className="bg-linear-to-r from-[#00F5FF] to-[#8A2BE2] text-[#0B0F19] font-bold px-10 py-4 rounded-2xl shadow-xl shadow-[#00F5FF]/20 hover:shadow-[#00F5FF]/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 disabled:opacity-50 disabled:translate-y-0"
+              className="bg-[#DFFF00] text-[#050505] font-black uppercase tracking-widest px-10 py-4 shadow-[6px_6px_0_rgba(255,255,255,0.2)] hover:shadow-none hover:translate-y-1 hover:translate-x-1 transition-all border-2 border-transparent disabled:opacity-50"
             >
               {saving ? t("saving") : t("save")}
             </button>
           </div>
         </form>
 
-        <div className="mt-16 pt-10 border-t border-white/5">
-          <h2 className="text-lg font-bold text-red-400/80 mb-4">
+        <div className="mt-16 pt-10 border-t border-dashed border-white/20">
+          <h2 className="text-lg font-black tracking-widest uppercase text-[#FF4500] mb-6">
             {t("dangerZone")}
           </h2>
-          <div className="bg-red-500/5 border border-red-500/10 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="bg-[#050505] border-2 border-[#FF4500]/20 p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="font-bold text-white mb-1">
+              <h3 className="font-black uppercase tracking-widest text-[#FF4500] mb-2">
                 {t("deleteAccount")}
               </h3>
-              <p className="text-sm text-[#8B9AB5]">{t("deleteWarning")}</p>
+              <p className="text-sm font-mono text-[#A1A1AA]">
+                {t("deleteWarning")}
+              </p>
             </div>
-            <button className="px-6 py-3 rounded-xl border border-red-500/30 text-red-400 font-bold hover:bg-red-500/10 transition-all duration-300 whitespace-nowrap">
+            <button className="px-6 py-3 border-2 border-[#FF4500] text-[#FF4500] font-black uppercase tracking-widest hover:bg-[#FF4500] hover:text-[#050505] transition-all whitespace-nowrap">
               {t("deleteAccount")}
             </button>
           </div>

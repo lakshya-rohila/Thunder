@@ -20,18 +20,18 @@ function FileExplorer({
   hasJsx?: boolean;
 }) {
   return (
-    <div className="w-48 bg-[#0B0F19] border-r border-white/5 flex flex-col">
-      <div className="px-4 py-3 text-xs font-bold text-[#6B7A99] uppercase tracking-wider">
+    <div className="w-48 bg-[#050505] border-r border-white/10 flex flex-col">
+      <div className="px-4 py-3 text-[10px] font-black text-[#A1A1AA] uppercase tracking-widest font-mono border-b border-white/10">
         Explorer
       </div>
-      <div className="flex flex-col gap-0.5 px-2">
+      <div className="flex flex-col px-2 py-2 gap-1">
         {hasJsx ? (
           <button
             onClick={() => onSelect("jsx")}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
+            className={`flex items-center gap-2 px-3 py-2 text-[10px] font-bold font-mono tracking-wider transition-colors border ${
               activeTab === "jsx"
-                ? "bg-[#00F5FF]/10 text-[#00F5FF]"
-                : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+                ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00]"
+                : "text-[#A1A1AA] hover:text-[#FAFAFA] border-transparent hover:border-white/20"
             }`}
           >
             <span className="text-cyan-400">⚛️</span>
@@ -40,23 +40,23 @@ function FileExplorer({
         ) : (
           <button
             onClick={() => onSelect("html")}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
+            className={`flex items-center gap-2 px-3 py-2 text-[10px] font-bold font-mono tracking-wider transition-colors border ${
               activeTab === "html"
-                ? "bg-[#00F5FF]/10 text-[#00F5FF]"
-                : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+                ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00]"
+                : "text-[#A1A1AA] hover:text-[#FAFAFA] border-transparent hover:border-white/20"
             }`}
           >
-            <span className="text-orange-400">&lt;/&gt;</span>
+            <span className="text-[#FF4500]">{"</>"}</span>
             index.html
           </button>
         )}
 
         <button
           onClick={() => onSelect("css")}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
+          className={`flex items-center gap-2 px-3 py-2 text-[10px] font-bold font-mono tracking-wider transition-colors border ${
             activeTab === "css"
-              ? "bg-[#00F5FF]/10 text-[#00F5FF]"
-              : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+              ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00]"
+              : "text-[#A1A1AA] hover:text-[#FAFAFA] border-transparent hover:border-white/20"
           }`}
         >
           <span className="text-[#00F5FF]">#</span>
@@ -66,10 +66,10 @@ function FileExplorer({
         {!hasJsx && (
           <button
             onClick={() => onSelect("js")}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs transition-colors ${
+            className={`flex items-center gap-2 px-3 py-2 text-[10px] font-bold font-mono tracking-wider transition-colors border ${
               activeTab === "js"
-                ? "bg-[#00F5FF]/10 text-[#00F5FF]"
-                : "text-[#8B9AB5] hover:text-white hover:bg-white/5"
+                ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00]"
+                : "text-[#A1A1AA] hover:text-[#FAFAFA] border-transparent hover:border-white/20"
             }`}
           >
             <span className="text-yellow-400">JS</span>
@@ -147,22 +147,22 @@ export default function CodeTabs({
       inherit: true,
       rules: [
         { token: "comment", foreground: "6B7A99", fontStyle: "italic" },
-        { token: "keyword", foreground: "FF79C6", fontStyle: "bold" },
-        { token: "string", foreground: "F1FA8C" },
-        { token: "number", foreground: "BD93F9" },
-        { token: "tag", foreground: "8BE9FD" },
-        { token: "attribute.name", foreground: "50FA7B" },
-        { token: "attribute.value", foreground: "F1FA8C" },
-        { token: "type", foreground: "8BE9FD" },
+        { token: "keyword", foreground: "FF4500", fontStyle: "bold" },
+        { token: "string", foreground: "DFFF00" },
+        { token: "number", foreground: "00F5FF" },
+        { token: "tag", foreground: "FAFAFA", fontStyle: "bold" },
+        { token: "attribute.name", foreground: "A1A1AA" },
+        { token: "attribute.value", foreground: "DFFF00" },
+        { token: "type", foreground: "FAFAFA", fontStyle: "bold" },
       ],
       colors: {
-        "editor.background": "#0B0F19", // Thunder bg
-        "editor.foreground": "#E2E8F0",
-        "editor.lineHighlightBackground": "#1A202C",
-        "editorCursor.foreground": "#00F5FF",
-        "editor.selectionBackground": "#00F5FF33",
-        "editorIndentGuide.background": "#1E293B",
-        "editorIndentGuide.activeBackground": "#00F5FF",
+        "editor.background": "#050505", // Thunder bg geometric
+        "editor.foreground": "#FAFAFA",
+        "editor.lineHighlightBackground": "#111111",
+        "editorCursor.foreground": "#DFFF00",
+        "editor.selectionBackground": "#DFFF0033",
+        "editorIndentGuide.background": "#1A1A1A",
+        "editorIndentGuide.activeBackground": "#DFFF00",
       },
     });
     monaco.editor.setTheme("thunder-v2");
@@ -175,7 +175,7 @@ export default function CodeTabs({
   };
 
   return (
-    <div className="flex h-full bg-[#111827] overflow-hidden">
+    <div className="flex h-full bg-[#050505] overflow-hidden">
       {/* Sidebar Explorer */}
       {showExplorer && (
         <FileExplorer
@@ -187,11 +187,11 @@ export default function CodeTabs({
 
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Top Bar */}
-        <div className="flex items-center justify-between bg-[#0D1117] border-b border-white/5 h-10 px-4">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between bg-[#050505] border-b border-white/10 h-10 px-4">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setShowExplorer(!showExplorer)}
-              className="text-[#6B7A99] hover:text-white"
+              className="text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors"
             >
               <svg
                 width="16"
@@ -200,14 +200,14 @@ export default function CodeTabs({
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
               >
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <rect x="3" y="3" width="18" height="18" />
                 <line x1="9" y1="3" x2="9" y2="21" />
               </svg>
             </button>
-            <span className="text-xs text-[#6B7A99] font-mono">
+            <span className="text-[10px] text-[#A1A1AA] font-mono font-bold tracking-widest uppercase">
               {activeTab === "html"
                 ? hasJsx
                   ? "public/index.html"
@@ -222,10 +222,10 @@ export default function CodeTabs({
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
               onClick={handleFormat}
-              className="p-1.5 text-[#6B7A99] hover:text-white transition-colors"
+              className="p-1 px-2 border-2 border-transparent text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-white/20 transition-colors"
               title="Format Code"
             >
               <svg
@@ -235,8 +235,8 @@ export default function CodeTabs({
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
               >
                 <path d="M21 10H3" />
                 <path d="M21 6H3" />
@@ -246,10 +246,10 @@ export default function CodeTabs({
             </button>
             <button
               onClick={copyToClipboard}
-              className={`flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1 text-[9px] font-bold uppercase tracking-widest transition-colors font-mono border-2 ${
                 copied
-                  ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-white/5 text-[#6B7A99] hover:text-white hover:bg-white/10"
+                  ? "bg-[#DFFF00] text-[#050505] border-[#DFFF00]"
+                  : "bg-transparent text-[#A1A1AA] border-white/20 hover:text-[#FAFAFA] hover:border-[#FAFAFA]"
               }`}
             >
               {copied ? (
@@ -261,12 +261,12 @@ export default function CodeTabs({
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeLinecap="square"
+                    strokeLinejoin="miter"
                   >
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
-                  Copied
+                  COPIED
                 </>
               ) : (
                 <>
@@ -277,13 +277,13 @@ export default function CodeTabs({
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeLinecap="square"
+                    strokeLinejoin="miter"
                   >
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <rect x="9" y="9" width="13" height="13" />
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                   </svg>
-                  Copy
+                  COPY
                 </>
               )}
             </button>

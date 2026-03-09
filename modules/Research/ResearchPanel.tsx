@@ -28,11 +28,11 @@ export default function ResearchPanel() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-[#0B0F19] overflow-hidden text-white">
+    <div className="h-full flex flex-col bg-[#050505] overflow-hidden text-[#FAFAFA]">
       {/* Header */}
-      <div className="h-14 border-b border-white/5 flex items-center px-6 shrink-0 bg-[#0D1117]">
-        <h2 className="font-semibold text-sm flex items-center gap-2">
-          <span className="text-purple-400">⚡</span>
+      <div className="h-10 border-b-2 border-white/10 flex items-center px-6 shrink-0 bg-[#000000]">
+        <h2 className="font-bold text-[10px] uppercase font-mono tracking-widest flex items-center gap-2">
+          <span className="text-[#FF4500]">⚡</span>
           Deep Research Module
         </h2>
       </div>
@@ -41,41 +41,41 @@ export default function ResearchPanel() {
       <div className="flex-1 overflow-y-auto p-8 max-w-4xl mx-auto w-full">
         {/* Search Input */}
         <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+          <h1 className="text-3xl lg:text-4xl font-black mb-6 uppercase tracking-tight text-[#FAFAFA]">
             What do you want to learn?
           </h1>
           <form
             onSubmit={handleResearch}
-            className="relative max-w-2xl mx-auto"
+            className="relative max-w-2xl mx-auto flex"
           >
-            <div className="relative w-full">
+            <div className="relative w-full flex">
               <input
                 type="text"
                 value={topic}
                 onChange={(e) => dispatch(setTopic(e.target.value))}
-                placeholder="Enter a topic (e.g. 'Quantum Computing', 'History of Rome')..."
-                className="w-full bg-[#161B22] border border-white/10 rounded-xl px-6 py-4 pr-32 text-lg focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20 transition-all shadow-xl"
+                placeholder="Enter a topic (e.g. 'Quantum Computing')..."
+                className="w-full bg-[#0A0A0A] border-2 border-white/10 px-6 py-4 pr-32 font-mono text-sm focus:outline-none focus:border-[#DFFF00] transition-colors text-white"
               />
               <div className="absolute right-3 top-3 flex items-center gap-2">
                 <button
                   type="button"
                   onClick={toggleListening}
-                  className={`p-2 rounded-lg transition-all ${
+                  className={`p-2 transition-colors border-2 ${
                     isListening
-                      ? "bg-red-500/20 text-red-400 animate-pulse"
-                      : "bg-white/5 text-gray-400 hover:text-white"
+                      ? "border-[#FF4500] bg-[#FF4500]/10 text-[#FF4500] animate-pulse"
+                      : "border-transparent text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-white/20"
                   }`}
                   title="Voice Input"
                 >
                   <svg
-                    width="20"
-                    height="20"
+                    width="16"
+                    height="16"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeLinecap="square"
+                    strokeLinejoin="miter"
                   >
                     {isListening ? (
                       <>
@@ -98,9 +98,9 @@ export default function ResearchPanel() {
                 <button
                   type="submit"
                   disabled={isLoading || !topic}
-                  className="bg-purple-600 hover:bg-purple-500 text-white px-4 py-1.5 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-[#DFFF00] text-[#050505] border-2 border-[#DFFF00] px-4 py-1 font-bold font-mono text-[10px] tracking-widest uppercase transition-all hover:bg-transparent hover:text-[#DFFF00] disabled:opacity-50 disabled:cursor-not-allowed shadow-[2px_2px_0_rgba(223,255,0,0.3)] hover:shadow-none hover:translate-y-0.5"
                 >
-                  {isLoading ? "Searching..." : "Research"}
+                  {isLoading ? "Wait..." : "Research"}
                 </button>
               </div>
             </div>
@@ -109,53 +109,62 @@ export default function ResearchPanel() {
 
         {/* Results */}
         {isLoading && (
-          <div className="space-y-6 animate-pulse">
-            <div className="h-40 bg-white/5 rounded-2xl"></div>
-            <div className="h-20 bg-white/5 rounded-2xl"></div>
-            <div className="h-60 bg-white/5 rounded-2xl"></div>
+          <div className="space-y-6">
+            <div className="h-32 border-2 border-dashed border-[#DFFF00]/50 bg-[#050505] flex items-center justify-center">
+              <span className="text-[10px] font-mono tracking-widest text-[#DFFF00] uppercase animate-pulse">
+                Running Deep Research...
+              </span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2 h-40 border-2 border-dashed border-white/10" />
+              <div className="h-40 border-2 border-dashed border-white/10" />
+            </div>
           </div>
         )}
 
         {result && (
           <div className="space-y-8 animate-fade-in-up">
             {/* Executive Summary */}
-            <section className="bg-[#161B22] border border-white/5 p-6 rounded-2xl shadow-lg">
-              <h3 className="text-purple-400 text-xs font-bold uppercase tracking-wider mb-3">
+            <section className="bg-[#050505] border-2 border-white/10 p-6">
+              <h3 className="text-[#FF4500] text-[10px] font-bold font-mono uppercase tracking-widest mb-3">
                 Executive Summary
               </h3>
-              <p className="text-lg leading-relaxed text-gray-200">
+              <p className="text-sm font-mono leading-relaxed text-[#FAFAFA]">
                 {result.summary}
               </p>
             </section>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Key Insights */}
-              <section className="md:col-span-2 bg-[#161B22] border border-white/5 p-6 rounded-2xl">
-                <h3 className="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-4">
+              <section className="md:col-span-2 bg-[#050505] border-2 border-white/10 p-6">
+                <h3 className="text-[#DFFF00] text-[10px] font-bold font-mono uppercase tracking-widest mb-4">
                   Key Insights
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-3 font-mono text-sm leading-relaxed">
                   {result.keyInsights?.map((insight, i) => (
-                    <li key={i} className="flex gap-3 text-gray-300">
-                      <span className="text-emerald-500 flex-shrink-0">•</span>
-                      <span>{insight}</span>
+                    <li key={i} className="flex gap-3 text-[#A1A1AA]">
+                      <span className="text-[#DFFF00] flex-shrink-0">►</span>
+                      <span className="text-[#FAFAFA]">{insight}</span>
                     </li>
                   ))}
                 </ul>
               </section>
 
               {/* Statistics */}
-              <section className="md:col-span-1 bg-[#161B22] border border-white/5 p-6 rounded-2xl">
-                <h3 className="text-blue-400 text-xs font-bold uppercase tracking-wider mb-4">
+              <section className="md:col-span-1 bg-[#050505] border-2 border-white/10 p-6">
+                <h3 className="text-blue-400 text-[10px] font-bold font-mono uppercase tracking-widest mb-4">
                   Key Statistics
                 </h3>
                 <div className="space-y-4">
                   {result.statistics?.map((stat, i) => (
-                    <div key={i} className="bg-white/5 p-3 rounded-lg">
-                      <div className="text-2xl font-bold text-white mb-1">
+                    <div
+                      key={i}
+                      className="border-b-2 border-white/10 pb-3 last:border-0 last:pb-0"
+                    >
+                      <div className="text-2xl font-black text-[#FAFAFA] mb-1">
                         {stat.value}
                       </div>
-                      <div className="text-xs text-gray-400 uppercase tracking-wide">
+                      <div className="text-[10px] text-[#A1A1AA] font-mono uppercase tracking-widest">
                         {stat.label}
                       </div>
                     </div>
@@ -165,11 +174,11 @@ export default function ResearchPanel() {
             </div>
 
             {/* Detailed Analysis */}
-            <section className="bg-[#161B22] border border-white/5 p-6 rounded-2xl">
-              <h3 className="text-pink-400 text-xs font-bold uppercase tracking-wider mb-4">
+            <section className="bg-[#050505] border-2 border-white/10 p-6">
+              <h3 className="text-pink-400 text-[10px] font-bold font-mono uppercase tracking-widest mb-4">
                 Detailed Analysis
               </h3>
-              <div className="prose prose-invert max-w-none prose-p:text-gray-300 prose-headings:text-white prose-a:text-pink-400">
+              <div className="prose prose-invert max-w-none prose-p:text-[#A1A1AA] prose-p:font-mono prose-p:text-sm prose-headings:text-[#FAFAFA] prose-headings:font-black prose-headings:uppercase prose-a:text-[#DFFF00] prose-a:underline prose-li:font-mono prose-li:text-[#A1A1AA] prose-li:text-sm">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {result.detailedAnalysis}
                 </ReactMarkdown>
@@ -177,8 +186,8 @@ export default function ResearchPanel() {
             </section>
 
             {/* Sources */}
-            <section className="border-t border-white/10 pt-6">
-              <h3 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-4">
+            <section className="border-t-2 border-white/10 pt-6">
+              <h3 className="text-[#A1A1AA] text-[10px] font-bold font-mono uppercase tracking-widest mb-4">
                 Sources & References
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -188,28 +197,28 @@ export default function ResearchPanel() {
                     href={source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group"
+                    className="flex items-center gap-3 p-4 border-2 border-white/10 bg-[#0A0A0A] hover:bg-[#FAFAFA] hover:text-[#050505] transition-colors group"
                   >
-                    <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-gray-400 group-hover:text-white transition-colors">
+                    <div className="w-8 h-8 flex items-center justify-center text-[10px] font-mono font-bold text-[#A1A1AA] group-hover:text-[#050505] border border-white/20 group-hover:border-[#050505]/20">
                       {i + 1}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-200 truncate group-hover:text-purple-400 transition-colors">
+                      <div className="text-sm font-bold font-mono uppercase tracking-wider truncate mb-1">
                         {source.title}
                       </div>
-                      <div className="text-xs text-gray-500 truncate">
+                      <div className="text-[10px] font-mono opacity-60 truncate">
                         {new URL(source.url).hostname}
                       </div>
                     </div>
                     <svg
-                      className="w-4 h-4 text-gray-600 group-hover:text-gray-400"
+                      className="w-4 h-4 opacity-50"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
                       <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
                         strokeWidth={2}
                         d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                       />
