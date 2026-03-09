@@ -110,7 +110,7 @@ export default function UseCasesSection() {
   };
 
   return (
-    <section className="py-24 bg-[#0A0A0A] border-y-2 border-white/10 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-[#0A0A0A] border-y-2 border-white/10 relative overflow-hidden">
       {/* Background Graphic */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] opacity-10 translate-x-1/3 -translate-y-1/4 pointer-events-none">
         <svg
@@ -151,7 +151,7 @@ export default function UseCasesSection() {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="show"

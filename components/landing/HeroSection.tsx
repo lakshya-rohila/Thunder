@@ -38,7 +38,7 @@ export default function HeroSection({
   };
 
   return (
-    <section className="relative pt-40 pb-32 px-6 overflow-hidden">
+    <section className="relative pt-24 md:pt-40 pb-20 md:pb-32 px-4 sm:px-6 overflow-hidden">
       {/* Background with geometric styling */}
       <div
         className="absolute inset-0 z-0"
@@ -57,7 +57,7 @@ export default function HeroSection({
       >
         {/* Badge */}
         <motion.div
-          className="inline-flex items-center gap-2 px-4 py-1.5 border border-[#DFFF00]/30 bg-[#0A0A0A] text-[#DFFF00] text-xs font-mono font-bold mb-8 uppercase tracking-widest"
+          className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 border border-[#DFFF00]/30 bg-[#0A0A0A] text-[#DFFF00] text-[10px] sm:text-xs font-mono font-bold mb-8 uppercase tracking-widest"
           variants={itemVariants}
         >
           <span className="w-2 h-2 bg-[#DFFF00] animate-pulse" />
@@ -66,7 +66,7 @@ export default function HeroSection({
 
         {/* Headline */}
         <motion.h1
-          className="text-6xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.95] display-font uppercase"
+          className="text-[clamp(2.5rem,12vw,4rem)] sm:text-6xl md:text-8xl font-black mb-6 sm:mb-8 tracking-tighter leading-[0.9] sm:leading-[0.95] display-font uppercase"
           variants={itemVariants}
         >
           {tHero("titleLine1")}
@@ -78,7 +78,7 @@ export default function HeroSection({
 
         {/* Subtext */}
         <motion.p
-          className="text-lg md:text-xl text-[#A1A1AA] mb-12 max-w-2xl mx-auto leading-relaxed"
+          className="text-base sm:text-lg md:text-xl text-[#A1A1AA] mb-12 max-w-2xl mx-auto leading-relaxed"
           variants={itemVariants}
         >
           {tHero("description")}
@@ -86,20 +86,20 @@ export default function HeroSection({
 
         {/* CTAs */}
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="flex flex-col w-full sm:w-auto sm:flex-row items-center justify-center gap-4"
           variants={itemVariants}
         >
           {!isLoading && (
             <>
               {isLoggedIn ? (
                 <Link href="/dashboard" className="w-full sm:w-auto">
-                  <button className="btn-primary w-full sm:w-auto px-8 py-4 text-base tracking-wide uppercase">
+                  <button className="btn-primary w-full sm:w-auto px-4 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base tracking-wide uppercase">
                     <span>{tHero("openDashboard")}</span>
                   </button>
                 </Link>
               ) : (
                 <Link href="/register" className="w-full sm:w-auto">
-                  <button className="btn-primary w-full sm:w-auto px-8 py-4 text-base tracking-wide uppercase">
+                  <button className="btn-primary w-full sm:w-auto px-4 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base tracking-wide uppercase">
                     <span>{tHero("startBuildingFree")}</span>
                   </button>
                 </Link>
@@ -108,7 +108,7 @@ export default function HeroSection({
                 href={isLoggedIn ? "/community" : "/login"}
                 className="w-full sm:w-auto"
               >
-                <button className="btn-secondary w-full sm:w-auto px-8 py-4 text-base uppercase tracking-wide">
+                <button className="btn-secondary w-full sm:w-auto px-4 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base uppercase tracking-wide">
                   {isLoggedIn ? tHero("exploreFeed") : tHero("viewDemo")}
                 </button>
               </Link>

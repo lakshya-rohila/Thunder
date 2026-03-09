@@ -35,7 +35,7 @@ export default function CTASection({
   };
 
   return (
-    <section className="py-40 px-6 bg-[#DFFF00] text-[#050505] border-t border-[#050505] relative overflow-hidden">
+    <section className="py-24 md:py-40 px-6 bg-[#DFFF00] text-[#050505] border-t border-[#050505] relative overflow-hidden">
       <div
         className="absolute inset-0 opacity-10 pointer-events-none"
         style={{
@@ -59,7 +59,7 @@ export default function CTASection({
         </motion.div>
         <motion.h2
           variants={itemVariants}
-          className="text-5xl md:text-7xl font-black mb-8 tracking-tighter leading-none display-font uppercase"
+          className="text-4xl sm:text-5xl md:text-7xl font-black mb-8 tracking-tighter leading-none display-font uppercase"
         >
           {tCTA("titleLine1")}
           <br />

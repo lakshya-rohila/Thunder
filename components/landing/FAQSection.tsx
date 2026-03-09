@@ -58,7 +58,7 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="py-24 bg-[#050505] border-t-2 border-white/10 relative">
+    <section className="py-16 md:py-24 bg-[#050505] border-t-2 border-white/10 relative">
       <div className="max-w-4xl mx-auto px-6 relative z-10">
         <motion.div
           className="mb-16 text-center"
@@ -157,7 +157,10 @@ export default function FAQSection() {
                         paddingBottom: 0,
                         paddingTop: 0,
                       }}
-                      transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] as any }}
+                      transition={{
+                        duration: 0.3,
+                        ease: [0.25, 1, 0.5, 1] as any,
+                      }}
                     >
                       <p className="text-[#A1A1AA] font-mono text-sm leading-relaxed border-l-2 border-[#DFFF00] pl-4">
                         {faq.answer}

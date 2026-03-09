@@ -37,10 +37,10 @@ export default function PhilosophySection() {
   return (
     <section
       id="philosophy"
-      className="py-32 px-6 bg-[#0A0A0A] border-t border-white/5 overflow-hidden"
+      className="py-20 md:py-32 px-6 bg-[#0A0A0A] border-t border-white/5 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -55,7 +55,7 @@ export default function PhilosophySection() {
             </motion.div>
             <motion.h2
               variants={itemVariants}
-              className="text-4xl md:text-6xl font-black mb-8 tracking-tight leading-tight display-font uppercase"
+              className="text-4xl sm:text-5xl md:text-6xl font-black mb-8 tracking-tight leading-tight display-font uppercase"
             >
               {tPhilosophy("titleLine1")} <br />
               <span className="text-[#A1A1AA] italic">

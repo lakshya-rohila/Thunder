@@ -49,7 +49,7 @@ export default function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="py-32 px-6 bg-[#050505] border-t border-white/5 relative overflow-hidden"
+      className="py-24 md:py-32 px-6 bg-[#050505] border-t border-white/5 relative overflow-hidden"
     >
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-px bg-white/5 pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-full w-px bg-white/5 pointer-events-none" />
@@ -65,7 +65,7 @@ export default function HowItWorksSection() {
           <div className="inline-flex items-center gap-2 px-3 py-1 font-mono bg-white text-black text-xs font-bold uppercase tracking-widest mb-6">
             {tProcess("badge")}
           </div>
-          <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tight display-font uppercase">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tight display-font uppercase">
             {tProcess("titleLine1").split(" ")[0]}{" "}
             <span className="text-[#A1A1AA] italic">
               {tProcess("titleLine1").split(" ").slice(1).join(" ")}

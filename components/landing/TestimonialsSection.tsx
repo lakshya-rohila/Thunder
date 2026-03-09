@@ -50,7 +50,7 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section className="py-32 border-y-2 border-white/10 bg-[#0A0A0A] relative overflow-hidden">
+    <section className="py-20 md:py-32 border-y-2 border-white/10 bg-[#0A0A0A] relative overflow-hidden">
       {/* Abstract Background Element */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1200px] h-[400px] pointer-events-none opacity-5">
         <svg

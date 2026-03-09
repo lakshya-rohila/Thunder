@@ -7,7 +7,7 @@ export default function ShowcaseSection() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="py-24 bg-[#050505] relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-[#050505] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           className="mb-16 md:mb-24 flex flex-col items-center text-center"
@@ -16,7 +16,7 @@ export default function ShowcaseSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] as any }}
         >
-          <h2 className="text-4xl md:text-6xl font-black uppercase text-[#FAFAFA] tracking-tighter mb-6">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase text-[#FAFAFA] tracking-tighter mb-6">
             The Difference <br /> Is{" "}
             <span className="text-[#FF4500]">Visible.</span>
           </h2>
@@ -33,7 +33,11 @@ export default function ShowcaseSection() {
             initial={{ opacity: 0, x: reduceMotion ? 0 : -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 1, 0.5, 1] as any }}
+            transition={{
+              duration: 0.5,
+              delay: 0.1,
+              ease: [0.25, 1, 0.5, 1] as any,
+            }}
           >
             <div className="mb-4 flex items-center justify-between border-b-2 border-white/10 pb-4">
               <span className="text-[#A1A1AA] font-mono text-xs uppercase tracking-widest">
@@ -74,7 +78,11 @@ export default function ShowcaseSection() {
             initial={{ opacity: 0, x: reduceMotion ? 0 : 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 1, 0.5, 1] as any }}
+            transition={{
+              duration: 0.5,
+              delay: 0.2,
+              ease: [0.25, 1, 0.5, 1] as any,
+            }}
           >
             <div className="mb-4 flex items-center justify-between border-b-2 border-white/10 pb-4">
               <span className="text-[#DFFF00] font-mono text-xs uppercase tracking-widest font-bold">

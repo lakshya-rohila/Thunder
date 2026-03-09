@@ -33,7 +33,7 @@ export default function FeaturesSection() {
   return (
     <section
       id="features"
-      className="py-32 px-6 bg-[#0A0A0A] border-t border-white/5 relative overflow-hidden"
+      className="py-20 md:py-32 px-6 bg-[#0A0A0A] border-t border-white/5 relative overflow-hidden"
     >
       {/* Background accents */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#DFFF00]/5 blur-[120px] pointer-events-none" />
@@ -42,7 +42,7 @@ export default function FeaturesSection() {
       <div className="max-w-7xl mx-auto space-y-40 relative z-10">
         {/* Instant UI Generation */}
         <motion.div
-          className="grid lg:grid-cols-2 gap-16 items-center"
+          className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center"
           variants={staggerContainer}
           initial="hidden"
           whileInView="show"
@@ -124,7 +124,7 @@ export default function FeaturesSection() {
 
         {/* Screenshot to Code */}
         <motion.div
-          className="grid lg:grid-cols-2 gap-16 items-center"
+          className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center"
           variants={staggerContainer}
           initial="hidden"
           whileInView="show"
